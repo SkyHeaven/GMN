@@ -1,6 +1,7 @@
-//
+QT += widgets
 
 SOURCES += \
-    Controle.cpp
+    Controle.cpp \
+    main.cpp
 
 
