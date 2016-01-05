@@ -1,3 +1,6 @@
 //
 
+SOURCES += \
+    Controle.cpp
+
 
