@@ -13,7 +13,13 @@ int main(int argc, char *argv[])
 
     Controle c ;
 
-    c.ouvertureImage("result6.jpg");
+    QImageReader reader("result6.jpg");
+    reader.setAutoTransform(true);
+    const QImage imagef = reader.read();
+    c.ouvertureImage(imagef);
+
+
+
     return 0;
 
 }

@@ -1,5 +1,6 @@
 #ifndef CONTROLE_H
 #define CONTROLE_H
+#include <QImage>
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <string>
@@ -11,7 +12,7 @@ class Controle{
     public:
 
     void affichageImage(IplImage img);
-    void ouvertureImage(char chemin[]);
+    void ouvertureImage(QImage imagef);
     IplImage filtrage(IplImage img); //ici creation nouvelle image
     IplImage amelioration(IplImage img); //ici creation nouvelle image
     IplImage crop(IplImage img, CvScalar pixel1, CvScalar pixel2);

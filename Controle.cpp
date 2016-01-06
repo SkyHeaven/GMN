@@ -11,28 +11,39 @@ using namespace std;
         cout << "beubeu" << endl;
     }
 
-    void Controle::ouvertureImage(char chemin[]){
+    void Controle::ouvertureImage(QImage imagef){
 
-        IplImage *imagef = cvLoadImage(chemin, 1);
+//        QImageReader reader(chemin);
+//        reader.setAutoTransform(true);
+//        const QImage imagef = reader.read();
+
+        //IplImage *imagef = cvLoadImage(chemin, 1);
         int x, y, couleur;
         CvScalar p;
         Image image;
         Pixel pix;
 
-        image.setHauteur(imagef->height);
-        image.setLargeur(imagef->width);
+        image.setHauteur(imagef.height());
+        image.setLargeur(imagef.width());
           //printf("Image chargée : largeur=%d, hauteur=%d, profondeur=%d, couleur=%d\n", image->width, image->height, image->depth, image->nChannels);
 
           //if ( ( image->nChannels == 3 ) && ( largeur == image->width) && ( hauteur == image->height ) ) {
 
             for( x = 0; x < image.getLargeur(); x++ ){
               for( y = 0; y < image.getHauteur(); y++ ) {
-                p = cvGet2D(imagef, y, x);
+
+
+                        //cvGet2D(imagef, y, x);
                 pix.setX(x);
                 pix.setY(y);
-                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
-                    pix.setRGBCouleur(couleur, p.val[couleur]);
-                }
+
+                pix.setRGBCouleur(0, qRed(imagef.color(imagef.pixelIndex(x,y))));
+                pix.setRGBCouleur(1, qGreen(imagef.color(imagef.pixelIndex(x,y))));
+                pix.setRGBCouleur(2, qBlue(imagef.color(imagef.pixelIndex(x,y))));
+
+//                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
+//                    pix.setRGBCouleur(couleur, p.val[couleur]);
+//                }
                 image.setPixel(x,y,pix);
               }
             }
