@@ -12,19 +12,8 @@ int main(int argc, char *argv[])
 {
 
     Controle c ;
-    c.afficher();
+
+    c.ouvertureImage("result6.jpg");
     return 0;
-/*
-    QApplication app(argc, argv);
 
-
-
-    QPushButton bouton("Salut les Zeros, la forme ?");
-
-    bouton.show();
-
-
-
-    return app.exec();
-*/
 }

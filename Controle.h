@@ -3,12 +3,15 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <string>
+#include "Image.h"
+#include "Pixel.h"
 class Controle{
     //private:
 
     public:
-    IplImage ouvertureImage(std::string chemin);
+
     void affichageImage(IplImage img);
+    void ouvertureImage(char chemin[]);
     IplImage filtrage(IplImage img); //ici creation nouvelle image
     IplImage amelioration(IplImage img); //ici creation nouvelle image
     IplImage crop(IplImage img, CvScalar pixel1, CvScalar pixel2);
