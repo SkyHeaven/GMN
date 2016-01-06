@@ -11,25 +11,25 @@ using namespace std;
     }
 
     IplImage Controle::ouvertureImage(string chemin){
-        return null;
+        //return NULL;
     }
 
     IplImage Controle::filtrage(IplImage img){ //ici creation nouvelle image
-        return null;
+        //return NULL;
     }
 
     IplImage Controle::amelioration(IplImage img){ //ici creation nouvelle image
-        return null;
+        //return NULL;
     }
 
     IplImage Controle::crop(IplImage img, CvScalar pixel1, CvScalar pixel2){
-        return null;
+        //return NULL;
     }
 
     void Controle::redimension(IplImage img, string option, int l, int h){
-        return null;
+        //return NULL;
     }
 
     IplImage Controle::afficherHistogramme(CvScalar pixel, string optionCoul){
-        return null;
+        //return NULL;
     }
