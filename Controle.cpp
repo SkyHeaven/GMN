@@ -6,13 +6,32 @@
 
 using namespace std;
 
+
+
+std::vector<Image> Controle::getSauvegardeImage() const
+{
+    return sauvegardeImage;
+}
+
+void Controle::setSauvegardeImage(const std::vector<Image> &value)
+{
+    sauvegardeImage = value;
+}
+int Controle::getIndexVecteur() const
+{
+    return indexVecteur;
+}
+
+void Controle::setIndexVecteur(int value)
+{
+    indexVecteur = value;
+}
 void Controle::ouvertureImage(QImage imagef){
+    
+    //        QImageReader reader(chemin);
+    //        reader.setAutoTransform(true);
+    //        const QImage imagef = reader.read();
 
-//        QImageReader reader(chemin);
-//        reader.setAutoTransform(true);
-//        const QImage imagef = reader.read();
-
-    //IplImage *imagef = cvLoadImage(chemin, 1);
     int x, y, couleur;
     CvScalar p;
     Image image;
@@ -21,40 +40,49 @@ void Controle::ouvertureImage(QImage imagef){
     image.setHauteur(imagef.height());
     image.setLargeur(imagef.width());
     image.setTableauPixel(imagef.width(),imagef.height());
-      //printf("Image chargée : largeur=%d, hauteur=%d, profondeur=%d, couleur=%d\n", image->width, image->height, image->depth, image->nChannels);
 
-      //if ( ( image->nChannels == 3 ) && ( largeur == image->width) && ( hauteur == image->height ) ) {
+    for( x = 0; x < image.getLargeur(); x++ ){
+      for( y = 0; y < image.getHauteur(); y++ ) {
+        Pixel pix = Pixel((double)x,(double)y);
 
-        for( x = 0; x < image.getLargeur(); x++ ){
-          for( y = 0; y < image.getHauteur(); y++ ) {
-            Pixel pix = Pixel((double)x,(double)y);
+        pix.setRGBCouleur(0, qRed(imagef.pixel(x,y)));
+        pix.setRGBCouleur(1, qGreen(imagef.pixel(x,y)));
+        pix.setRGBCouleur(2, qBlue(imagef.pixel(x,y)));
 
-            pix.setRGBCouleur(0, qRed(imagef.pixel(x,y)));
-            pix.setRGBCouleur(1, qGreen(imagef.pixel(x,y)));
-            pix.setRGBCouleur(2, qBlue(imagef.pixel(x,y)));
-
-//                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
-//                    pix.setRGBCouleur(couleur, p.val[couleur]);
-//                }
-            image.setPixel(x,y,pix);
-          }
-        }
-     // }
-    //return NULL;
+    //                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
+    //                    pix.setRGBCouleur(couleur, p.val[couleur]);
+    //                }
+        image.setPixel(x,y,pix);
+       }
+    }
 }
 
-    void Controle::affichageImage(IplImage img){
+    void Controle::affichageImage(Image img){
         cout << "beubeu" << endl;
+    }
+    int* Controle::affichageCouleurRGB(int h, int l){
+        Image img = sauvegardeImage.at(indexVecteur);
+        return img.getRGB(h,l);
     }
 
     Image Controle::undo(){
-        indexVecteur --;
-        return sauvegardeImage.at(indexVecteur);
+        if(indexVecteur > 0){
+            indexVecteur --;
+            return sauvegardeImage.at(indexVecteur);
+        }
+        else{
+            cout << "impossible de continuer a annuler" << endl;
+        }
     }
 
     Image Controle::redo(){
-        indexVecteur ++;
-        return sauvegardeImage.at(indexVecteur);
+        if(indexVecteur < sauvegardeImage.size()-1){
+            indexVecteur ++;
+            return sauvegardeImage.at(indexVecteur);
+        }
+        else{
+            cout << "Aucun redo supplementaire" << endl;
+        }
     }
 
     void Controle::ajoutOperation(Image img){ // A VERIFIER EN CAS DE SEG FAULT
@@ -65,22 +93,22 @@ void Controle::ouvertureImage(QImage imagef){
         sauvegardeImage.insert(sauvegardeImage.begin()+ indexVecteur, img);
     }
 
-    IplImage Controle::filtrage(IplImage img){ //ici creation nouvelle image
+    Image Controle::filtrage(Image img){ //ici creation nouvelle image
         //return NULL;
     }
 
-    IplImage Controle::amelioration(IplImage img){ //ici creation nouvelle image
+    Image Controle::amelioration(Image img){ //ici creation nouvelle image
         //return NULL;
     }
 
-    IplImage Controle::crop(IplImage img, CvScalar pixel1, CvScalar pixel2){
+    Image Controle::crop(Image img, Pixel pixel1, Pixel pixel2){
         //return NULL;
     }
 
-    void Controle::redimension(IplImage img, string option, int l, int h){
+    void Controle::redimension(Image img, string option, int l, int h){
         //return NULL;
     }
 
-    IplImage Controle::afficherHistogramme(CvScalar pixel, string optionCoul){
+    Image Controle::afficherHistogramme(Pixel pixel, string optionCoul){
         //return NULL;
     }

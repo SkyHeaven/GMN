@@ -32,6 +32,10 @@ void Image::setLargeur(int l){
     largeur = l;
 }
 
+int* Image::getRGB(int h, int l){
+    return tableauPixel[h][l].getRGBCouleur();
+}
+
 void Image::setGray(){
     for(int i= 0 ; i <largeur; i++){
         for(int j =0; j < hauteur; j++){

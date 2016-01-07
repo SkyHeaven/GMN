@@ -14,6 +14,7 @@ class Image {
     void setHauteur(int h);
     int getLargeur();
     void setLargeur(int l);
+    int* getRGB(int h, int l);
     void setGray();
 };
 

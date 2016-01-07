@@ -9,21 +9,28 @@
 #include "Pixel.h"
 
 class Controle{
-    //private:
+    private:
     std::vector<Image> sauvegardeImage;
     int indexVecteur = 0;
-    public:
 
+    public:
+    int getIndexVecteur() const;
+    void setIndexVecteur(int value);
+    std::vector<Image> getSauvegardeImage() const;
+    void setSauvegardeImage(const std::vector<Image> &value);
     void ouvertureImage(QImage imagef);
-    void affichageImage(IplImage img);
+    void affichageImage(Image img);
+    int* affichageCouleurRGB(int h, int l);
     Image undo();
     Image redo();
     void ajoutOperation(Image img);
-    IplImage filtrage(IplImage img); //ici creation nouvelle image
-    IplImage amelioration(IplImage img); //ici creation nouvelle image
-    IplImage crop(IplImage img, CvScalar pixel1, CvScalar pixel2);
-    void redimension(IplImage img, std::string option, int l, int h);
-    IplImage afficherHistogramme(CvScalar pixel, std::string optionCoul);
+    Image filtrage(Image img); //ici creation nouvelle image
+    Image amelioration(Image img); //ici creation nouvelle image
+    Image crop(Image img, Pixel pixel1, Pixel pixel2);
+    void redimension(Image img, std::string option, int l, int h);
+    Image afficherHistogramme(Pixel pixel, std::string optionCoul);
+
+
 };
 #endif // CONTROLE_H
 
