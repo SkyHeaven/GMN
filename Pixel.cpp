@@ -25,6 +25,16 @@ void Pixel::setYUVwithRGB(int rgb[]){
 
 }
 
+void Pixel::setGraywithRGB(int rgb[]){
+    double g =0;
+    double tab[NBCOULEUR];
+    for(int i =0; i<NBCOULEUR; i++){
+        tab[i] = (double)rgb[i];
+    }
+    g = (tab[0] + tab[1] +tab[2])/ 3;
+    gris = (int)g;
+}
+
 int* Pixel::getYUV(int y, int u, int v){
     return yuv;
 }
@@ -39,4 +49,8 @@ void setY(double y){
 
 void Pixel::setRGBCouleur(int ind, int val){
     rgb[ind] = val;
+}
+
+int* Pixel::getRGBCouleur(){
+    return rgb;
 }

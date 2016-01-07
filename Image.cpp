@@ -31,3 +31,11 @@ int Image::getLargeur(){
 void Image::setLargeur(int l){
     largeur = l;
 }
+
+void Image::setGray(){
+    for(int i= 0 ; i <largeur; i++){
+        for(int j =0; j < hauteur; j++){
+            tableauPixel[i][j].setGraywithRGB(tableauPixel[i][j].getRGBCouleur());
+        }
+    }
+}
