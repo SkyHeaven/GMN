@@ -9,6 +9,7 @@ class Image {
 
     public:
     void setTableauPixel(int h, int l);
+    Pixel **getTableauPixel() const;
     void setPixel(int x, int y, Pixel p);
     int getHauteur();
     void setHauteur(int h);
@@ -16,6 +17,7 @@ class Image {
     void setLargeur(int l);
     int* getRGB(int h, int l);
     void setGray();
+
 };
 
 #endif // IMAGE_H

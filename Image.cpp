@@ -4,17 +4,22 @@
 
 using namespace std;
 
+Pixel **Image::getTableauPixel() const
+{
+    return tableauPixel;
+}
+
 void Image::setTableauPixel(int h, int l){
-
-
+    
+    
     tableauPixel = (Pixel**)malloc(h * sizeof(Pixel*));
     for(int i = 0; i<h;i++){
         tableauPixel[i] = (Pixel*)malloc(l* sizeof(Pixel));
     }
 }
 
-void Image::setPixel(int x, int y, Pixel p){
-    tableauPixel[x][y] = p;
+void Image::setPixel(int h, int l, Pixel p){
+    tableauPixel[h][l] = p;
 }
 
 int Image::getHauteur(){

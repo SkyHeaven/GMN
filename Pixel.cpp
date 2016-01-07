@@ -4,6 +4,16 @@
 
 using namespace std;
 
+int Pixel::getGris() const
+{
+    return gris;
+}
+
+void Pixel::setGris(int value)
+{
+    gris = value;
+}
+
 Pixel::Pixel(double x , double y){
     x = x;
     y = y;

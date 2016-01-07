@@ -20,6 +20,7 @@ public:
 private slots:
     void open();
     void fitToWindow();
+    void grey();
 
 private:
     Ui::MainWindow *ui;
@@ -27,7 +28,7 @@ private:
     void updateActions();
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
-    void grey();
+
 
     Controle c;
 

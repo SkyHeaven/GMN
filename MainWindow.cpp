@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "MainWindow.h"
 #include "ui_mainwindow.h"
 #include "Controle.h"
 
@@ -105,13 +105,15 @@ void MainWindow::fitToWindow()
 }
 
 void MainWindow::grey(){
-    QImage image(c.sauvegardeImage.at(c.indexVecteur).getLargeur(),c.sauvegardeImage.at(c.indexVecteur).getHauteur(),QImage::Format_RGB32);
+
+    QImage image(c.getSauvegardeImage().at(c.getIndexVecteur()).getLargeur(),c.getSauvegardeImage().at(c.getIndexVecteur()).getHauteur(),QImage::Format_RGB32);
     QRgb value;
-    for (int i=0;i<image.height();i++){
-        for(int j=0;i<image.width();j++){
-            int v = c.sauvegardeImage.at(c.indexVecteur).tableauPixel[i][j].gris;
+    for (int h=0;h<image.height();h++){
+        for(int l=0;l<image.width();l++){
+            int v = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getGris();
             value = qRgb(v, v, v);
-            image.setPixel(i, j, value);
+            image.setPixel(l,h,value);
+
         }
     }
     imageLabel->setPixmap(QPixmap::fromImage(image));

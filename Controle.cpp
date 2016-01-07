@@ -39,22 +39,25 @@ void Controle::ouvertureImage(QImage imagef){
 
     image.setHauteur(imagef.height());
     image.setLargeur(imagef.width());
-    image.setTableauPixel(imagef.width(),imagef.height());
+    image.setTableauPixel(imagef.height(),imagef.width());
 
-    for( x = 0; x < image.getLargeur(); x++ ){
-      for( y = 0; y < image.getHauteur(); y++ ) {
+    for( int h = 0; h < image.getHauteur(); h++ ){
+      for( int l = 0; l < image.getLargeur(); l++ ) {
         Pixel pix = Pixel((double)x,(double)y);
 
-        pix.setRGBCouleur(0, qRed(imagef.pixel(x,y)));
-        pix.setRGBCouleur(1, qGreen(imagef.pixel(x,y)));
-        pix.setRGBCouleur(2, qBlue(imagef.pixel(x,y)));
+        pix.setRGBCouleur(0, qRed(imagef.pixel(l,imagef.height()-h-1)));
+        pix.setRGBCouleur(1, qGreen(imagef.pixel(l,imagef.height()-h-1)));
+        pix.setRGBCouleur(2, qBlue(imagef.pixel(l,imagef.height()-h-1)));
 
     //                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
     //                    pix.setRGBCouleur(couleur, p.val[couleur]);
     //                }
-        image.setPixel(x,y,pix);
+        image.setPixel(h,l,pix);
        }
     }
+
+    indexVecteur =0;
+    sauvegardeImage.insert(sauvegardeImage.begin(),image);
 }
 
     void Controle::affichageImage(Image img){

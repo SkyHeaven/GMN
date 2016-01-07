@@ -22,6 +22,8 @@ class Pixel {
     int* getRGBCouleur();
 
     // methodes de conversion (grisToRGB grisToYUV...)
+    int getGris() const;
+    void setGris(int value);
 };
 
 #endif // PIXEL_H

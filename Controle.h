@@ -11,7 +11,7 @@
 class Controle{
     private:
     std::vector<Image> sauvegardeImage;
-    int indexVecteur = 0;
+    int indexVecteur;
 
     public:
     int getIndexVecteur() const;
