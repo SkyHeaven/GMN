@@ -1,7 +1,7 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 #include "Pixel.h"
-class Image : public IplImage{
+class Image {
     private:
     Pixel **tableauPixel;
     int hauteur;
@@ -14,7 +14,7 @@ class Image : public IplImage{
     void setHauteur(int h);
     int getLargeur();
     void setLargeur(int l);
-
+    void setGray();
 };
 
 #endif // IMAGE_H

@@ -3,7 +3,7 @@
 #define NBCOULEUR 3
 #include <opencv2/opencv.hpp>
 
-class Pixel : public CvScalar{
+class Pixel {
     private:
     double x;
     double y;
@@ -15,9 +15,12 @@ class Pixel : public CvScalar{
     Pixel(double x , double y);
     int* getYUV(int y, int u, int v);
     void setYUVwithRGB(int rgb[]);
+    void setGraywithRGB(int rgb[]);
     void setX(double x);
     void setY(double y);
     void setRGBCouleur(int ind, int val);
+    int* getRGBCouleur();
+
     // methodes de conversion (grisToRGB grisToYUV...)
 };
 
