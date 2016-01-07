@@ -3,6 +3,7 @@
 #include <string>
 
 #include "MainWindow.h"
+#include "Controle.h"
 
 using namespace std;
 MainWindow::MainWindow()
@@ -48,6 +49,8 @@ bool MainWindow::loadFile(const QString &fileName)
         imageLabel->adjustSize();
 
     setWindowFilePath(fileName);
+    Controle c;
+    c.ouvertureImage(image);
     return true;
 }
 

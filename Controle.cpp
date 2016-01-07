@@ -33,16 +33,18 @@ using namespace std;
               for( y = 0; y < image.getHauteur(); y++ ) {
                 Pixel pix = Pixel((double)x,(double)y);
 
+                cout<<"tamere"<<endl;
 
-
-                pix.setRGBCouleur(0, qRed(imagef.color(imagef.pixelIndex(x,y))));
-                pix.setRGBCouleur(1, qGreen(imagef.color(imagef.pixelIndex(x,y))));
-                pix.setRGBCouleur(2, qBlue(imagef.color(imagef.pixelIndex(x,y))));
+                pix.setRGBCouleur(0, qRed(imagef.pixel(x,y)));
+                pix.setRGBCouleur(1, qGreen(imagef.pixel(x,y)));
+                pix.setRGBCouleur(2, qBlue(imagef.pixel(x,y)));
 
 //                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
 //                    pix.setRGBCouleur(couleur, p.val[couleur]);
 //                }
+                cout<<"tamere"<<endl;
                 image.setPixel(x,y,pix);
+                cout<<"tamere"<<endl;
               }
             }
          // }
