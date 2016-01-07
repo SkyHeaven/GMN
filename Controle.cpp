@@ -25,6 +25,7 @@ using namespace std;
 
         image.setHauteur(imagef.height());
         image.setLargeur(imagef.width());
+        image.setTableauPixel(imagef.width(),imagef.height());
           //printf("Image chargée : largeur=%d, hauteur=%d, profondeur=%d, couleur=%d\n", image->width, image->height, image->depth, image->nChannels);
 
           //if ( ( image->nChannels == 3 ) && ( largeur == image->width) && ( hauteur == image->height ) ) {
@@ -33,8 +34,6 @@ using namespace std;
               for( y = 0; y < image.getHauteur(); y++ ) {
                 Pixel pix = Pixel((double)x,(double)y);
 
-                cout<<"tamere"<<endl;
-
                 pix.setRGBCouleur(0, qRed(imagef.pixel(x,y)));
                 pix.setRGBCouleur(1, qGreen(imagef.pixel(x,y)));
                 pix.setRGBCouleur(2, qBlue(imagef.pixel(x,y)));
@@ -42,9 +41,7 @@ using namespace std;
 //                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
 //                    pix.setRGBCouleur(couleur, p.val[couleur]);
 //                }
-                cout<<"tamere"<<endl;
                 image.setPixel(x,y,pix);
-                cout<<"tamere"<<endl;
               }
             }
          // }
