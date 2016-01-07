@@ -4,6 +4,11 @@
 
 using namespace std;
 
+Pixel::Pixel(double x , double y){
+    x = x;
+    y = y;
+}
+
 void Pixel::setYUVwithRGB(int rgb[]){
         double y,u,v = 0;
         double tab[NBCOULEUR];

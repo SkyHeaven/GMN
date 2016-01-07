@@ -12,6 +12,7 @@ class Pixel : public CvScalar{
     int gris;
 
     public:
+    Pixel(double x , double y);
     int* getYUV(int y, int u, int v);
     void setYUVwithRGB(int rgb[]);
     void setX(double x);

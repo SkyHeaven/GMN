@@ -21,7 +21,7 @@ using namespace std;
         int x, y, couleur;
         CvScalar p;
         Image image;
-        Pixel pix;
+
 
         image.setHauteur(imagef.height());
         image.setLargeur(imagef.width());
@@ -31,11 +31,9 @@ using namespace std;
 
             for( x = 0; x < image.getLargeur(); x++ ){
               for( y = 0; y < image.getHauteur(); y++ ) {
+                Pixel pix = Pixel((double)x,(double)y);
 
 
-                        //cvGet2D(imagef, y, x);
-                pix.setX(x);
-                pix.setY(y);
 
                 pix.setRGBCouleur(0, qRed(imagef.color(imagef.pixelIndex(x,y))));
                 pix.setRGBCouleur(1, qGreen(imagef.color(imagef.pixelIndex(x,y))));
