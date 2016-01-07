@@ -8,6 +8,7 @@ class Image : public IplImage{
     int largeur;
 
     public:
+    void setTableauPixel(int h, int l);
     void setPixel(int x, int y, Pixel p);
     int getHauteur();
     void setHauteur(int h);
