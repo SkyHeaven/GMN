@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     resize(500, 400);
 
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-    connect(ui->Grey,SIGNAL(clicked()),this,SLOT())
+    connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
 }
 
 bool MainWindow::loadFile(const QString &fileName)
@@ -102,6 +102,25 @@ void MainWindow::fitToWindow()
     scrollArea->setWidgetResizable(fitToWindow);
 
     updateActions();
+}
+
+void MainWindow::grey(){
+    QImage image(c.sauvegardeImage.at(c.indexVecteur).getLargeur(),c.sauvegardeImage.at(c.indexVecteur).getHauteur(),QImage::Format_RGB32);
+    QRgb value;
+    for (int i=0;i<image.height();i++){
+        for(int j=0;i<image.width();j++){
+            int v = c.sauvegardeImage.at(c.indexVecteur).tableauPixel[i][j].gris;
+            value = qRgb(v, v, v);
+            image.setPixel(i, j, value);
+        }
+    }
+    imageLabel->setPixmap(QPixmap::fromImage(image));
+    scaleFactor = 1.0;
+    fitToWindowAct->setEnabled(true);
+    updateActions();
+
+    if (!fitToWindowAct->isChecked())
+        imageLabel->adjustSize();
 }
 
 MainWindow::~MainWindow()

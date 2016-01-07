@@ -27,6 +27,7 @@ private:
     void updateActions();
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
+    void grey();
 
     Controle c;
 
