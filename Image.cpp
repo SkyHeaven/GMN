@@ -42,8 +42,8 @@ int* Image::getRGB(int h, int l){
 }
 
 void Image::setGray(){
-    for(int i= 0 ; i <largeur; i++){
-        for(int j =0; j < hauteur; j++){
+    for(int i= 0 ; i <hauteur; i++){
+        for(int j =0; j < largeur; j++){
             tableauPixel[i][j].setGraywithRGB(tableauPixel[i][j].getRGBCouleur());
         }
     }

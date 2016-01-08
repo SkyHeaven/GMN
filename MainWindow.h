@@ -20,7 +20,10 @@ public:
 private slots:
     void open();
     void fitToWindow();
+    bool save();
+    bool saveAs();
     void grey();
+    void documentWasModified();
 
 private:
     Ui::MainWindow *ui;
@@ -28,16 +31,23 @@ private:
     void updateActions();
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
-
+    QImage recupQImage();
+    bool maybeSave();
+    bool saveFile(const QString &fileName);
+    void setCurrentFile(const QString &fileName);
 
     Controle c;
 
     QLabel *imageLabel;
     QScrollArea *scrollArea;
     double scaleFactor;
+    QString curFile;
+    QPlainTextEdit *textEdit;
 
     QAction *openAct;
     QAction *fitToWindowAct;
+    QAction *saveAct;
+    QAction *saveAsAct;
 
 };
 

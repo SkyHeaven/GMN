@@ -45,9 +45,9 @@ void Controle::ouvertureImage(QImage imagef){
       for( int l = 0; l < image.getLargeur(); l++ ) {
         Pixel pix = Pixel((double)x,(double)y);
 
-        pix.setRGBCouleur(0, qRed(imagef.pixel(l,imagef.height()-h-1)));
-        pix.setRGBCouleur(1, qGreen(imagef.pixel(l,imagef.height()-h-1)));
-        pix.setRGBCouleur(2, qBlue(imagef.pixel(l,imagef.height()-h-1)));
+        pix.setRGBCouleur(0, qRed(imagef.pixel(l,h)));
+        pix.setRGBCouleur(1, qGreen(imagef.pixel(l,h)));
+        pix.setRGBCouleur(2, qBlue(imagef.pixel(l,h)));
 
     //                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
     //                    pix.setRGBCouleur(couleur, p.val[couleur]);

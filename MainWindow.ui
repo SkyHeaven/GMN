@@ -68,6 +68,8 @@
      <string>File</string>
     </property>
     <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
+    <addaction name="action_Save_As"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -159,6 +161,22 @@
    </property>
    <property name="text">
     <string>fitToWindowAct</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_Save_As">
+   <property name="text">
+    <string>&amp;Save As..</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
