@@ -21,9 +21,7 @@ private slots:
     void open();
     void fitToWindow();
     bool save();
-    bool saveAs();
     void grey();
-    void documentWasModified();
 
 private:
     Ui::MainWindow *ui;
@@ -32,9 +30,10 @@ private:
     void scaleImage(double factor);
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
     QImage recupQImage();
-    bool maybeSave();
-    bool saveFile(const QString &fileName);
-    void setCurrentFile(const QString &fileName);
+    void afficherImage(QImage image);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
     Controle c;
 
@@ -43,11 +42,13 @@ private:
     double scaleFactor;
     QString curFile;
     QPlainTextEdit *textEdit;
+    QPoint origineSel,finSel;
+    QGraphicsView *sel;
+    QRubberBand *r;
 
     QAction *openAct;
     QAction *fitToWindowAct;
     QAction *saveAct;
-    QAction *saveAsAct;
 
 };
 

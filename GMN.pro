@@ -8,7 +8,7 @@ SOURCES += \
     Masque.cpp \
     Pixel.cpp \
     Image.cpp \
-    MainWindow.cpp \
+    MainWindow.cpp
 
 HEADERS += \
     Controle.h \
@@ -16,7 +16,7 @@ HEADERS += \
     Masque.h \
     Pixel.h \
     Image.h \
-    MainWindow.h \
+    MainWindow.h
 
 FORMS += \
     MainWindow.ui

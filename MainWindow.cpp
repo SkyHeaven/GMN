@@ -17,25 +17,29 @@ MainWindow::MainWindow(QWidget *parent) :
     openAct = ui->action_Open;
     fitToWindowAct = ui->actionFitToWindowAct;
     saveAct = ui->action_Save;
-    saveAsAct = ui->action_Save_As;
+
+
 
     imageLabel = new QLabel;
     imageLabel->setBackgroundRole(QPalette::Base);
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
 
+    r = new QRubberBand(QRubberBand::Rectangle,imageLabel);
+
     scrollArea = new QScrollArea;
     scrollArea->setBackgroundRole(QPalette::Dark);
     scrollArea->setWidget(imageLabel);
     setCentralWidget(scrollArea);
 
-    setWindowTitle(tr("Image Viewer"));
-    resize(500, 400);
+
+
+    setWindowTitle(tr("GMN"));
 
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
     connect(saveAct,SIGNAL(triggered()), this, SLOT(save()));
-    connect(saveAsAct,SIGNAL(triggered()), this, SLOT(saveAs()));
+    connect(ui->Crop, SIGNAL(toggled(bool)), this, SLOT(Crop()));
 
 }
 
@@ -56,14 +60,7 @@ bool MainWindow::loadFile(const QString &fileName)
     }
 
     imageLabel->setPixmap(QPixmap::fromImage(image));
-    scaleFactor = 1.0;
-    fitToWindowAct->setEnabled(true);
-    updateActions();
-
-    if (!fitToWindowAct->isChecked())
-        imageLabel->adjustSize();
-
-    setWindowFilePath(fileName);
+    afficherImage(image);
     c.ouvertureImage(image);
     return true;
 }
@@ -113,22 +110,15 @@ void MainWindow::grey(){
 
     QImage image= recupQImage();
     QRgb value;
-    c.getSauvegardeImage().at(c.getIndexVecteur()).setGray();
     for (int h=0;h<image.height();h++){
         for(int l=0;l<image.width();l++){
             int v = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getGris();
             value = qRgb(v, v, v);
             image.setPixel(l,h,value);
-
         }
     }
-    imageLabel->setPixmap(QPixmap::fromImage(image));
-    scaleFactor = 1.0;
-    fitToWindowAct->setEnabled(true);
-    updateActions();
+    afficherImage(image);
 
-    if (!fitToWindowAct->isChecked())
-        imageLabel->adjustSize();
 }
 
 QImage MainWindow::recupQImage(){
@@ -141,87 +131,97 @@ QImage MainWindow::recupQImage(){
             int* v = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getRGBCouleur();
             value = qRgb(v[0], v[1], v[2]);
             image.setPixel(l,h,value);
-
         }
     }
     return image;
 }
 
+void MainWindow::afficherImage(QImage image){
+    imageLabel->setPixmap(QPixmap::fromImage(image));
+    scaleFactor = 1.0;
+    fitToWindowAct->setEnabled(true);
+    updateActions();
+
+    if (!fitToWindowAct->isChecked())
+        imageLabel->adjustSize();
+}
+
 bool MainWindow::save()
 {
+    QString fichier = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
+    QImage image = recupQImage();
+    image.save(fichier);
+
 
 }
 
-bool MainWindow::saveAs()
-{
-    QFileDialog dialog(this);
-    dialog.setWindowModality(Qt::WindowModal);
-    dialog.setAcceptMode(QFileDialog::AcceptSave);
-    QStringList files;
-    if (dialog.exec())
-        files = dialog.selectedFiles();
-    else
-        return false;
 
-    return saveFile(files.at(0));
-}
-
-void MainWindow::documentWasModified()
+void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    setWindowModified(textEdit->document()->isModified());
-}
-
-bool MainWindow::maybeSave()
-{
-    if (textEdit->document()->isModified()) {
-        QMessageBox::StandardButton ret;
-        ret = QMessageBox::warning(this, tr("Application"),
-                     tr("The document has been modified.\n"
-                        "Do you want to save your changes?"),
-                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-        if (ret == QMessageBox::Save)
-            return save();
-        else if (ret == QMessageBox::Cancel)
-            return false;
+    r->hide();
+    if (event->button() == Qt::LeftButton && ui->Crop->isChecked()) {
+        origineSel.setX(event->pos().x() - ui->Outils->width());
+        origineSel.setY(event->pos().y() - ui->Outils->pos().y());
+        if(origineSel.x()<9){
+            origineSel.setX(0);
+        }
+        if(origineSel.y()<0){
+            origineSel.setY(0);
+        }
+        cout<<origineSel.x()<<endl;
+        cout<<origineSel.y()<<endl;
+        cout<<""<<endl;
     }
-    return true;
 }
 
-bool MainWindow::saveFile(const QString &fileName)
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    QFile file(fileName);
-    if (!file.open(QFile::WriteOnly | QFile::Text)) {
-        QMessageBox::warning(this, tr("Application"),
-                             tr("Cannot write file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
-        return false;
+    if (ui->Crop->isChecked()){
+        qreal x = origineSel.x(), y = origineSel.y(), w = event->pos().x() - origineSel.x() - ui->Outils->width(), h = event->pos().y() - origineSel.y() - ui->Outils->pos().y();
+        if(x > event->x()- ui->Outils->width()) {
+            x = event->x()- ui->Outils->width();
+            w *= -1;
+        }
+        if(y > event->y()- ui->Outils->pos().y()) {
+            y = event->y()- ui->Outils->pos().y();
+            h *= -1;
+        }
+
+        if (x + w > imageLabel->width()) {
+            w = imageLabel->width() - x;
+        }
+        if (x < 0) {
+            w += x;
+            x = 0;
+        }
+        if (y + h > imageLabel->height()) {
+            h = imageLabel->height() - y;
+        }
+        if (y < 0) {
+            h += y;
+            y = 0;
+        }
+        r->setGeometry(x, y, w, h);
+        r->show();
     }
-
-    QTextStream out(&file);
-#ifndef QT_NO_CURSOR
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-#endif
-    out << textEdit->toPlainText();
-#ifndef QT_NO_CURSOR
-    QApplication::restoreOverrideCursor();
-#endif
-
-    setCurrentFile(fileName);
-    statusBar()->showMessage(tr("File saved"), 2000);
-    return true;
 }
 
-void MainWindow::setCurrentFile(const QString &fileName)
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    curFile = fileName;
-    textEdit->document()->setModified(false);
-    setWindowModified(false);
+    if (event->button() == Qt::LeftButton && ui->Crop->isChecked()) {
+        finSel.setX(event->pos().x() - ui->Outils->width());
+        finSel.setY(event->pos().y() - ui->Outils->pos().y());
+        if(finSel.x()<9){
+            finSel.setX(0);
+        }
+        if(finSel.y()<0){
+            finSel.setY(0);
+        }
+        cout<<finSel.x()<<endl;
+        cout<<finSel.y()<<endl;
+        cout<<""<<endl;
 
-    QString shownName = curFile;
-    if (curFile.isEmpty())
-        shownName = "untitled.txt";
-    setWindowFilePath(shownName);
+    }
 }
 
 MainWindow::~MainWindow()
