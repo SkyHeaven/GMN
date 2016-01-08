@@ -49,7 +49,36 @@ void Image::setGray(){
     }
 }
 
-Image Image::cropImage(Image img,Pixel pixel1,Pixel pixel2){
+void Image::setYUV(){
+    for(int i= 0 ; i <hauteur; i++){
+        for(int j =0; j < largeur; j++){
+            tableauPixel[i][j].setYUVwithRGB(tableauPixel[i][j].getRGBCouleur());
+        }
+    }
+}
+
+void Image::setTableauCourant(int c){
+    for(int i= 0 ; i <hauteur; i++){
+        for(int j =0; j < largeur; j++){
+            tableauPixel[i][j].setEtatCourant(c);
+        }
+    }
+}
+Image Image::cloneImage(){
+    Image img;
+    img.setHauteur(hauteur);
+    img.setLargeur(largeur);
+    for(int i = 0; i < hauteur; i++){
+        for(int j = 0; j < largeur; j++){
+            Pixel p = Pixel(j,i);
+            img.setPixel(j,i,p);
+
+        }
+    }
+    return img;
+}
+
+Image Image::cropImage(Pixel pixel1,Pixel pixel2){
     Image imgRes;
     imgRes.setHauteur(pixel2.getY() - pixel1.getY());
     imgRes.setLargeur(pixel2.getX() - pixel1.getX());
@@ -58,7 +87,7 @@ Image Image::cropImage(Image img,Pixel pixel1,Pixel pixel2){
 
     for(int i = pixel1.getY(); i < pixel2.getY(); i++){
         for(int j = pixel1.getX(); j < pixel2.getX(); j++){
-            imgRes.setPixel(j-diffY,i-diffX, img.getTableauPixel()[i][j]);
+            imgRes.setPixel(j-diffY,i-diffX, this->getTableauPixel()[i][j]);
         }
     }
     return imgRes;

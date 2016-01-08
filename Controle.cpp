@@ -2,8 +2,6 @@
 #include <iostream>
 #include <string>
 #include "Controle.h"
-#include <opencv2/opencv.hpp>
-
 using namespace std;
 
 
@@ -32,8 +30,6 @@ void Controle::ouvertureImage(QImage imagef){
     //        reader.setAutoTransform(true);
     //        const QImage imagef = reader.read();
 
-    int x, y, couleur;
-    CvScalar p;
     Image image;
 
 
@@ -43,8 +39,7 @@ void Controle::ouvertureImage(QImage imagef){
 
     for( int h = 0; h < image.getHauteur(); h++ ){
       for( int l = 0; l < image.getLargeur(); l++ ) {
-        Pixel pix = Pixel((double)x,(double)y);
-
+        Pixel pix = Pixel((double)l,(double)h);
         pix.setRGBCouleur(0, qRed(imagef.pixel(l,h)));
         pix.setRGBCouleur(1, qGreen(imagef.pixel(l,h)));
         pix.setRGBCouleur(2, qBlue(imagef.pixel(l,h)));
@@ -54,6 +49,15 @@ void Controle::ouvertureImage(QImage imagef){
     //                }
         image.setPixel(h,l,pix);
        }
+        image.setGray();
+        image.setYUV();
+        //Couleur c = rgbE;
+        //Couleur::enumCouleur c;
+//        c = Couleur.enumCouleur. rgb;
+//        Couleur.enumCouleur c = Couleur.rgb;
+
+//        c.enumCouleur enumC  = Couleur.rgb;
+        image.setTableauCourant(1);
     }
 
     indexVecteur =0;
@@ -61,7 +65,7 @@ void Controle::ouvertureImage(QImage imagef){
 }
 
     void Controle::affichageImage(Image img){
-        cout << "beubeu" << endl;
+
     }
     int* Controle::affichageCouleurRGB(int h, int l){
         Image img = sauvegardeImage.at(indexVecteur);
@@ -105,8 +109,15 @@ void Controle::ouvertureImage(QImage imagef){
     }
 
     Image Controle::crop(Image img, Pixel pixel1, Pixel pixel2){
+        Image imgRes = img.cropImage(pixel1, pixel2);
+        ajoutOperation(imgRes);
+        return imgRes;
+    }
+    void Controle::afficherGris(){
+        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+        img.setTableauCourant(3);
         ajoutOperation(img);
-        return img.cropImage(img, pixel1, pixel2);
+
     }
 
     void Controle::redimension(Image img, string option, int l, int h){

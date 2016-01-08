@@ -1,7 +1,6 @@
 #ifndef CONTROLE_H
 #define CONTROLE_H
 #include <QImage>
-#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -27,6 +26,7 @@ class Controle{
     Image filtrage(Image img); //ici creation nouvelle image
     Image amelioration(Image img); //ici creation nouvelle image
     Image crop(Image img, Pixel pixel1, Pixel pixel2);
+    void afficherGris();
     void redimension(Image img, std::string option, int l, int h);
     Image afficherHistogramme(Pixel pixel, std::string optionCoul);
 

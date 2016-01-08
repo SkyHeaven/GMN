@@ -1,8 +1,7 @@
 #ifndef PIXEL_H
 #define PIXEL_H
 #define NBCOULEUR 3
-#include <opencv2/opencv.hpp>
-
+//#include "Couleur.h"
 class Pixel {
     private:
     double x;
@@ -23,7 +22,7 @@ class Pixel {
     void setY(int value);
     void setRGBCouleur(int ind, int val);
     int* getRGBCouleur();
-    void setEtatCourant(int ind, int val);
+    void setEtatCourant(int c);
     int* getEtatCourant();
 
 

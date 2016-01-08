@@ -1,5 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
+#include <QImage>
+#include <iostream>
+#include <string>
 #include "Pixel.h"
 class Image {
     private:
@@ -17,7 +20,10 @@ class Image {
     void setLargeur(int l);
     int* getRGB(int h, int l);
     void setGray();
-    Image cropImage(Image img,Pixel pixel1,Pixel pixel2);
+    void setYUV();
+    void setTableauCourant(int c);
+    Image cloneImage();
+    Image cropImage(Pixel pixel1,Pixel pixel2);
 
 };
 

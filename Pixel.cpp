@@ -35,6 +35,8 @@ void Pixel::setYUVwithRGB(int rgb[]){
 
 }
 
+
+
 void Pixel::setGraywithRGB(int rgb[]){
     double g =0;
     double tab[NBCOULEUR];
@@ -73,8 +75,21 @@ int* Pixel::getRGBCouleur(){
     return rgb;
 }
 
-void Pixel::setEtatCourant(int ind, int val){
-    etatCourant[ind] = val;
+void Pixel::setEtatCourant(int c){
+    switch(c){
+    case 1 :
+        for(int ind=0; ind <NBCOULEUR; ind++){
+            etatCourant[ind] = rgb[ind];
+        }
+    case 2 :
+        for(int ind=0; ind <NBCOULEUR; ind++){
+            etatCourant[ind] = yuv[ind];
+        }
+    case 3 :
+        for(int ind=0; ind <NBCOULEUR; ind++){
+            etatCourant[ind] = gris;
+        }
+    }
 }
 
 int* Pixel::getEtatCourant(){
