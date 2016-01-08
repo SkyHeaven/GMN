@@ -10,8 +10,6 @@ Pixel **Image::getTableauPixel() const
 }
 
 void Image::setTableauPixel(int h, int l){
-    
-    
     tableauPixel = (Pixel**)malloc(h * sizeof(Pixel*));
     for(int i = 0; i<h;i++){
         tableauPixel[i] = (Pixel*)malloc(l* sizeof(Pixel));
@@ -81,13 +79,17 @@ Image Image::cloneImage(){
 
 Image Image::cropImage(Pixel pixel1,Pixel pixel2){
     Image imgRes;
-    imgRes.setHauteur(pixel2.getY() - pixel1.getY());
-    imgRes.setLargeur(pixel2.getX() - pixel1.getX());
-    int diffX = pixel1.getX();
-    int diffY = pixel1.getY();
+    int minX = min(pixel1.getX(), pixel2.getX());
+    int minY = min(pixel1.getY(), pixel2.getY());
+    int maxX = max(pixel1.getX(), pixel2.getX());
+    int maxY = max(pixel1.getY(), pixel2.getY());
+    int diffX = maxX - minX;
+    int diffY = maxY - minY;
 
-    for(int i = pixel1.getY(); i < pixel2.getY(); i++){
-        for(int j = pixel1.getX(); j < pixel2.getX(); j++){
+    imgRes.setHauteur(maxY - minY);
+    imgRes.setLargeur(maxX - minX);
+    for(int i = minY; i < maxY; i++){
+        for(int j = minX; j < maxX; j++){
             imgRes.setPixel(j-diffY,i-diffX, this->getTableauPixel()[i][j]);
         }
     }
