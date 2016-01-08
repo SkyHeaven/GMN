@@ -48,3 +48,18 @@ void Image::setGray(){
         }
     }
 }
+
+Image Image::cropImage(Image img,Pixel pixel1,Pixel pixel2){
+    Image imgRes;
+    imgRes.setHauteur(pixel2.getY() - pixel1.getY());
+    imgRes.setLargeur(pixel2.getX() - pixel1.getX());
+    int diffX = pixel1.getX();
+    int diffY = pixel1.getY();
+
+    for(int i = pixel1.getY(); i < pixel2.getY(); i++){
+        for(int j = pixel1.getX(); j < pixel2.getX(); j++){
+            imgRes.setPixel(j-diffY,i-diffX, img.getTableauPixel()[i][j]);
+        }
+    }
+    return imgRes;
+}

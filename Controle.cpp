@@ -105,7 +105,8 @@ void Controle::ouvertureImage(QImage imagef){
     }
 
     Image Controle::crop(Image img, Pixel pixel1, Pixel pixel2){
-        //return NULL;
+        ajoutOperation(img);
+        return img.cropImage(img, pixel1, pixel2);
     }
 
     void Controle::redimension(Image img, string option, int l, int h){

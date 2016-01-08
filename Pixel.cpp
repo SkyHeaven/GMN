@@ -49,12 +49,20 @@ int* Pixel::getYUV(int y, int u, int v){
     return yuv;
 }
 
-void setX(double x){
-    x = x;
+int Pixel::getX(){
+    return x;
 }
 
-void setY(double y){
-    y = y;
+void Pixel::setX(int value){
+    x = value;
+}
+
+int Pixel::getY(){
+    return y;
+}
+
+void Pixel::setY(int value){
+    y = value;
 }
 
 void Pixel::setRGBCouleur(int ind, int val){
@@ -64,3 +72,12 @@ void Pixel::setRGBCouleur(int ind, int val){
 int* Pixel::getRGBCouleur(){
     return rgb;
 }
+
+void Pixel::setEtatCourant(int ind, int val){
+    etatCourant[ind] = val;
+}
+
+int* Pixel::getEtatCourant(){
+    return etatCourant;
+}
+

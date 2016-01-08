@@ -10,16 +10,22 @@ class Pixel {
     int rgb[NBCOULEUR];
     int yuv[NBCOULEUR];
     int gris;
+    int etatCourant[NBCOULEUR];
 
     public:
     Pixel(double x , double y);
     int* getYUV(int y, int u, int v);
     void setYUVwithRGB(int rgb[]);
     void setGraywithRGB(int rgb[]);
-    void setX(double x);
-    void setY(double y);
+    int getX();
+    void setX(int value);
+    int getY();
+    void setY(int value);
     void setRGBCouleur(int ind, int val);
     int* getRGBCouleur();
+    void setEtatCourant(int ind, int val);
+    int* getEtatCourant();
+
 
     // methodes de conversion (grisToRGB grisToYUV...)
     int getGris() const;
