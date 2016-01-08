@@ -111,8 +111,6 @@ void MainWindow::fitToWindow()
 }
 
 void MainWindow::grey(){
-
-
     c.afficherGris();
     QImage image= recupQImage();
     afficherImage(image);

@@ -22,6 +22,7 @@ private slots:
     void fitToWindow();
     bool save();
     void grey();
+    void crop();
 
 private:
     Ui::MainWindow *ui;

@@ -36,7 +36,6 @@ void Controle::ouvertureImage(QImage imagef){
     image.setHauteur(imagef.height());
     image.setLargeur(imagef.width());
     image.setTableauPixel(imagef.height(),imagef.width());
-
     for( int h = 0; h < image.getHauteur(); h++ ){
       for( int l = 0; l < image.getLargeur(); l++ ) {
         Pixel pix = Pixel((double)l,(double)h);
@@ -49,19 +48,21 @@ void Controle::ouvertureImage(QImage imagef){
     //                }
         image.setPixel(h,l,pix);
        }
-        image.setGray();
-        image.setYUV();
+
         //Couleur c = rgbE;
         //Couleur::enumCouleur c;
 //        c = Couleur.enumCouleur. rgb;
 //        Couleur.enumCouleur c = Couleur.rgb;
 
 //        c.enumCouleur enumC  = Couleur.rgb;
-        image.setTableauCourant(1);
-    }
 
+    }
+    image.setGray();
+    image.setYUV();
+    image.setTableauCourant(1);
     indexVecteur =0;
     sauvegardeImage.insert(sauvegardeImage.begin(),image);
+
 }
 
     void Controle::affichageImage(Image img){
@@ -94,8 +95,10 @@ void Controle::ouvertureImage(QImage imagef){
 
     void Controle::ajoutOperation(Image img){ // A VERIFIER EN CAS DE SEG FAULT
         indexVecteur ++;
-        for(int i = sauvegardeImage.size(); i >= indexVecteur; i--){
-            sauvegardeImage.erase(sauvegardeImage.begin() + i);
+        if (sauvegardeImage.size() > indexVecteur){
+            for(int i = sauvegardeImage.size(); i > indexVecteur; i--){
+                sauvegardeImage.erase(sauvegardeImage.begin() + i -1);
+            }
         }
         sauvegardeImage.insert(sauvegardeImage.begin()+ indexVecteur, img);
     }
@@ -114,6 +117,7 @@ void Controle::ouvertureImage(QImage imagef){
         return imgRes;
     }
     void Controle::afficherGris(){
+
         Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         img.setTableauCourant(3);
         ajoutOperation(img);

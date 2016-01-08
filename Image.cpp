@@ -68,11 +68,12 @@ Image Image::cloneImage(){
     Image img;
     img.setHauteur(hauteur);
     img.setLargeur(largeur);
+    img.setTableauPixel(hauteur,largeur);
     for(int i = 0; i < hauteur; i++){
         for(int j = 0; j < largeur; j++){
-            Pixel p = Pixel(j,i);
-            img.setPixel(j,i,p);
-
+            Pixel p = Pixel((double)j,(double)i);
+            p = tableauPixel[i][j];
+            img.setPixel(i,j,p);
         }
     }
     return img;
