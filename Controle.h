@@ -25,7 +25,7 @@ class Controle{
     void ajoutOperation(Image img);
     Image filtrage(Image img); //ici creation nouvelle image
     Image amelioration(Image img); //ici creation nouvelle image
-    Image crop(Image img, Pixel pixel1, Pixel pixel2);
+    Image crop(int h1, int l1, int h2, int l2);
     void afficherGris();
     void redimension(Image img, std::string option, int l, int h);
     Image afficherHistogramme(Pixel pixel, std::string optionCoul);

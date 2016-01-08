@@ -23,7 +23,7 @@ class Image {
     void setYUV();
     void setTableauCourant(int c);
     Image cloneImage();
-    Image cropImage(Pixel pixel1,Pixel pixel2);
+    Image cropImage(int h1, int l1, int h2, int l2);
 
 };
 

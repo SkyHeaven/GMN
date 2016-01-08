@@ -43,9 +43,6 @@ void Controle::ouvertureImage(QImage imagef){
         pix.setRGBCouleur(1, qGreen(imagef.pixel(l,h)));
         pix.setRGBCouleur(2, qBlue(imagef.pixel(l,h)));
 
-    //                for( couleur = 0; couleur < NBCOULEUR; couleur++ ){
-    //                    pix.setRGBCouleur(couleur, p.val[couleur]);
-    //                }
         image.setPixel(h,l,pix);
        }
 
@@ -57,6 +54,7 @@ void Controle::ouvertureImage(QImage imagef){
 //        c.enumCouleur enumC  = Couleur.rgb;
 
     }
+
     image.setGray();
     image.setYUV();
     image.setTableauCourant(1);
@@ -111,8 +109,8 @@ void Controle::ouvertureImage(QImage imagef){
         //return NULL;
     }
 
-    Image Controle::crop(Image img, Pixel pixel1, Pixel pixel2){
-        Image imgRes = img.cropImage(pixel1, pixel2);
+    Image Controle::crop(int h1, int l1, int h2, int l2){
+        Image imgRes = sauvegardeImage.at(indexVecteur).cropImage(h1,l1,h2,l2);
         ajoutOperation(imgRes);
         return imgRes;
     }

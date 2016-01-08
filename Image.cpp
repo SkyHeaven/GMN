@@ -77,12 +77,12 @@ Image Image::cloneImage(){
     return img;
 }
 
-Image Image::cropImage(Pixel pixel1,Pixel pixel2){
+Image Image::cropImage(int h1, int l1, int h2, int l2){
     Image imgRes;
-    int minX = min(pixel1.getX(), pixel2.getX());
-    int minY = min(pixel1.getY(), pixel2.getY());
-    int maxX = max(pixel1.getX(), pixel2.getX());
-    int maxY = max(pixel1.getY(), pixel2.getY());
+    int minX = min(l1,l2);
+    int minY = min(h1,h2);
+    int maxX = max(l1,l2);
+    int maxY = max(h1,h2);
     int diffX = maxX - minX;
     int diffY = maxY - minY;
 
