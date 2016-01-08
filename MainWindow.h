@@ -23,6 +23,8 @@ private slots:
     bool save();
     void grey();
     void crop();
+    void undo();
+    void redo();
 
 private:
     Ui::MainWindow *ui;
@@ -50,6 +52,8 @@ private:
     QAction *openAct;
     QAction *fitToWindowAct;
     QAction *saveAct;
+    QAction *undoAct;
+    QAction *redoAct;
 
 };
 

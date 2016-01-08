@@ -81,6 +81,8 @@
      <string>Edit</string>
     </property>
     <addaction name="actionFitToWindowAct"/>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -132,22 +134,13 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>110</y>
+       <y>130</y>
        <width>99</width>
        <height>27</height>
       </rect>
      </property>
      <property name="text">
       <string>Crop</string>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
      </property>
     </widget>
    </widget>
@@ -196,6 +189,22 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
   </action>
  </widget>

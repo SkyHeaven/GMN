@@ -42,7 +42,6 @@ void Controle::ouvertureImage(QImage imagef){
         pix.setRGBCouleur(0, qRed(imagef.pixel(l,h)));
         pix.setRGBCouleur(1, qGreen(imagef.pixel(l,h)));
         pix.setRGBCouleur(2, qBlue(imagef.pixel(l,h)));
-
         image.setPixel(h,l,pix);
        }
 
@@ -71,20 +70,18 @@ void Controle::ouvertureImage(QImage imagef){
         return img.getRGB(h,l);
     }
 
-    Image Controle::undo(){
+    void Controle::undo(){
         if(indexVecteur > 0){
             indexVecteur --;
-            return sauvegardeImage.at(indexVecteur);
         }
         else{
             cout << "impossible de continuer a annuler" << endl;
         }
     }
 
-    Image Controle::redo(){
+    void Controle::redo(){
         if(indexVecteur < sauvegardeImage.size()-1){
             indexVecteur ++;
-            return sauvegardeImage.at(indexVecteur);
         }
         else{
             cout << "Aucun redo supplementaire" << endl;
@@ -109,10 +106,9 @@ void Controle::ouvertureImage(QImage imagef){
         //return NULL;
     }
 
-    Image Controle::crop(int h1, int l1, int h2, int l2){
+    void Controle::crop(int h1, int l1, int h2, int l2){
         Image imgRes = sauvegardeImage.at(indexVecteur).cropImage(h1,l1,h2,l2);
         ajoutOperation(imgRes);
-        return imgRes;
     }
     void Controle::afficherGris(){
 

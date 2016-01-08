@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     openAct = ui->action_Open;
     fitToWindowAct = ui->actionFitToWindowAct;
     saveAct = ui->action_Save;
+    undoAct = ui->actionUndo;
+    redoAct = ui->actionRedo;
 
 
 
@@ -43,7 +45,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
     connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
     connect(saveAct,SIGNAL(triggered()), this, SLOT(save()));
+    connect(undoAct,SIGNAL(triggered()), this, SLOT(undo()));
+    connect(redoAct,SIGNAL(triggered()), this, SLOT(redo()));
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
+
 
 }
 
@@ -64,6 +69,8 @@ bool MainWindow::loadFile(const QString &fileName)
     imageLabel->setPixmap(QPixmap::fromImage(image));
     afficherImage(image);
     c.ouvertureImage(image);
+    QImage im = recupQImage();
+    afficherImage(im);
     return true;
 }
 
@@ -111,12 +118,9 @@ void MainWindow::fitToWindow()
 }
 
 void MainWindow::grey(){
-
-
     c.afficherGris();
     QImage image= recupQImage();
     afficherImage(image);
-
 }
 
 QImage MainWindow::recupQImage(){
@@ -125,8 +129,10 @@ QImage MainWindow::recupQImage(){
     QRgb value;
     for (int h=0;h<image.height();h++){
         for(int l=0;l<image.width();l++){
-            int* v = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant();
-            value = qRgb(v[0], v[1], v[2]);
+            int v0 = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[0];
+            int v1 = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[1];
+            int v2 = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[2];
+            value = qRgb(v0, v1, v2);
             image.setPixel(l,h,value);
         }
     }
@@ -153,12 +159,25 @@ bool MainWindow::save()
 
 void MainWindow::crop(){
     if (origineSel != finSel){
-
+        c.crop(origineSel.y(),origineSel.x(),finSel.y(),finSel.x());
+        QImage image= recupQImage();
+        afficherImage(image);
     }
     r->hide();
     origineSel = finSel;
 }
 
+void MainWindow::undo(){
+    c.undo();
+    QImage image= recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::redo(){
+    c.redo();
+    QImage image= recupQImage();
+    afficherImage(image);
+}
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {

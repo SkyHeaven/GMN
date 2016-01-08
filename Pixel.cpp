@@ -81,14 +81,17 @@ void Pixel::setEtatCourant(int c){
         for(int ind=0; ind <NBCOULEUR; ind++){
             etatCourant[ind] = rgb[ind];
         }
+        break;
     case 2 :
         for(int ind=0; ind <NBCOULEUR; ind++){
             etatCourant[ind] = yuv[ind];
         }
+        break;
     case 3 :
         for(int ind=0; ind <NBCOULEUR; ind++){
             etatCourant[ind] = gris;
         }
+        break;
     }
 }
 

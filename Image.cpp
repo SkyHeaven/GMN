@@ -88,10 +88,15 @@ Image Image::cropImage(int h1, int l1, int h2, int l2){
 
     imgRes.setHauteur(maxY - minY);
     imgRes.setLargeur(maxX - minX);
+    imgRes.setTableauPixel(maxY - minY,maxX - minX);
     for(int i = minY; i < maxY; i++){
         for(int j = minX; j < maxX; j++){
-            imgRes.setPixel(j-diffY,i-diffX, this->getTableauPixel()[i][j]);
+            Pixel p = Pixel((double)j-minX,(double)i-minY);
+            p = tableauPixel[i][j];
+            imgRes.setPixel(i-minY,j-minX, p);
         }
     }
+    imgRes.setGray();
+    imgRes.setYUV();
     return imgRes;
 }
