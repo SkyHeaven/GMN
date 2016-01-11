@@ -20,6 +20,10 @@ void Image::setPixel(int h, int l, Pixel p){
     tableauPixel[h][l] = p;
 }
 
+Pixel Image::getPixel(int h, int l){
+    return tableauPixel[h][l];
+}
+
 int Image::getHauteur(){
     return hauteur;
 }
@@ -37,6 +41,14 @@ void Image::setLargeur(int l){
 
 int* Image::getRGB(int h, int l){
     return tableauPixel[h][l].getRGBCouleur();
+}
+
+int* Image::getYUV(int h, int l){
+    return tableauPixel[h][l].getYUVCouleur();
+}
+
+int Image::getGray(int h, int l){
+    return tableauPixel[h][l].getGrayCouleur();
 }
 
 void Image::setGray(){
@@ -99,4 +111,38 @@ Image Image::cropImage(int h1, int l1, int h2, int l2){
     imgRes.setGray();
     imgRes.setYUV();
     return imgRes;
+}
+
+Histogramme* Image::initHistogramme(string optionCoul){
+    Histogramme tabHist[NBCOULEUR];
+    for(int i = 0; i < NBCOULEUR; i ++){
+        tabHist[i].initZero();
+    }
+
+    if(optionCoul == "rgb"){
+        for(int i= 0; i < getHauteur(); i++){
+            for(int j = 0; j < getLargeur(); j++){
+                Pixel p = getPixel(i,j);
+                int* rgbRep = p.getRGBCouleur();
+
+                for(int k = 0; k < NBCOULEUR; k++){
+                    tabHist[k].incrementeValeurHistogramme(rgbRep[k]);
+                }
+            }
+        }
+        return tabHist;
+    }
+    if(optionCoul == "yuv"){
+        for(int i= 0; i < getHauteur(); i++){
+            for(int j = 0; j < getLargeur(); j++){
+                Pixel p = getPixel(i,j);
+                int* yuvRep = p.getYUVCouleur();
+                for(int k = 0; k < NBCOULEUR; k++){
+                    tabHist[k].incrementeValeurHistogramme(yuvRep[k]);
+                }
+            }
+        }
+        return tabHist;
+    }
+
 }

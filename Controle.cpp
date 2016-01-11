@@ -70,6 +70,21 @@ void Controle::ouvertureImage(QImage imagef){
         return img.getRGB(h,l);
     }
 
+    int* Controle::affichageCouleurYUV(int h, int l){
+        Image img = sauvegardeImage.at(indexVecteur);
+        return img.getYUV(h,l);
+    }
+
+    int Controle::affichageCouleurGris(int h , int l){
+        Image img = sauvegardeImage.at(indexVecteur);
+        return img.getGray(h,l);
+    }
+
+    Pixel Controle::affichageCouleur(int h, int l){ //FAIRE MALLOC ICI EN CAS PROBLEME
+        Image img = sauvegardeImage.at(indexVecteur);
+        return img.getPixel(h,l);
+    }
+
     void Controle::undo(){
         if(indexVecteur > 0){
             indexVecteur --;
@@ -122,6 +137,9 @@ void Controle::ouvertureImage(QImage imagef){
         //return NULL;
     }
 
-    Image Controle::afficherHistogramme(Pixel pixel, string optionCoul){
-        //return NULL;
-    }
+    Histogramme* Controle::afficherHistogramme(Image img, string optionCoul){
+        Histogramme* tabHist;
+        tabHist = new Histogramme[NBCOULEUR];
+        tabHist = img.initHistogramme(optionCoul);
+        return tabHist;
+}

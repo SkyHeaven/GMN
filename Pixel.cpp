@@ -47,7 +47,11 @@ void Pixel::setGraywithRGB(int rgb[]){
     gris = (int)g;
 }
 
-int* Pixel::getYUV(int y, int u, int v){
+int Pixel::getGrayCouleur(){
+    return gris;
+}
+
+int* Pixel::getYUVCouleur(){
     return yuv;
 }
 

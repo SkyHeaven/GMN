@@ -6,6 +6,7 @@
 #include <vector>
 #include "Image.h"
 #include "Pixel.h"
+#include "Histogramme.h"
 
 class Controle{
     private:
@@ -20,6 +21,9 @@ class Controle{
     void ouvertureImage(QImage imagef);
     void affichageImage(Image img);
     int* affichageCouleurRGB(int h, int l);
+    int* affichageCouleurYUV(int h, int l);
+    int affichageCouleurGris(int h , int l);
+    Pixel affichageCouleur(int h, int l);
     void undo();
     void redo();
     void ajoutOperation(Image img);
@@ -28,7 +32,7 @@ class Controle{
     void crop(int h1, int l1, int h2, int l2);
     void afficherGris();
     void redimension(Image img, std::string option, int l, int h);
-    Image afficherHistogramme(Pixel pixel, std::string optionCoul);
+    Histogramme* afficherHistogramme(Image img, std::string optionCoul);
 
 
 };

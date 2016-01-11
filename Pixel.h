@@ -13,9 +13,10 @@ class Pixel {
 
     public:
     Pixel(double x , double y);
-    int* getYUV(int y, int u, int v);
     void setYUVwithRGB(int rgb[]);
     void setGraywithRGB(int rgb[]);
+    int getGrayCouleur();
+    int* getYUVCouleur();
     int getX();
     void setX(int value);
     int getY();
