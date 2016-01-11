@@ -1,14 +1,18 @@
 #ifndef HISTOGRAMME_H
+#include <malloc.h>
+#include <iostream>
+#include <string>
 #define HISTOGRAMME_H
 #define NBNUANCES 256
-#define NBMAX 100
 
 class Histogramme{
     private:
-    int tabHist[NBMAX][NBNUANCES];
+    int tableauHistogramme[NBNUANCES];
     public:
+    void setHistogramme();
+    void initZero();
     Histogramme egaliser(Histogramme hist);
-
+    void incrementeValeurHistogramme(int val);
 };
 
 #endif // HISTOGRAMME_H
