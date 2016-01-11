@@ -112,12 +112,17 @@ void Controle::ouvertureImage(QImage imagef){
         }
         sauvegardeImage.insert(sauvegardeImage.begin()+ indexVecteur, img);
     }
+    void Controle::flou(){
+        Image img = sauvegardeImage.at(indexVecteur);
+        img.flouImage();
+        ajoutOperation(img);
+    }
 
-    Image Controle::filtrage(Image img){ //ici creation nouvelle image
+    void Controle::filtrage(Image img){ //ici creation nouvelle image
         //return NULL;
     }
 
-    Image Controle::amelioration(Image img){ //ici creation nouvelle image
+    void Controle::amelioration(Image img){ //ici creation nouvelle image
         //return NULL;
     }
 
@@ -143,3 +148,8 @@ void Controle::ouvertureImage(QImage imagef){
         tabHist = img.initHistogramme(optionCoul);
         return tabHist;
 }
+    Image Controle::rotation(string option){
+        Image img = sauvegardeImage.at(indexVecteur);
+        img.rotationTableauPixel(option);
+        ajoutOperation(img);
+    }

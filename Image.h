@@ -5,6 +5,8 @@
 #include <string>
 #include "Pixel.h"
 #include "Histogramme.h"
+#include "Masque.h"
+
 class Image {
     private:
     Pixel **tableauPixel;
@@ -29,6 +31,9 @@ class Image {
     Image cloneImage();
     Image cropImage(int h1, int l1, int h2, int l2);
     Histogramme* initHistogramme(std::string optionCoul);
+    Image rotationTableauPixel(std::string option);
+    void rotationPixel(int h, int l, int i,int j,std::string option);
+    void flouImage();
 
 };
 

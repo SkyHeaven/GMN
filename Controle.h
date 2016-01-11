@@ -7,6 +7,7 @@
 #include "Image.h"
 #include "Pixel.h"
 #include "Histogramme.h"
+#include "Masque.h"
 
 class Controle{
     private:
@@ -27,12 +28,14 @@ class Controle{
     void undo();
     void redo();
     void ajoutOperation(Image img);
-    Image filtrage(Image img); //ici creation nouvelle image
-    Image amelioration(Image img); //ici creation nouvelle image
+    void flou();
+    void filtrage(Image img); //ici creation nouvelle image
+    void amelioration(Image img); //ici creation nouvelle image
     void crop(int h1, int l1, int h2, int l2);
     void afficherGris();
     void redimension(Image img, std::string option, int l, int h);
     Histogramme* afficherHistogramme(Image img, std::string optionCoul);
+    Image rotation(std::string option);
 
 
 };

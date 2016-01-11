@@ -119,30 +119,93 @@ Histogramme* Image::initHistogramme(string optionCoul){
         tabHist[i].initZero();
     }
 
-    if(optionCoul == "rgb"){
-        for(int i= 0; i < getHauteur(); i++){
-            for(int j = 0; j < getLargeur(); j++){
-                Pixel p = getPixel(i,j);
-                int* rgbRep = p.getRGBCouleur();
+    for(int i= 0; i < getHauteur(); i++){
+        for(int j = 0; j < getLargeur(); j++){
+            Pixel p = getPixel(i,j);
 
+            if(optionCoul == "rgb"){
+                int* rgbRep = p.getRGBCouleur();
                 for(int k = 0; k < NBCOULEUR; k++){
                     tabHist[k].incrementeValeurHistogramme(rgbRep[k]);
                 }
             }
-        }
-        return tabHist;
-    }
-    if(optionCoul == "yuv"){
-        for(int i= 0; i < getHauteur(); i++){
-            for(int j = 0; j < getLargeur(); j++){
-                Pixel p = getPixel(i,j);
+
+            else if(optionCoul == "yuv"){
                 int* yuvRep = p.getYUVCouleur();
                 for(int k = 0; k < NBCOULEUR; k++){
                     tabHist[k].incrementeValeurHistogramme(yuvRep[k]);
                 }
             }
         }
-        return tabHist;
     }
-
+    return tabHist;
 }
+
+Image Image::rotationTableauPixel(string option){
+    Image imgRes;
+    int h = getHauteur();
+    int l = getLargeur();
+    imgRes.setTableauPixel(h,l);
+
+    for(int i=0; i<h; i++){
+        for(int j=0; j<l; j++){
+         imgRes.rotationPixel(h,l,i,j,option);
+        }
+    }
+    return imgRes;
+}
+
+void Image::rotationPixel(int h, int l, int i, int j, string option){
+    if(option == "180"){
+        Pixel p = getPixel(h-i-1,l-j-1);
+        setPixel(i,j,p);
+    }
+    else if(option == "90D"){
+        Pixel p = getPixel(h-j-1,i);
+        setPixel(i,j,p);
+    }
+    else if(option =="90G"){ // VERIFIER que c est bien h-1-i et non l-1-i
+        Pixel p = getPixel(j,h-1-i);
+        setPixel(i,j,p);
+    }
+}
+
+void Image::flouImage(){
+    Masque mask = Masque(3);
+    mask.remplirMasque();
+    int hImg = getHauteur();
+    int lImg = getLargeur();
+    int lMask = mask.getLongueur();
+    int sumMask =0;
+    int *tabCol = new int[NBCOULEUR];
+    int *tabSum = new int[NBCOULEUR];
+
+    for(int i=0; i<NBCOULEUR; i++){ //init masque
+        tabSum[i] = 0;
+    }
+    for(int i= lMask/2; i<hImg - lMask/2; i++){
+        for(int j=lMask/2; j<lImg - lMask/2; j++){
+            Pixel p = Pixel(j,i);
+            sumMask = mask.sommeMasque();
+
+            for(int i2=0; i2<lMask; i2++){
+                for(int j2=0; j2<lMask; j2++){
+                    tabCol = getPixel(i,j).getRGBCouleur();
+                    for(int k=0; k<NBCOULEUR; k++){
+                        tabSum[k] += tabCol[k];
+                    }
+                }
+            }
+
+            for(int k=0; k<NBCOULEUR; k++){
+                tabSum[k] = tabSum[k]/sumMask;
+                p.setRGBCouleur(k,tabSum[k]);
+            }
+            setPixel(i,j,p);
+            // ATTENTION NE PAS OUBLIER DE SET COULEUR + ETAT COURANT
+            //MALLOC masque
+
+        }
+    }
+}
+

@@ -9,7 +9,6 @@ class Histogramme{
     private:
     int tableauHistogramme[NBNUANCES];
     public:
-    void setHistogramme();
     void initZero();
     Histogramme egaliser(Histogramme hist);
     void incrementeValeurHistogramme(int val);
