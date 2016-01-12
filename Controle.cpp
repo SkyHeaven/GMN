@@ -103,7 +103,7 @@ void Controle::ouvertureImage(QImage imagef){
         }
     }
 
-    void Controle::ajoutOperation(Image img){ // A VERIFIER EN CAS DE SEG FAULT
+    void Controle::ajoutOperation(Image img){ // GERER DESTRUCTEUR
         indexVecteur ++;
         if (sauvegardeImage.size() > indexVecteur){
             for(int i = sauvegardeImage.size(); i > indexVecteur; i--){
@@ -134,6 +134,7 @@ void Controle::ouvertureImage(QImage imagef){
 
         Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         img.setTableauCourant(3);
+        img.setNoRGB();
         ajoutOperation(img);
 
     }

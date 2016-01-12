@@ -8,7 +8,7 @@ class Pixel {
     double y;
     int rgb[NBCOULEUR];
     int yuv[NBCOULEUR];
-    int gris;
+    int gris;    
     int etatCourant[NBCOULEUR];
 
     public:

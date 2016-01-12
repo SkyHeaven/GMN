@@ -219,6 +219,7 @@ void Image::flouImage(){
                 }
 
             }
+            
             if(coul == "rgb"){
                 p.setYUVwithRGB(p.getRGBCouleur());
                 p.setGraywithRGB(p.getRGBCouleur());

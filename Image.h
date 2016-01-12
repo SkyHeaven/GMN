@@ -27,6 +27,8 @@ class Image {
     int getGray(int h, int l);
     void setGray();
     void setYUV();
+    void setNoYUV();
+    void setNoRGB();
     void setTableauCourant(int c);
     Image cloneImage();
     Image cropImage(int h1, int l1, int h2, int l2);
@@ -34,7 +36,8 @@ class Image {
     Image rotationTableauPixel(std::string option);
     void rotationPixel(int h, int l, int i,int j,std::string option);
     void flouImage();
-
+    std::string quelleCouleur();
+    //destructeur
 };
 
 #endif // IMAGE_H

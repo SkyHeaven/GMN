@@ -9,10 +9,13 @@ class Masque{
 
     public:
     Masque(int nb);
+    ~Masque();
     void remplirMasque();
     int getLongueur() const;
     void setLongueur(int value);
+    int getValeurTableauMasque(int h, int l);
     int sommeMasque();
+    //destructeur
 };
 
 #endif // MASQUE_H
