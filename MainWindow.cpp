@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "Controle.h"
+#include "ImageViewer.h"
 
 #include <iostream>
 #include <string>
@@ -21,17 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
     redoAct = ui->actionRedo;
 
 
-
-    imageLabel = new QLabel;
+    imageLabel = new ImageViewer();
     imageLabel->setBackgroundRole(QPalette::Base);
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
-
-    r = new QRubberBand(QRubberBand::Rectangle,imageLabel);
-
-    origineSel.setX(0);
-    origineSel.setY(0);
-    finSel = origineSel;
+    imageLabel->setMouseTracking(true);
+    imageLabel->setParent(ui->imageLabel);
 
     scrollArea = new QScrollArea;
     scrollArea->setBackgroundRole(QPalette::Dark);
@@ -48,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(undoAct,SIGNAL(triggered()), this, SLOT(undo()));
     connect(redoAct,SIGNAL(triggered()), this, SLOT(redo()));
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
-
+    connect(imageLabel, SIGNAL(sign_pip()), this, SLOT(pipette()));
 
 }
 
@@ -81,8 +77,6 @@ void MainWindow::open()
     const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
     QFileDialog dialog(this, tr("Open File"),picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
-    origineSel = finSel;
-    r->hide();
 
     //QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
     while (dialog.exec() == QDialog::Accepted && !loadFile(dialog.selectedFiles().first())) {    }
@@ -158,13 +152,11 @@ bool MainWindow::save()
 }
 
 void MainWindow::crop(){
-    if (origineSel != finSel){
-        c.crop(origineSel.y(),origineSel.x(),finSel.y(),finSel.x());
-        QImage image= recupQImage();
-        afficherImage(image);
-    }
-    r->hide();
-    origineSel = finSel;
+
+    c.crop(imageLabel->getOrigineSel().y(),imageLabel->getOrigineSel().x(),imageLabel->getFinSel().y(),imageLabel->getFinSel().x());
+    QImage image= recupQImage();
+    afficherImage(image);
+
 }
 
 void MainWindow::undo(){
@@ -179,64 +171,21 @@ void MainWindow::redo(){
     afficherImage(image);
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    r->hide();
-    if (event->button() == Qt::LeftButton) {
-        origineSel.setX(event->pos().x() - ui->Outils->width());
-        origineSel.setY(event->pos().y() - ui->Outils->pos().y());
-        if(origineSel.x()<9){
-            origineSel.setX(0);
-        }
-        if(origineSel.y()<0){
-            origineSel.setY(0);
-        }
-    }
-}
 
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
 
-        qreal x = origineSel.x(), y = origineSel.y(), w = event->pos().x() - origineSel.x() - ui->Outils->width(), h = event->pos().y() - origineSel.y() - ui->Outils->pos().y();
-        if(x > event->x()- ui->Outils->width()) {
-            x = event->x()- ui->Outils->width();
-            w *= -1;
-        }
-        if(y > event->y()- ui->Outils->pos().y()) {
-            y = event->y()- ui->Outils->pos().y();
-            h *= -1;
-        }
+void MainWindow::pipette(){
 
-        if (x + w > imageLabel->width()) {
-            w = imageLabel->width() - x;
-        }
-        if (x < 0) {
-            w += x;
-            x = 0;
-        }
-        if (y + h > imageLabel->height()) {
-            h = imageLabel->height() - y;
-        }
-        if (y < 0) {
-            h += y;
-            y = 0;
-        }
-        r->setGeometry(x, y, w, h);
-        r->show();
+    if(ui->Pipette->isChecked()){
+        cout<<"tamere"<<endl;
+        int *rgb = c.affichageCouleurRGB(imageLabel->getPipette().y(),imageLabel->getPipette().x());
+        int *yuv = c.affichageCouleurYUV(imageLabel->getPipette().y(),imageLabel->getPipette().x());
+        int gris = c.affichageCouleurGris(imageLabel->getPipette().y(),imageLabel->getPipette().x());
 
-}
+         QString st;
+         st = QString("Valeur RGB : %1, %2, %3 \n Valeur YUV : %4, %5, %6 \n Valeur gris : %7").arg(rgb[0]).arg(rgb[1]).arg(rgb[2]).arg(yuv[0]).arg(yuv[1]).arg(yuv[2]).arg(gris);
+         cout<<pip.y()<<"           "<<pip.x()<<endl;
+        ui->AffInfo->setPlainText(st);
 
-void MainWindow::mouseReleaseEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton) {
-        finSel.setX(event->pos().x() - ui->Outils->width());
-        finSel.setY(event->pos().y() - ui->Outils->pos().y());
-        if(finSel.x()<9){
-            finSel.setX(0);
-        }
-        if(finSel.y()<0){
-            finSel.setY(0);
-        }
     }
 }
 
