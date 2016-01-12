@@ -14,6 +14,7 @@ class Image {
     int largeur;
 
     public:
+    ~Image();
     void setTableauPixel(int h, int l);
     Pixel **getTableauPixel() const;
     void setPixel(int h, int l, Pixel p);

@@ -4,12 +4,28 @@
 
 using namespace std;
 
+Image::~Image(){
+    for(int i = 0 ; i < getHauteur() ; i++){
+        delete[] tableauPixel[i];
+     }
+     delete[] tableauPixel;
+}
+
+
 Pixel **Image::getTableauPixel() const
 {
     return tableauPixel;
 }
 
 void Image::setTableauPixel(int h, int l){
+
+//    tableauPixel = new Pixel*[h];
+//    for(int i = 0; i < h; ++i){
+//        tableauPixel[i] = new Pixel[l];
+//    }
+
+    // A VOIR si on peut enlever l utilisation de malloc
+
     tableauPixel = (Pixel**)malloc(h * sizeof(Pixel*));
     for(int i = 0; i<h;i++){
         tableauPixel[i] = (Pixel*)malloc(l* sizeof(Pixel));
@@ -145,6 +161,9 @@ Histogramme* Image::initHistogramme(string optionCoul){
                     tabHist[k].incrementeValeurHistogramme(yuvRep[k]);
                 }
             }
+//            else if(optionCoul == "gris"){
+
+//            }
         }
     }
     return tabHist;
@@ -219,6 +238,7 @@ void Image::flouImage(){
                 }
 
             }
+
             if(coul == "rgb"){
                 p.setYUVwithRGB(p.getRGBCouleur());
                 p.setGraywithRGB(p.getRGBCouleur());

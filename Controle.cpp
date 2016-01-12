@@ -107,11 +107,14 @@ void Controle::ouvertureImage(QImage imagef){
         indexVecteur ++;
         if (sauvegardeImage.size() > indexVecteur){
             for(int i = sauvegardeImage.size(); i > indexVecteur; i--){
+                Image img = sauvegardeImage.at(i-1); //copie superficielle
+                img.~Image(); //DESALOCATION tableauPixel
                 sauvegardeImage.erase(sauvegardeImage.begin() + i -1);
             }
         }
         sauvegardeImage.insert(sauvegardeImage.begin()+ indexVecteur, img);
     }
+
     void Controle::flou(){
         Image img = sauvegardeImage.at(indexVecteur);
         img.flouImage();
