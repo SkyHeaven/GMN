@@ -4,12 +4,12 @@
 
 using namespace std;
 
-Image::~Image(){
-    for(int i = 0 ; i < getHauteur() ; i++){
-        delete[] tableauPixel[i];
-     }
-     delete[] tableauPixel;
-}
+//Image::~Image(){
+//    for(int i = 0 ; i < getHauteur() ; i++){
+//        delete[] tableauPixel[i];
+//     }
+//     delete[] tableauPixel;
+//}
 
 
 Pixel **Image::getTableauPixel() const
@@ -171,30 +171,46 @@ Histogramme* Image::initHistogramme(string optionCoul){
 
 Image Image::rotationTableauPixel(string option){
     Image imgRes;
-    int h = getHauteur();
-    int l = getLargeur();
-    imgRes.setTableauPixel(h,l);
+    int h,l=0;
+
+    if(option == "180"){
+        h = getHauteur();
+        l = getLargeur();
+    }
+
+    else{
+        l = getHauteur();
+        h = getLargeur();
+    }
+
+     imgRes.setHauteur(h);
+     imgRes.setLargeur(l);
+     imgRes.setTableauPixel(h,l);
 
     for(int i=0; i<h; i++){
         for(int j=0; j<l; j++){
-         imgRes.rotationPixel(h,l,i,j,option);
+            Pixel p = rotationPixel(h,l,i,j,option);
+            imgRes.setPixel(i,j,p);
         }
     }
     return imgRes;
 }
 
-void Image::rotationPixel(int h, int l, int i, int j, string option){
+Pixel Image::rotationPixel(int h, int l, int i, int j, string option){
     if(option == "180"){
         Pixel p = getPixel(h-i-1,l-j-1);
-        setPixel(i,j,p);
+        return p;
     }
+
     else if(option == "90D"){
-        Pixel p = getPixel(h-j-1,i);
-        setPixel(i,j,p);
+        Pixel p = getPixel(l-j-1,i);
+        //cout<<"tuti"<<endl;
+        return p;
     }
-    else if(option =="90G"){ // VERIFIER que c est bien h-1-i et non l-1-i
-        Pixel p = getPixel(j,h-1-i);
-        setPixel(i,j,p);
+
+    else if(option =="90G"){
+        Pixel p = getPixel(j,h-i-1);
+        return p;
     }
 }
 

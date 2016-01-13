@@ -107,8 +107,8 @@ void Controle::ouvertureImage(QImage imagef){
         indexVecteur ++;
         if (sauvegardeImage.size() > indexVecteur){
             for(int i = sauvegardeImage.size(); i > indexVecteur; i--){
-                Image img = sauvegardeImage.at(i-1); //copie superficielle
-                img.~Image(); //DESALOCATION tableauPixel
+//                Image imgDel = sauvegardeImage.at(i-1); //copie superficielle
+//                imgDel.~Image(); //DESALOCATION tableauPixel
                 sauvegardeImage.erase(sauvegardeImage.begin() + i -1);
             }
         }
@@ -154,6 +154,6 @@ void Controle::ouvertureImage(QImage imagef){
 }
     Image Controle::rotation(string option){
         Image img = sauvegardeImage.at(indexVecteur);
-        img.rotationTableauPixel(option);
-        ajoutOperation(img);
+        Image imgRes = img.rotationTableauPixel(option);
+        ajoutOperation(imgRes);
     }
