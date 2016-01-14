@@ -84,7 +84,8 @@
      <property name="title">
       <string>Rotation</string>
      </property>
-     <addaction name="action90"/>
+     <addaction name="action90D"/>
+     <addaction name="action90G"/>
      <addaction name="action180"/>
     </widget>
     <addaction name="actionFitToWindowAct"/>
@@ -267,14 +268,19 @@
     <string>Ctrl+Y</string>
    </property>
   </action>
-  <action name="action90">
+  <action name="action90D">
    <property name="text">
-    <string>90°</string>
+    <string>90° D</string>
    </property>
   </action>
   <action name="action180">
    <property name="text">
     <string>180°</string>
+   </property>
+  </action>
+  <action name="action90G">
+   <property name="text">
+    <string>90° G</string>
    </property>
   </action>
  </widget>

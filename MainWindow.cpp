@@ -42,7 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(saveAct,SIGNAL(triggered()), this, SLOT(save()));
     connect(undoAct,SIGNAL(triggered()), this, SLOT(undo()));
     connect(redoAct,SIGNAL(triggered()), this, SLOT(redo()));
-    connect(ui->action90, SIGNAL(triggered()), this, SLOT(rotation90()));
+    connect(ui->action90D, SIGNAL(triggered()), this, SLOT(rotation90D()));
+    connect(ui->action90G, SIGNAL(triggered()), this, SLOT(rotation90G()));
     connect(ui->action180, SIGNAL(triggered()), this, SLOT(rotation180()));
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
     connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
@@ -205,9 +206,14 @@ void MainWindow::pipette(){
     }
 }
 
-void MainWindow::rotation90(){
-    cout<<"tamere"<<endl;
-    c.rotation("90");
+void MainWindow::rotation90D(){
+    c.rotation("90D");
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::rotation90G(){
+    c.rotation("90G");
     QImage image = recupQImage();
     afficherImage(image);
 }
