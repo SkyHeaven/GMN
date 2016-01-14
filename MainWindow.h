@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets>
 #include "Controle.h"
+#include "ImageViewer.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,6 +26,7 @@ private slots:
     void crop();
     void undo();
     void redo();
+    void pipette();
 
 private:
     Ui::MainWindow *ui;
@@ -34,20 +36,22 @@ private:
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
     QImage recupQImage();
     void afficherImage(QImage image);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+//    void mousePressEvent(QMouseEvent *event);
+//    void mouseMoveEvent(QMouseEvent *event);
+//    void mouseReleaseEvent(QMouseEvent *event);
+
 
     Controle c;
 
-    QLabel *imageLabel;
+    ImageViewer *imageLabel;
     QScrollArea *scrollArea;
     double scaleFactor;
     QString curFile;
     QPlainTextEdit *textEdit;
-    QPoint origineSel,finSel;
+    QPoint origineSel,finSel,pip;
     QGraphicsView *sel;
     QRubberBand *r;
+    qint64  pixmapKey;
 
     QAction *openAct;
     QAction *fitToWindowAct;
