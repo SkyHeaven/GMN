@@ -225,6 +225,7 @@ void Image::flouImage(){
     int *tabCol = new int[NBCOULEUR];
     int *tabSum = new int[NBCOULEUR];
     string coul = quelleCouleur();
+    int tabZero[3] = {0,0,0};
 
     for(int i= lMask/2; i<hImg - lMask/2; i++){
         for(int j=lMask/2; j<lImg - lMask/2; j++){
@@ -233,7 +234,7 @@ void Image::flouImage(){
                 tabSum[i] = 0;
             }
 
-            Pixel p = Pixel(i,j);
+            Pixel p = Pixel(j,i);
             for(int i2=0; i2<lMask; i2++){
                 for(int j2=0; j2<lMask; j2++){
                     tabCol = getPixel(i -lMask/2+i2,j-lMask/2+j2).getEtatCourant();
@@ -245,22 +246,8 @@ void Image::flouImage(){
 
             for(int k=0; k<NBCOULEUR; k++){
                 tabSum[k] = tabSum[k]/sumMask;
-
-                if(coul == "rgb"){
-                    p.setRGBCouleur(k,tabSum[k]);
-                    p.setEtatCourant(1);
-                }
-                else if(coul == "gris"){
-                    p.setGris(tabSum[k]);
-                    p.setEtatCourant(3);
-                }
-
             }
-
-            if(coul == "rgb"){
-                p.setYUVwithRGB(p.getRGBCouleur());
-                p.setGraywithRGB(p.getRGBCouleur());
-            }
+            p.setCouleur(coul,tabSum);
 
             setPixel(i,j,p);
             // ATTENTION NE PAS OUBLIER DE SET COULEUR + ETAT COURANT
@@ -268,10 +255,41 @@ void Image::flouImage(){
 
         }
     }
+    for(int i=0; i<hImg; i++){
+         for(int ind=0; ind <lMask/2; ind++){
+             Pixel p1 = Pixel(ind,i);
+             Pixel p2 = Pixel(lImg-1-ind,i);
+             for(int k =0; k<NBCOULEUR; k++){
+                 p1.setRGBCouleur(k,0);
+                 p2.setRGBCouleur(k,0);
+             }
+             p1.setCouleur(coul,tabZero);
+             p2.setCouleur(coul,tabZero);
+             setPixel(i,ind,p1);
+             setPixel(i,lImg-1-ind,p2);
+         }
+    }
+
+    for(int j=1; j<lImg-1; j++){
+        for(int ind=0; ind <lMask/2; ind++){
+            Pixel p1 = Pixel(j,ind);
+            Pixel p2 = Pixel(j,hImg-1-ind);
+            for(int k =0; k<NBCOULEUR; k++){
+             p1.setRGBCouleur(k,0);
+             p2.setRGBCouleur(k,0);
+            }
+            p1.setCouleur(coul,tabZero);
+            p2.setCouleur(coul,tabZero);
+            setPixel(ind,j,p1);
+            setPixel(hImg-1-ind,j,p2);
+        }
+    }
+
+
 //    for(int i=0; i<lMask/2; i++){ // remplissage du contour de l image
 //        for(int j=0; j<lMask/2; j++){
 //            Pixel p = Pixel(j,i);
-//            setPixel(i,j,p);
+//             Pixel p = Pixel(j,i);
 //        }
 //    }
     //mask.~Masque();
@@ -313,5 +331,110 @@ string Image::quelleCouleur(){
         }
     }
 */
+}
+
+Image Image::reductionHauteurImage(int valeur){
+    Image imgRes;
+    imgRes.setLargeur(getLargeur());
+    imgRes.setHauteur(valeur);
+    imgRes.setTableauPixel(valeur, getLargeur());
+    int h,l;
+    h = imgRes.getHauteur();
+    l = imgRes.getLargeur();
+
+    double coeffReduc = (double)getHauteur()/(double)h;
+    double borneInf, borneSup;
+    int tabSum[3];
+    int ind;
+    int cpt;
+    string coul = quelleCouleur();
+    for(int i=0; i<h; i++){
+        for(int j=0; j<l; j++){
+            for(int i=0; i<NBCOULEUR; i++){ //init tabSum
+                tabSum[i] = 0;
+            }
+
+            Pixel p = Pixel(j,i);
+            borneInf = (double)i*coeffReduc;
+            borneSup = ((double)i+1.0)*coeffReduc;
+            ind = (int)borneInf;
+            cpt =0;
+            while(ind < borneSup){
+                for(int k=0; k<NBCOULEUR; k++){
+                    tabSum[k] += getPixel(ind,j).getSingleRGB(k);
+                }
+                cpt++;
+                ind++;
+            }
+
+            for(int k=0; k<NBCOULEUR; k++){
+                tabSum[k] = tabSum[k]/cpt;
+            }
+            p.setCouleur(coul,tabSum);
+            imgRes.setPixel(i,j,p);
+        }
+    }
+    return imgRes;
+}
+
+Image Image::reductionLargeurImage(int valeur){
+    Image imgRes;
+    imgRes.setLargeur(valeur);
+    imgRes.setHauteur(getHauteur());
+    imgRes.setTableauPixel(getHauteur(),valeur);
+    int h,l;
+    h = imgRes.getHauteur();
+    l = imgRes.getLargeur();
+
+    double coeffReduc = (double)getLargeur()/(double)l;
+    double borneInf, borneSup;
+    int tabSum[3];
+    int ind;
+    int cpt;
+    string coul = quelleCouleur();
+    for(int i=0; i<h; i++){
+        for(int j=0; j<l; j++){
+            for(int i=0; i<NBCOULEUR; i++){ //init tabSum
+                tabSum[i] = 0;
+            }
+
+            Pixel p = Pixel(j,i);
+            borneInf = (double)j*coeffReduc;
+            borneSup = ((double)j+1.0)*coeffReduc;
+            ind = (int)borneInf;
+            cpt =0;
+            while(ind < borneSup){
+                for(int k=0; k<NBCOULEUR; k++){
+                    tabSum[k] += getPixel(i,ind).getSingleRGB(k);
+                }
+                cpt++;
+                ind++;
+            }
+
+            for(int k=0; k<NBCOULEUR; k++){
+                tabSum[k] = tabSum[k]/cpt;
+            }
+            p.setCouleur(coul,tabSum);
+            imgRes.setPixel(i,j,p);
+        }
+    }
+    return imgRes;
+}
+
+Image Image::etirementHauteurImage(int valeur){
+
+}
+
+Image Image::etirementLargeurImage(int valeur){
+
+}
+
+int Image::arrondiSuperieur(double d){
+    int rep;
+    //rep = (int)t;
+    if((d- rep) > 0){
+        rep++;
+    }
+    return rep;
 }
 

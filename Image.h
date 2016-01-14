@@ -38,6 +38,11 @@ class Image {
     Pixel rotationPixel(int h, int l, int i,int j,std::string option);
     void flouImage();
     std::string quelleCouleur();
+    Image reductionHauteurImage(int valeur);
+    Image reductionLargeurImage(int valeur);
+    Image etirementHauteurImage(int valeur);
+    Image etirementLargeurImage(int valeur);
+    int arrondiSuperieur(double d);
     //destructeur
 };
 

@@ -116,7 +116,7 @@ void Controle::ouvertureImage(QImage imagef){
     }
 
     void Controle::flou(){
-        Image img = sauvegardeImage.at(indexVecteur);
+        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         img.flouImage();
         ajoutOperation(img);
     }
@@ -142,18 +142,42 @@ void Controle::ouvertureImage(QImage imagef){
 
     }
 
-    void Controle::redimension(Image img, string option, int l, int h){
-        //return NULL;
-    }
-
     Histogramme* Controle::afficherHistogramme(Image img, string optionCoul){
         Histogramme* tabHist;
         tabHist = new Histogramme[NBCOULEUR];
         tabHist = img.initHistogramme(optionCoul);
         return tabHist;
-}
-    Image Controle::rotation(string option){
-        Image img = sauvegardeImage.at(indexVecteur);
+    }
+
+    void Controle::rotation(string option){
+        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         Image imgRes = img.rotationTableauPixel(option);
         ajoutOperation(imgRes);
     }
+
+    void Controle::redimensionHauteur(int valeur){
+        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+        Image imgRes;
+        if(valeur < img.getHauteur()){
+            imgRes = img.reductionHauteurImage(valeur);
+        }
+        else{
+            imgRes = img.etirementHauteurImage(valeur);
+        }
+
+        ajoutOperation(imgRes);
+    }
+
+    void Controle::redimensionLargeur(int valeur){
+        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+        Image imgRes;
+        if(valeur < img.getLargeur()){
+            imgRes = img.reductionLargeurImage(valeur);
+            ajoutOperation(imgRes);
+        }
+        else if (valeur > img.getLargeur()){
+            imgRes = img.etirementLargeurImage(valeur);
+            ajoutOperation(imgRes);
+        }
+    }
+
