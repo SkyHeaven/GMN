@@ -30,7 +30,8 @@ private slots:
     void undo();
     void redo();
     void pipette();
-    void rotation90();
+    void rotation90D();
+    void rotation90G();
     void rotation180();
     void flou();
 
