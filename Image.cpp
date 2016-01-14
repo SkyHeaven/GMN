@@ -215,26 +215,28 @@ Pixel Image::rotationPixel(int h, int l, int i, int j, string option){
 }
 
 void Image::flouImage(){
-    Masque mask = Masque(3);
+    Masque mask = Masque(9);
     mask.remplirMasque();
+
     int hImg = getHauteur();
     int lImg = getLargeur();
     int lMask = mask.getLongueur();
-    int sumMask =0;
+    int sumMask =mask.sommeMasque();;
     int *tabCol = new int[NBCOULEUR];
     int *tabSum = new int[NBCOULEUR];
     string coul = quelleCouleur();
-    for(int i=0; i<NBCOULEUR; i++){ //init tabCouleur
-        tabSum[i] = 0;
-    }
+
     for(int i= lMask/2; i<hImg - lMask/2; i++){
         for(int j=lMask/2; j<lImg - lMask/2; j++){
-            Pixel p = Pixel(j,i);
-            sumMask = mask.sommeMasque();
 
-            for(int i2=i -lMask/2; i2<lMask+i-lMask/2; i2++){
-                for(int j2=j-lMask/2; j2<lMask+j -lMask/2; j2++){
-                    tabCol = getPixel(i2,j2).getEtatCourant();
+            for(int i=0; i<NBCOULEUR; i++){ //init tabSum
+                tabSum[i] = 0;
+            }
+
+            Pixel p = Pixel(i,j);
+            for(int i2=0; i2<lMask; i2++){
+                for(int j2=0; j2<lMask; j2++){
+                    tabCol = getPixel(i -lMask/2+i2,j-lMask/2+j2).getEtatCourant();
                     for(int k=0; k<NBCOULEUR; k++){
                         tabSum[k] += mask.getValeurTableauMasque(i2,j2)*tabCol[k];
                     }
@@ -266,13 +268,13 @@ void Image::flouImage(){
 
         }
     }
-    for(int i=0; i<lMask/2; i++){ // remplissage du contour de l image
-        for(int j=0; j<lMask/2; j++){
-            Pixel p = Pixel(j,i);
-            setPixel(i,j,p);
-        }
-    }
-    mask.~Masque();
+//    for(int i=0; i<lMask/2; i++){ // remplissage du contour de l image
+//        for(int j=0; j<lMask/2; j++){
+//            Pixel p = Pixel(j,i);
+//            setPixel(i,j,p);
+//        }
+//    }
+    //mask.~Masque();
 }
 
 string Image::quelleCouleur(){

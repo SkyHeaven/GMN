@@ -4,24 +4,27 @@
 
 using namespace std;
 
-Masque::Masque(int nb){
-  longueur =nb;
-  //tableauMasque = new int[longueur][longueur];
-  for(int i=0; i<nb; i++){
-      for(int j=0; j<nb; j++){
-          tableauMasque[i][j] = 1;
-      }
+Masque::Masque(const int nb){
+  longueur = nb;
+  tableauMasque = new int *[nb];
+  for(int i =0; i <nb; i++){
+      tableauMasque[i] = new int[nb];
   }
 }
 
-Masque::~Masque(){
-    for(int i = 0 ; i < longueur ; i++){
-        delete[] tableauMasque[i];
-     }
-     delete[] tableauMasque;
-}
+//Masque::~Masque(){
+//    for(int i = 0 ; i < longueur ; i++){
+//        delete[] tableauMasque[i];
+//     }
+//     delete[] tableauMasque;
+//}
 
 void Masque::remplirMasque(){
+    for(int i=0; i<longueur; i++){
+        for(int j=0; j<longueur; j++){
+            tableauMasque[i][j] = 1;
+        }
+    }
 }
 
 
