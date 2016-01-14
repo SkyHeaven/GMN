@@ -19,7 +19,6 @@ void ImageViewer::mousePressEvent(QMouseEvent *e)
         origineSel = e->pos();
         pipette = e->pos();
         selEncours=true;
-        emit sign_pip();
     }
 }
 

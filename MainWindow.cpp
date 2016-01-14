@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
     imageLabel->setMouseTracking(true);
-    imageLabel->setParent(ui->imageLabel);
+    imageLabel->installEventFilter(this);
 
     scrollArea = new QScrollArea;
     scrollArea->setBackgroundRole(QPalette::Dark);
@@ -39,12 +39,16 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr("GMN"));
 
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-    connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
     connect(saveAct,SIGNAL(triggered()), this, SLOT(save()));
     connect(undoAct,SIGNAL(triggered()), this, SLOT(undo()));
     connect(redoAct,SIGNAL(triggered()), this, SLOT(redo()));
+    connect(ui->action90, SIGNAL(triggered()), this, SLOT(rotation90()));
+    connect(ui->action180, SIGNAL(triggered()), this, SLOT(rotation180()));
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
-    connect(imageLabel, SIGNAL(sign_pip()), this, SLOT(pipette()));
+    connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
+    connect(ui->Flou,SIGNAL(clicked()),this,SLOT(flou()));
+
+
 
 }
 
@@ -171,22 +175,54 @@ void MainWindow::redo(){
     afficherImage(image);
 }
 
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+
+    if (obj == imageLabel) {
+        if (event->type() == QEvent::MouseButtonPress) {
+            pipette();
+            return QMainWindow::eventFilter(obj, event);
+        }
+        else {
+            return QMainWindow::eventFilter(obj, event);
+        }
+    } else {
+        return QMainWindow::eventFilter(obj, event);
+    }
+}
 
 
 void MainWindow::pipette(){
-
     if(ui->Pipette->isChecked()){
-        cout<<"tamere"<<endl;
         int *rgb = c.affichageCouleurRGB(imageLabel->getPipette().y(),imageLabel->getPipette().x());
         int *yuv = c.affichageCouleurYUV(imageLabel->getPipette().y(),imageLabel->getPipette().x());
         int gris = c.affichageCouleurGris(imageLabel->getPipette().y(),imageLabel->getPipette().x());
 
-         QString st;
-         st = QString("Valeur RGB : %1, %2, %3 \n Valeur YUV : %4, %5, %6 \n Valeur gris : %7").arg(rgb[0]).arg(rgb[1]).arg(rgb[2]).arg(yuv[0]).arg(yuv[1]).arg(yuv[2]).arg(gris);
-         cout<<pip.y()<<"           "<<pip.x()<<endl;
+        QString st;
+        st = QString("Valeur RGB : %1, %2, %3 \n Valeur YUV : %4, %5, %6 \n Valeur gris : %7").arg(rgb[0]).arg(rgb[1]).arg(rgb[2]).arg(yuv[0]).arg(yuv[1]).arg(yuv[2]).arg(gris);
         ui->AffInfo->setPlainText(st);
 
     }
+}
+
+void MainWindow::rotation90(){
+    cout<<"tamere"<<endl;
+    c.rotation("90");
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::rotation180(){
+    c.rotation("180");
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::flou()
+{
+    c.flou();
+    QImage image = recupQImage();
+    afficherImage(image);
 }
 
 MainWindow::~MainWindow()
