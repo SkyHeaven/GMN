@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QtWidgets>
+#include <iostream>
+#include <string>
+
 #include "Controle.h"
 #include "ImageViewer.h"
 
@@ -27,6 +30,9 @@ private slots:
     void undo();
     void redo();
     void pipette();
+    void rotation90();
+    void rotation180();
+    void flou();
 
 private:
     Ui::MainWindow *ui;
@@ -36,6 +42,7 @@ private:
     void adjustScrollBar(QScrollBar *scrollBar, double factor);
     QImage recupQImage();
     void afficherImage(QImage image);
+    bool eventFilter(QObject *obj, QEvent *event);
 //    void mousePressEvent(QMouseEvent *event);
 //    void mouseMoveEvent(QMouseEvent *event);
 //    void mouseReleaseEvent(QMouseEvent *event);
