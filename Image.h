@@ -14,7 +14,7 @@ class Image {
     int largeur;
 
     public:
-    ~Image();
+//    ~Image();
     void setTableauPixel(int h, int l);
     Pixel **getTableauPixel() const;
     void setPixel(int h, int l, Pixel p);
@@ -35,9 +35,14 @@ class Image {
     Image cropImage(int h1, int l1, int h2, int l2);
     Histogramme* initHistogramme(std::string optionCoul);
     Image rotationTableauPixel(std::string option);
-    void rotationPixel(int h, int l, int i,int j,std::string option);
+    Pixel rotationPixel(int h, int l, int i,int j,std::string option);
     void flouImage();
     std::string quelleCouleur();
+    Image reductionHauteurImage(int valeur);
+    Image reductionLargeurImage(int valeur);
+    Image etirementHauteurImage(int valeur);
+    Image etirementLargeurImage(int valeur);
+    int arrondiSuperieur(double d);
     //destructeur
 };
 

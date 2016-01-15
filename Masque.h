@@ -9,7 +9,7 @@ class Masque{
 
     public:
     Masque(int nb);
-    ~Masque();
+  //  ~Masque();
     void remplirMasque();
     int getLongueur() const;
     void setLongueur(int value);

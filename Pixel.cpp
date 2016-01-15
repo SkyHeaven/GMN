@@ -79,6 +79,10 @@ int* Pixel::getRGBCouleur(){
     return rgb;
 }
 
+int Pixel::getSingleRGB(int ind){
+    return rgb[ind];
+}
+
 void Pixel::setEtatCourant(int c){
     switch(c){
     case 1 :
@@ -102,4 +106,23 @@ void Pixel::setEtatCourant(int c){
 int* Pixel::getEtatCourant(){
     return etatCourant;
 }
+
+ void Pixel::setCouleur(string coul, int tabCoul[NBCOULEUR]){
+     for(int k=0; k<NBCOULEUR; k++){
+         if(coul == "rgb"){
+             setRGBCouleur(k,tabCoul[k]);
+             setEtatCourant(1);
+         }
+         else if(coul == "gris"){
+             setGris(tabCoul[0]);
+             setEtatCourant(3);
+         }
+
+     }
+
+     if(coul == "rgb"){
+         setYUVwithRGB(getRGBCouleur());
+         setGraywithRGB(getRGBCouleur());
+     }
+ }
 

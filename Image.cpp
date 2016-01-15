@@ -4,12 +4,12 @@
 
 using namespace std;
 
-Image::~Image(){
-    for(int i = 0 ; i < getHauteur() ; i++){
-        delete[] tableauPixel[i];
-     }
-     delete[] tableauPixel;
-}
+//Image::~Image(){
+//    for(int i = 0 ; i < getHauteur() ; i++){
+//        delete[] tableauPixel[i];
+//     }
+//     delete[] tableauPixel;
+//}
 
 
 Pixel **Image::getTableauPixel() const
@@ -171,54 +171,73 @@ Histogramme* Image::initHistogramme(string optionCoul){
 
 Image Image::rotationTableauPixel(string option){
     Image imgRes;
-    int h = getHauteur();
-    int l = getLargeur();
-    imgRes.setTableauPixel(h,l);
+    int h,l=0;
+
+    if(option == "180"){
+        h = getHauteur();
+        l = getLargeur();
+    }
+
+    else{
+        l = getHauteur();
+        h = getLargeur();
+    }
+
+     imgRes.setHauteur(h);
+     imgRes.setLargeur(l);
+     imgRes.setTableauPixel(h,l);
 
     for(int i=0; i<h; i++){
         for(int j=0; j<l; j++){
-         imgRes.rotationPixel(h,l,i,j,option);
+            Pixel p = rotationPixel(h,l,i,j,option);
+            imgRes.setPixel(i,j,p);
         }
     }
     return imgRes;
 }
 
-void Image::rotationPixel(int h, int l, int i, int j, string option){
+Pixel Image::rotationPixel(int h, int l, int i, int j, string option){
     if(option == "180"){
         Pixel p = getPixel(h-i-1,l-j-1);
-        setPixel(i,j,p);
+        return p;
     }
+
     else if(option == "90D"){
-        Pixel p = getPixel(h-j-1,i);
-        setPixel(i,j,p);
+        Pixel p = getPixel(l-j-1,i);
+        //cout<<"tuti"<<endl;
+        return p;
     }
-    else if(option =="90G"){ // VERIFIER que c est bien h-1-i et non l-1-i
-        Pixel p = getPixel(j,h-1-i);
-        setPixel(i,j,p);
+
+    else if(option =="90G"){
+        Pixel p = getPixel(j,h-i-1);
+        return p;
     }
 }
 
 void Image::flouImage(){
-    Masque mask = Masque(3);
+    Masque mask = Masque(9);
     mask.remplirMasque();
+
     int hImg = getHauteur();
     int lImg = getLargeur();
     int lMask = mask.getLongueur();
-    int sumMask =0;
+    int sumMask =mask.sommeMasque();;
     int *tabCol = new int[NBCOULEUR];
     int *tabSum = new int[NBCOULEUR];
     string coul = quelleCouleur();
-    for(int i=0; i<NBCOULEUR; i++){ //init tabCouleur
-        tabSum[i] = 0;
-    }
+    int tabZero[3] = {0,0,0};
+
     for(int i= lMask/2; i<hImg - lMask/2; i++){
         for(int j=lMask/2; j<lImg - lMask/2; j++){
-            Pixel p = Pixel(j,i);
-            sumMask = mask.sommeMasque();
 
-            for(int i2=i -lMask/2; i2<lMask+i-lMask/2; i2++){
-                for(int j2=j-lMask/2; j2<lMask+j -lMask/2; j2++){
-                    tabCol = getPixel(i2,j2).getEtatCourant();
+            for(int i=0; i<NBCOULEUR; i++){ //init tabSum
+                tabSum[i] = 0;
+            }
+
+            Pixel p = Pixel(j,i);
+            for(int i2=0; i2<lMask; i2++){
+                for(int j2=0; j2<lMask; j2++){
+                    tabCol = getPixel(i -lMask/2+i2,j-lMask/2+j2).getEtatCourant();
                     for(int k=0; k<NBCOULEUR; k++){
                         tabSum[k] += mask.getValeurTableauMasque(i2,j2)*tabCol[k];
                     }
@@ -227,22 +246,8 @@ void Image::flouImage(){
 
             for(int k=0; k<NBCOULEUR; k++){
                 tabSum[k] = tabSum[k]/sumMask;
-
-                if(coul == "rgb"){
-                    p.setRGBCouleur(k,tabSum[k]);
-                    p.setEtatCourant(1);
-                }
-                else if(coul == "gris"){
-                    p.setGris(tabSum[k]);
-                    p.setEtatCourant(3);
-                }
-
             }
-
-            if(coul == "rgb"){
-                p.setYUVwithRGB(p.getRGBCouleur());
-                p.setGraywithRGB(p.getRGBCouleur());
-            }
+            p.setCouleur(coul,tabSum);
 
             setPixel(i,j,p);
             // ATTENTION NE PAS OUBLIER DE SET COULEUR + ETAT COURANT
@@ -250,13 +255,44 @@ void Image::flouImage(){
 
         }
     }
-    for(int i=0; i<lMask/2; i++){ // remplissage du contour de l image
-        for(int j=0; j<lMask/2; j++){
-            Pixel p = Pixel(j,i);
-            setPixel(i,j,p);
+    for(int i=0; i<hImg; i++){
+         for(int ind=0; ind <lMask/2; ind++){
+             Pixel p1 = Pixel(ind,i);
+             Pixel p2 = Pixel(lImg-1-ind,i);
+             for(int k =0; k<NBCOULEUR; k++){
+                 p1.setRGBCouleur(k,0);
+                 p2.setRGBCouleur(k,0);
+             }
+             p1.setCouleur(coul,tabZero);
+             p2.setCouleur(coul,tabZero);
+             setPixel(i,ind,p1);
+             setPixel(i,lImg-1-ind,p2);
+         }
+    }
+
+    for(int j=1; j<lImg-1; j++){
+        for(int ind=0; ind <lMask/2; ind++){
+            Pixel p1 = Pixel(j,ind);
+            Pixel p2 = Pixel(j,hImg-1-ind);
+            for(int k =0; k<NBCOULEUR; k++){
+             p1.setRGBCouleur(k,0);
+             p2.setRGBCouleur(k,0);
+            }
+            p1.setCouleur(coul,tabZero);
+            p2.setCouleur(coul,tabZero);
+            setPixel(ind,j,p1);
+            setPixel(hImg-1-ind,j,p2);
         }
     }
-    mask.~Masque();
+
+
+//    for(int i=0; i<lMask/2; i++){ // remplissage du contour de l image
+//        for(int j=0; j<lMask/2; j++){
+//            Pixel p = Pixel(j,i);
+//             Pixel p = Pixel(j,i);
+//        }
+//    }
+    //mask.~Masque();
 }
 
 string Image::quelleCouleur(){
@@ -295,5 +331,110 @@ string Image::quelleCouleur(){
         }
     }
 */
+}
+
+Image Image::reductionHauteurImage(int valeur){
+    Image imgRes;
+    imgRes.setLargeur(getLargeur());
+    imgRes.setHauteur(valeur);
+    imgRes.setTableauPixel(valeur, getLargeur());
+    int h,l;
+    h = imgRes.getHauteur();
+    l = imgRes.getLargeur();
+
+    double coeffReduc = (double)getHauteur()/(double)h;
+    double borneInf, borneSup;
+    int tabSum[3];
+    int ind;
+    int cpt;
+    string coul = quelleCouleur();
+    for(int i=0; i<h; i++){
+        for(int j=0; j<l; j++){
+            for(int i=0; i<NBCOULEUR; i++){ //init tabSum
+                tabSum[i] = 0;
+            }
+
+            Pixel p = Pixel(j,i);
+            borneInf = (double)i*coeffReduc;
+            borneSup = ((double)i+1.0)*coeffReduc;
+            ind = (int)borneInf;
+            cpt =0;
+            while(ind < borneSup){
+                for(int k=0; k<NBCOULEUR; k++){
+                    tabSum[k] += getPixel(ind,j).getSingleRGB(k);
+                }
+                cpt++;
+                ind++;
+            }
+
+            for(int k=0; k<NBCOULEUR; k++){
+                tabSum[k] = tabSum[k]/cpt;
+            }
+            p.setCouleur(coul,tabSum);
+            imgRes.setPixel(i,j,p);
+        }
+    }
+    return imgRes;
+}
+
+Image Image::reductionLargeurImage(int valeur){
+    Image imgRes;
+    imgRes.setLargeur(valeur);
+    imgRes.setHauteur(getHauteur());
+    imgRes.setTableauPixel(getHauteur(),valeur);
+    int h,l;
+    h = imgRes.getHauteur();
+    l = imgRes.getLargeur();
+
+    double coeffReduc = (double)getLargeur()/(double)l;
+    double borneInf, borneSup;
+    int tabSum[3];
+    int ind;
+    int cpt;
+    string coul = quelleCouleur();
+    for(int i=0; i<h; i++){
+        for(int j=0; j<l; j++){
+            for(int i=0; i<NBCOULEUR; i++){ //init tabSum
+                tabSum[i] = 0;
+            }
+
+            Pixel p = Pixel(j,i);
+            borneInf = (double)j*coeffReduc;
+            borneSup = ((double)j+1.0)*coeffReduc;
+            ind = (int)borneInf;
+            cpt =0;
+            while(ind < borneSup){
+                for(int k=0; k<NBCOULEUR; k++){
+                    tabSum[k] += getPixel(i,ind).getSingleRGB(k);
+                }
+                cpt++;
+                ind++;
+            }
+
+            for(int k=0; k<NBCOULEUR; k++){
+                tabSum[k] = tabSum[k]/cpt;
+            }
+            p.setCouleur(coul,tabSum);
+            imgRes.setPixel(i,j,p);
+        }
+    }
+    return imgRes;
+}
+
+Image Image::etirementHauteurImage(int valeur){
+
+}
+
+Image Image::etirementLargeurImage(int valeur){
+
+}
+
+int Image::arrondiSuperieur(double d){
+    int rep;
+    //rep = (int)t;
+    if((d- rep) > 0){
+        rep++;
+    }
+    return rep;
 }
 

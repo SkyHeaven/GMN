@@ -23,8 +23,10 @@ class Pixel {
     void setY(int value);
     void setRGBCouleur(int ind, int val);
     int* getRGBCouleur();
+    int getSingleRGB(int ind);
     void setEtatCourant(int c);
     int* getEtatCourant();
+    void setCouleur(std::string coul, int tabCoul[NBCOULEUR]);
 
 
     // methodes de conversion (grisToRGB grisToYUV...)

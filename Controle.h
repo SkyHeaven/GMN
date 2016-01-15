@@ -33,9 +33,10 @@ class Controle{
     void amelioration(Image img); //ici creation nouvelle image
     void crop(int h1, int l1, int h2, int l2);
     void afficherGris();
-    void redimension(Image img, std::string option, int l, int h);
     Histogramme* afficherHistogramme(Image img, std::string optionCoul);
-    Image rotation(std::string option);
+    void rotation(std::string option);
+    void redimensionHauteur(int valeur);
+    void redimensionLargeur(int valeur);
 
 
 };
