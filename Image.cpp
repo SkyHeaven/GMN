@@ -419,8 +419,8 @@ Image Image::etirementImage(int h, int l){
     double coeffEtirLarg = (double)l/(double)getLargeur();
     double borneInfHaut, borneInfLarg, borneSupHaut, borneSupLarg;
     int tabSum[3];
-    double t1,t2,u1,u2;
-    int x,y,sumCoeff;
+    double t1,t2,u1,u2,sumCoeff;
+    int x,y;
     string coul = quelleCouleur();
 
     for(int i=0; i<h-1; i++){
@@ -540,7 +540,7 @@ int Image::arrondiSuperieur(double d){
 }
 
 
-double Image::distance(int x1, int y1, int x2, int y2){
-    return sqrt(pow((x2-x1),2) + pow((y2 - y1),2));
+double Image::distance(double x1, double y1, int x2, int y2){
+    return sqrt(pow(((double)x2-x1),2) + pow(((double)y2 - y1),2));
 }
 

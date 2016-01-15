@@ -43,7 +43,7 @@ class Image {
     Image reductionLargeurImage(int valeur);
     Image etirementImage(int h,int l);
     int arrondiSuperieur(double d);
-    double distance(int x1, int y1, int x2, int y2);
+    double distance(double x1, double y1, int x2, int y2);
     //destructeur
 };
 
