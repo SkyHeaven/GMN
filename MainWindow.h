@@ -21,6 +21,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void Redimension();
 private slots:
     void open();
     void fitToWindow();
@@ -34,6 +35,8 @@ private slots:
     void rotation90G();
     void rotation180();
     void flou();
+    void histogramme();
+    void redimension();
 
 private:
     Ui::MainWindow *ui;
