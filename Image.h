@@ -6,6 +6,7 @@
 #include "Pixel.h"
 #include "Histogramme.h"
 #include "Masque.h"
+#include <math.h>
 
 class Image {
     private:
@@ -33,16 +34,16 @@ class Image {
     void setTableauCourant(int c);
     Image cloneImage();
     Image cropImage(int h1, int l1, int h2, int l2);
-    Histogramme* initHistogramme(std::string optionCoul);
+    Histogramme* initHistogramme();
     Image rotationTableauPixel(std::string option);
     Pixel rotationPixel(int h, int l, int i,int j,std::string option);
     void flouImage();
     std::string quelleCouleur();
     Image reductionHauteurImage(int valeur);
     Image reductionLargeurImage(int valeur);
-    Image etirementHauteurImage(int valeur);
-    Image etirementLargeurImage(int valeur);
+    Image etirementImage(int h,int l);
     int arrondiSuperieur(double d);
+    double distance(int x1, int y1, int x2, int y2);
     //destructeur
 };
 

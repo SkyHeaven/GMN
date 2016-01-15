@@ -142,10 +142,11 @@ void Controle::ouvertureImage(QImage imagef){
 
     }
 
-    Histogramme* Controle::afficherHistogramme(Image img, string optionCoul){
+    Histogramme* Controle::afficherHistogramme(){
+        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         Histogramme* tabHist;
         tabHist = new Histogramme[NBCOULEUR];
-        tabHist = img.initHistogramme(optionCoul);
+        tabHist = img.initHistogramme();
         return tabHist;
     }
 
@@ -154,30 +155,31 @@ void Controle::ouvertureImage(QImage imagef){
         Image imgRes = img.rotationTableauPixel(option);
         ajoutOperation(imgRes);
     }
-
-    void Controle::redimensionHauteur(int valeur){
+    void Controle::redimension(int h, int l){
         Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         Image imgRes;
-        if(valeur < img.getHauteur()){
-            imgRes = img.reductionHauteurImage(valeur);
+        if(h < img.getHauteur()){
+            if(l < img.getLargeur()){
+                imgRes = img.reductionHauteurImage(h);
+                imgRes = imgRes.reductionLargeurImage(l);
+                ajoutOperation(imgRes);
+            }
+            else{
+                 imgRes = img.reductionHauteurImage(h);
+                 ajoutOperation(imgRes);
+            }
         }
+        else if(l < img.getLargeur()){
+                imgRes = img.reductionLargeurImage(l);
+                ajoutOperation(imgRes);
+            }
+        else if( h > img.getHauteur() && l > img.getLargeur()){
+                imgRes = img.etirementImage(h,l);
+                ajoutOperation(imgRes);
+            }
         else{
-            imgRes = img.etirementHauteurImage(valeur);
-        }
+                cout << "Operation de redimensionnement non prise en compte" << endl;
+            }
 
-        ajoutOperation(imgRes);
-    }
-
-    void Controle::redimensionLargeur(int valeur){
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        Image imgRes;
-        if(valeur < img.getLargeur()){
-            imgRes = img.reductionLargeurImage(valeur);
-            ajoutOperation(imgRes);
-        }
-        else if (valeur > img.getLargeur()){
-            imgRes = img.etirementLargeurImage(valeur);
-            ajoutOperation(imgRes);
-        }
-    }
+}
 

@@ -9,7 +9,10 @@ class Histogramme{
     private:
     int tableauHistogramme[NBNUANCES];
     public:
+    Histogramme();
+    int* getTableauHistogramme();
     void initZero();
+    bool gris(Histogramme h1, Histogramme h2);
     Histogramme egaliser(Histogramme hist);
     void incrementeValeurHistogramme(int val);
 };

@@ -138,32 +138,20 @@ Image Image::cropImage(int h1, int l1, int h2, int l2){
     return imgRes;
 }
 
-Histogramme* Image::initHistogramme(string optionCoul){
-    Histogramme tabHist[NBCOULEUR];
+Histogramme* Image::initHistogramme(){
+    Histogramme *tabHist;
+    tabHist = (Histogramme*)malloc(NBCOULEUR* sizeof(Histogramme));
     for(int i = 0; i < NBCOULEUR; i ++){
-        tabHist[i].initZero();
+        tabHist[i]=Histogramme();
     }
 
     for(int i= 0; i < getHauteur(); i++){
         for(int j = 0; j < getLargeur(); j++){
             Pixel p = getPixel(i,j);
-
-            if(optionCoul == "rgb"){
-                int* rgbRep = p.getRGBCouleur();
-                for(int k = 0; k < NBCOULEUR; k++){
-                    tabHist[k].incrementeValeurHistogramme(rgbRep[k]);
-                }
+            int* tabRep = p.getEtatCourant();
+            for(int k = 0; k < NBCOULEUR; k++){
+                tabHist[k].incrementeValeurHistogramme(tabRep[k]);
             }
-
-            else if(optionCoul == "yuv"){
-                int* yuvRep = p.getYUVCouleur();
-                for(int k = 0; k < NBCOULEUR; k++){
-                    tabHist[k].incrementeValeurHistogramme(yuvRep[k]);
-                }
-            }
-//            else if(optionCoul == "gris"){
-
-//            }
         }
     }
     return tabHist;
@@ -421,12 +409,125 @@ Image Image::reductionLargeurImage(int valeur){
     return imgRes;
 }
 
-Image Image::etirementHauteurImage(int valeur){
+Image Image::etirementImage(int h, int l){
+    Image imgRes;
+    imgRes.setLargeur(l);
+    imgRes.setHauteur(h);
+    imgRes.setTableauPixel(h,l);
 
-}
+    double coeffEtirHaut = (double)h/(double)getHauteur();
+    double coeffEtirLarg = (double)l/(double)getLargeur();
+    double borneInfHaut, borneInfLarg, borneSupHaut, borneSupLarg;
+    int tabSum[3];
+    double t1,t2,u1,u2;
+    int x,y,sumCoeff;
+    string coul = quelleCouleur();
 
-Image Image::etirementLargeurImage(int valeur){
+    for(int i=0; i<h-1; i++){
+        for(int j=0; j<l-1; j++){
+            borneInfHaut = (double)i/coeffEtirHaut;
+            borneInfLarg = (double)j/coeffEtirLarg;
+            borneSupHaut = (double)(i+1)/coeffEtirHaut;
+            borneSupLarg = (double)(j+1)/coeffEtirLarg;
+            Pixel p = Pixel(j,i);
 
+            if( (((int)borneInfHaut == (int)borneSupHaut) && ((int)borneInfLarg == (int)borneSupLarg)) || (i==j)){
+                for(int k=0; k<NBCOULEUR; k++){ //init tabSum
+                    tabSum[k] = 0;
+                }
+                for(int k=0; k<NBCOULEUR; k++){
+                   tabSum[k] += getPixel((int)borneInfHaut, (int)borneInfLarg).getSingleRGB(k);
+                }
+            }
+
+            else if( ((int)borneInfHaut != (int)borneSupHaut) && ((int)borneInfLarg != (int)borneSupLarg)){
+                x= (int)borneSupLarg;// + 0.5*coeffEtirLarg;
+                y= (int)borneSupHaut;// + 0.5*coeffEtirHaut;
+                t1 = distance(borneInfLarg, borneInfHaut, x,y);
+                t2 = distance(borneInfLarg, borneSupHaut, x,y); //bizarre
+                u1 = distance(borneSupLarg, borneInfHaut, x,y);
+                u2 = distance(borneSupLarg, borneSupHaut, x,y);
+
+    //            t1 = 1 - (x-borneInfLarg); // a verif
+    //            t2 = borneSupLarg-x;
+    //            u1 = 1 -(y-borneInfHaut); // a verif
+    //            u2 = borneSupHaut-y;
+
+
+                sumCoeff = t1 +t2 + u1 + u2;
+                if(sumCoeff !=1){
+                    t1 /= sumCoeff;
+                    t2 /= sumCoeff;
+                    u1 /= sumCoeff;
+                    u2 /= sumCoeff;
+                }
+
+                for(int k=0; k<NBCOULEUR; k++){ //init tabSum
+                    tabSum[k] = 0;
+                }
+
+                for(int k=0; k<NBCOULEUR; k++){
+                   tabSum[k] += getPixel((int)borneInfHaut, (int)borneInfLarg).getSingleRGB(k)*t1; //recupere le pixel de lancienne image et multiplie les valeur de couleur par son coeff
+                   tabSum[k] += getPixel((int)borneSupHaut, (int)borneInfLarg).getSingleRGB(k)*t2;
+                   tabSum[k] += getPixel((int)borneInfHaut, (int)borneSupLarg).getSingleRGB(k)*u1;
+                   tabSum[k] += getPixel((int)borneSupHaut, (int)borneSupLarg).getSingleRGB(k)*u2;
+                }
+            }
+
+            else if( ((int)borneInfHaut == (int)borneSupHaut) && ((int)borneInfLarg != (int)borneSupLarg)){
+                x= (int)borneSupLarg;
+                y= (int)borneSupHaut;// + 0.5*coeffEtirHaut;
+                t1 = distance(borneInfLarg, borneInfHaut, x,y);
+                t2 = distance(borneInfLarg, borneSupLarg, x,y);
+
+                sumCoeff = t1 +t2;
+                if(sumCoeff !=1){
+                    t1 /= sumCoeff;
+                    t2 /= sumCoeff;
+                }
+
+                for(int k=0; k<NBCOULEUR; k++){ //init tabSum
+                    tabSum[k] = 0;
+                }
+
+                for(int k=0; k<NBCOULEUR; k++){
+                   tabSum[k] += getPixel((int)borneInfHaut, (int)borneInfLarg).getSingleRGB(k)*t1; //recupere le pixel de lancienne image et multiplie les valeur de couleur par son coeff
+                   tabSum[k] += getPixel((int)borneInfHaut, (int)borneSupLarg).getSingleRGB(k)*t2;
+                }
+
+            }
+            else if( ((int)borneInfHaut != (int)borneSupHaut) && ((int)borneInfLarg == (int)borneSupLarg)){
+                x= (int)borneSupLarg;// + 0.5*coeffEtirLarg;
+                y= (int)borneSupHaut;
+                u1 = distance(borneSupLarg, borneInfHaut, x,y);
+                u2 = distance(borneSupLarg, borneSupHaut, x,y);
+
+                sumCoeff =u1 + u2;
+                if(sumCoeff !=1){
+                    u1 /= sumCoeff;
+                    u2 /= sumCoeff;
+                }
+
+                for(int k=0; k<NBCOULEUR; k++){ //init tabSum
+                    tabSum[k] = 0;
+                }
+
+                for(int k=0; k<NBCOULEUR; k++){
+                   tabSum[k] += getPixel((int)borneInfHaut, (int)borneSupLarg).getSingleRGB(k)*u1;
+                   tabSum[k] += getPixel((int)borneSupHaut, (int)borneSupLarg).getSingleRGB(k)*u2;
+                }
+            }
+
+
+
+            else{ cout << "erreur ici" << endl;}
+
+
+            p.setCouleur(coul,tabSum);
+            imgRes.setPixel(i,j,p);
+        }
+    }
+    return imgRes;
 }
 
 int Image::arrondiSuperieur(double d){
@@ -436,5 +537,10 @@ int Image::arrondiSuperieur(double d){
         rep++;
     }
     return rep;
+}
+
+
+double Image::distance(int x1, int y1, int x2, int y2){
+    return sqrt(pow((x2-x1),2) + pow((y2 - y1),2));
 }
 
