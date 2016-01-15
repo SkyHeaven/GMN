@@ -2,10 +2,15 @@
 #include "ui_MainWindow.h"
 #include "Controle.h"
 #include "ImageViewer.h"
+#include "FenHisto.h"
+#include "DialogRedim.h"
+
 
 #include <iostream>
 #include <string>
 #include <QtWidgets>
+
+
 
 using namespace std;
 
@@ -48,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
     connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
     connect(ui->Flou,SIGNAL(clicked()),this,SLOT(flou()));
+    connect(ui->Histogramme,SIGNAL(clicked()),this,SLOT(histogramme()));
+    connect(ui->Redimension,SIGNAL(clicked()),this,SLOT(redimension()));
 
 
 
@@ -227,6 +234,37 @@ void MainWindow::rotation180(){
 void MainWindow::flou()
 {
     c.flou();
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::histogramme()
+{
+    Histogramme *h = c.afficherHistogramme();
+    FenHisto *fr = new FenHisto(h[0],Qt::red);
+    FenHisto *fg = new FenHisto(h[1],Qt::green);
+    FenHisto *fb = new FenHisto(h[2],Qt::blue);
+    FenHisto *fgris = new FenHisto(h[0],Qt::gray);
+
+    if (!(h[0].gris(h[1],h[2]))){
+        fr->show();
+        fg->show();
+        fb->show();
+    }
+    else {
+        fgris->show();
+    }
+}
+
+void MainWindow::redimension(){
+    DialogRedim d;
+    d.setValue(c.getSauvegardeImage().at(c.getIndexVecteur()).getHauteur(),c.getSauvegardeImage().at(c.getIndexVecteur()).getLargeur());
+    int h,l;
+    if(d.exec() == QDialog::Accepted) {
+        h=d.getH();
+        l=d.getL();
+    }
+    //c.redimension(l,h);
     QImage image = recupQImage();
     afficherImage(image);
 }
