@@ -20,8 +20,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    c = new Controle();
-
     openAct = ui->action_Open;
     fitToWindowAct = ui->actionFitToWindowAct;
     saveAct = ui->action_Save;
@@ -52,13 +50,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action90D, SIGNAL(triggered()), this, SLOT(rotation90D()));
     connect(ui->action90G, SIGNAL(triggered()), this, SLOT(rotation90G()));
     connect(ui->action180, SIGNAL(triggered()), this, SLOT(rotation180()));
-    connect(ui->actionOpen_fu,SIGNAL(triggered()),this,SLOT(fusion()));
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
     connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
     connect(ui->Flou,SIGNAL(clicked()),this,SLOT(flou()));
     connect(ui->Histogramme,SIGNAL(clicked()),this,SLOT(histogramme()));
     connect(ui->Redimension,SIGNAL(clicked()),this,SLOT(redimension()));
-    connect(ui->Fusionner,SIGNAL(clicked()),this,SLOT(fusionner()));
 
 
 
@@ -80,7 +76,7 @@ bool MainWindow::loadFile(const QString &fileName)
 
     imageLabel->setPixmap(QPixmap::fromImage(image));
     afficherImage(image);
-    c->ouvertureImage(image);
+    c.ouvertureImage(image);
     QImage im = recupQImage();
     afficherImage(im);
     return true;
@@ -128,20 +124,20 @@ void MainWindow::fitToWindow()
 }
 
 void MainWindow::grey(){
-    c->afficherGris();
+    c.afficherGris();
     QImage image= recupQImage();
     afficherImage(image);
 }
 
 QImage MainWindow::recupQImage(){
 
-    QImage image(c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),QImage::Format_RGB32);
+    QImage image(c.getSauvegardeImage().at(c.getIndexVecteur()).getLargeur(),c.getSauvegardeImage().at(c.getIndexVecteur()).getHauteur(),QImage::Format_RGB32);
     QRgb value;
     for (int h=0;h<image.height();h++){
         for(int l=0;l<image.width();l++){
-            int v0 = c->getSauvegardeImage().at(c->getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[0];
-            int v1 = c->getSauvegardeImage().at(c->getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[1];
-            int v2 = c->getSauvegardeImage().at(c->getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[2];
+            int v0 = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[0];
+            int v1 = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[1];
+            int v2 = c.getSauvegardeImage().at(c.getIndexVecteur()).getTableauPixel()[h][l].getEtatCourant()[2];
             value = qRgb(v0, v1, v2);
             image.setPixel(l,h,value);
         }
@@ -169,20 +165,20 @@ bool MainWindow::save()
 
 void MainWindow::crop(){
 
-    c->crop(imageLabel->getOrigineSel().y(),imageLabel->getOrigineSel().x(),imageLabel->getFinSel().y(),imageLabel->getFinSel().x());
+    c.crop(imageLabel->getOrigineSel().y(),imageLabel->getOrigineSel().x(),imageLabel->getFinSel().y(),imageLabel->getFinSel().x());
     QImage image= recupQImage();
     afficherImage(image);
 
 }
 
 void MainWindow::undo(){
-    c->undo();
+    c.undo();
     QImage image= recupQImage();
     afficherImage(image);
 }
 
 void MainWindow::redo(){
-    c->redo();
+    c.redo();
     QImage image= recupQImage();
     afficherImage(image);
 }
@@ -206,9 +202,9 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::pipette(){
     if(ui->Pipette->isChecked()){
-        int *rgb = c->affichageCouleurRGB(imageLabel->getPipette().y(),imageLabel->getPipette().x());
-        int *yuv = c->affichageCouleurYUV(imageLabel->getPipette().y(),imageLabel->getPipette().x());
-        int gris = c->affichageCouleurGris(imageLabel->getPipette().y(),imageLabel->getPipette().x());
+        int *rgb = c.affichageCouleurRGB(imageLabel->getPipette().y(),imageLabel->getPipette().x());
+        int *yuv = c.affichageCouleurYUV(imageLabel->getPipette().y(),imageLabel->getPipette().x());
+        int gris = c.affichageCouleurGris(imageLabel->getPipette().y(),imageLabel->getPipette().x());
 
         QString st;
         st = QString("Valeur RGB : %1, %2, %3 \n Valeur YUV : %4, %5, %6 \n Valeur gris : %7").arg(rgb[0]).arg(rgb[1]).arg(rgb[2]).arg(yuv[0]).arg(yuv[1]).arg(yuv[2]).arg(gris);
@@ -218,114 +214,59 @@ void MainWindow::pipette(){
 }
 
 void MainWindow::rotation90D(){
-    c->rotation("90D");
+    c.rotation("90D");
     QImage image = recupQImage();
     afficherImage(image);
 }
 
 void MainWindow::rotation90G(){
-    c->rotation("90G");
+    c.rotation("90G");
     QImage image = recupQImage();
     afficherImage(image);
 }
 
 void MainWindow::rotation180(){
-    c->rotation("180");
+    c.rotation("180");
     QImage image = recupQImage();
     afficherImage(image);
 }
 
 void MainWindow::flou()
 {
-    c->flou();
+    c.flou();
     QImage image = recupQImage();
     afficherImage(image);
 }
 
 void MainWindow::histogramme()
 {
-    Histogramme *h = c->afficherHistogramme();
-    FenHisto *fr = new FenHisto(h[0],Qt::red);
-    FenHisto *fg = new FenHisto(h[1],Qt::green);
-    FenHisto *fb = new FenHisto(h[2],Qt::blue);
-    FenHisto *fgris = new FenHisto(h[0],Qt::gray);
+//    Histogramme *h = c.afficherHistogramme();
+//    FenHisto *fr = new FenHisto(h[0],Qt::red);
+//    FenHisto *fg = new FenHisto(h[1],Qt::green);
+//    FenHisto *fb = new FenHisto(h[2],Qt::blue);
+//    FenHisto *fgris = new FenHisto(h[0],Qt::gray);
 
-    if (!(h[0].gris(h[1],h[2]))){
-        fr->show();
-        fg->show();
-        fb->show();
-    }
-    else {
-        fgris->show();
-    }
+//    if (!(h[0].gris(h[1],h[2]))){
+//        fr->show();
+//        fg->show();
+//        fb->show();
+//    }
+//    else {
+//        fgris->show();
+//    }
 }
 
 void MainWindow::redimension(){
     DialogRedim d;
-    d.setValue(c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur());
+    d.setValue(c.getSauvegardeImage().at(c.getIndexVecteur()).getHauteur(),c.getSauvegardeImage().at(c.getIndexVecteur()).getLargeur());
     int h,l;
     if(d.exec() == QDialog::Accepted) {
         h=d.getH();
         l=d.getL();
     }
-    c->redimension(h,l);
+    c.redimension(l,h);
     QImage image = recupQImage();
     afficherImage(image);
-}
-
-bool MainWindow::loadFile_fusion(const QString &fileName)
-{
-    QImageReader reader(fileName);
-
-    const QImage image = reader.read();
-    if (image.isNull()) {
-        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
-                                 tr("Cannot load %1.").arg(QDir::toNativeSeparators(fileName)));
-        setWindowFilePath(QString());
-        imageFusion->setPixmap(QPixmap());
-        imageFusion->adjustSize();
-        return false;
-    }
-
-    imageFusion->setPixmap(QPixmap::fromImage(image));
-    scaleFactor = 1.0;
-    fitToWindowAct->setEnabled(true);
-    if (!fitToWindowAct->isChecked())
-        imageFusion->adjustSize();
-    c->ouvertureImage(image);
-    return true;
-}
-
-
-
-void MainWindow::open_fusion()
-{
-    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
-    QFileDialog dialog(this, tr("Open File"),picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
-    dialog.setAcceptMode(QFileDialog::AcceptOpen);
-
-    //QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
-    while (dialog.exec() == QDialog::Accepted && !loadFile_fusion(dialog.selectedFiles().first())) {    }
-}
-
-void MainWindow::fusion(){
-    imageFusion = new ImageViewer;
-    imageFusion->setScaledContents(true);
-    scrollAreaFusion = new QScrollArea;
-    scrollAreaFusion->setBackgroundRole(QPalette::Dark);
-    scrollAreaFusion->setWidget(imageFusion);
-    scrollAreaFusion->setMinimumWidth(800);
-    scrollAreaFusion->setMinimumHeight(800);
-    open_fusion();
-    scrollAreaFusion->show();
-}
-
-void MainWindow::fusionner(){
-    c->fusion(imageFusion->getOrigineSel().y(),imageFusion->getOrigineSel().x(),imageFusion->getFinSel().y(),imageFusion->getFinSel().x());
-    QImage image = recupQImage();
-    afficherImage(image);
-    imageFusion->close();
-    scrollAreaFusion->close();
 }
 
 MainWindow::~MainWindow()

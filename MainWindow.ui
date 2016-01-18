@@ -88,10 +88,25 @@
      <addaction name="action90G"/>
      <addaction name="action180"/>
     </widget>
+    <widget class="QMenu" name="menuFusion">
+     <property name="title">
+      <string>Fusion</string>
+     </property>
+     <addaction name="actionOpen_fu"/>
+    </widget>
+    <widget class="QMenu" name="menuHistogramme">
+     <property name="title">
+      <string>Histogramme</string>
+     </property>
+     <addaction name="actionRecadrer"/>
+     <addaction name="actionEgaliser"/>
+    </widget>
     <addaction name="actionFitToWindowAct"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
     <addaction name="menuRotation"/>
+    <addaction name="menuFusion"/>
+    <addaction name="menuHistogramme"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -207,6 +222,19 @@
       <string>Redimension</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="Fusionner">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>380</y>
+       <width>99</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Fusionner</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QDockWidget" name="Option">
@@ -294,6 +322,21 @@
   <action name="action90G">
    <property name="text">
     <string>90° G</string>
+   </property>
+  </action>
+  <action name="actionOpen_fu">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionRecadrer">
+   <property name="text">
+    <string>Recadrer</string>
+   </property>
+  </action>
+  <action name="actionEgaliser">
+   <property name="text">
+    <string>Egaliser</string>
    </property>
   </action>
  </widget>

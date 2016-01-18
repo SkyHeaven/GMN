@@ -37,6 +37,8 @@ private slots:
     void flou();
     void histogramme();
     void redimension();
+    void fusion();
+    void fusionner();
 
 private:
     Ui::MainWindow *ui;
@@ -47,15 +49,13 @@ private:
     QImage recupQImage();
     void afficherImage(QImage image);
     bool eventFilter(QObject *obj, QEvent *event);
-//    void mousePressEvent(QMouseEvent *event);
-//    void mouseMoveEvent(QMouseEvent *event);
-//    void mouseReleaseEvent(QMouseEvent *event);
 
-
-    Controle c;
+    Controle *c;
 
     ImageViewer *imageLabel;
+    ImageViewer *imageFusion;
     QScrollArea *scrollArea;
+    QScrollArea *scrollAreaFusion;
     double scaleFactor;
     QString curFile;
     QPlainTextEdit *textEdit;
@@ -70,6 +70,8 @@ private:
     QAction *undoAct;
     QAction *redoAct;
 
+    void open_fusion();
+    bool loadFile_fusion(const QString &fileName);
 };
 
 #endif // MAINWINDOW_H

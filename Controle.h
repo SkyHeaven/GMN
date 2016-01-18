@@ -9,12 +9,18 @@
 #include "Histogramme.h"
 #include "Masque.h"
 
+#define MINECARTTYPE 100
+#define MINMOY 60
+#define MAXMOY 190
+
 class Controle{
     private:
     std::vector<Image> sauvegardeImage;
     int indexVecteur;
+    bool ouvertuneimage;
 
     public:
+    Controle();
     int getIndexVecteur() const;
     void setIndexVecteur(int value);
     std::vector<Image> getSauvegardeImage() const;
@@ -40,6 +46,9 @@ class Controle{
     void redimensionLargeur(int valeur, Image img);
 
 
+    void fusion(int h1, int l1, int h2, int l2);
+
+    void transformationHistogramme();
 };
 #endif // CONTROLE_H
 

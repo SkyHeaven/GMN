@@ -530,54 +530,9 @@ Image Image::etirementImage(int h, int l){
     return imgRes;
 }
 
-
-Image Image::fusion(Image im){
-    Image imageres  = cloneImage();
-    if (hauteur < im.getHauteur() || largeur < im.getLargeur()){
-        cout<<"fusion impossible"<<endl;
-        imageres.setHauteur(0);
-    }
-    else {
-        for (int i=0;i<im.getHauteur();i++){
-            for(int j=0;j<im.getLargeur();j++){
-                imageres.setPixel(i,j,im.getPixel(i,j));
-            }
-        }
-    }
-    return imageres;
-}
-
-void Image::augmentationContraste(int ind, int nMax, int nMin){
-    int h = getHauteur();
-    int l = getLargeur();
-    int val=0;
-    string coul = quelleCouleur();
-    for(int i=0; i<h; i++){
-        for(int j=0; j<l; j++){
-            Pixel p = getPixel(i,j);
-            if(coul == "rgb"){
-                val = p.getSingleRGB(ind);
-            }
-            else{
-                val = p.getGrayCouleur();
-            }
-            val = min(max(255.0*( (double)val- (double)nMin)/((double)nMax-(double)nMin),0),255);
-            p.setRGBCouleur(ind,val);
-            setPixel(i,j,p);
-        }
-    }
-}
-
-void Image::eclaircissementImage(int ind){
-
-}
-
-void Image::assombrissementmage(int ind){
-
-}
-
 int Image::arrondiSuperieur(double d){
     int rep;
+    //rep = (int)t;
     if((d- rep) > 0){
         rep++;
     }
@@ -588,14 +543,13 @@ int Image::arrondiSuperieur(double d){
 double Image::distance(double x1, double y1, int x2, int y2){
     return sqrt(pow(((double)x2-x1),2) + pow(((double)y2 - y1),2));
 }
-int Image::min(double a, double b){
-    if(a<b) return (int)a;
-    else return (int)b;
+
+Image Image::fusion(Image im){
+    Image imageres  = cloneImage();
+    for (int i=0;i<im.getHauteur();i++){
+        for(int j=0;j<im.getLargeur();j++){
+            imageres.setPixel(i,j,im.getPixel(i,j));
+        }
+    }
+    return imageres;
 }
-
-int Image::max(double a, double b){
-    if(a>b) return (int)a;
-    else return (int)b;
-}
-
-
