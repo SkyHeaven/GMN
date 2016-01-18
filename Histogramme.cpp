@@ -36,3 +36,7 @@ Histogramme egaliser(Histogramme hist){
 void Histogramme::incrementeValeurHistogramme(int val){
     tableauHistogramme[val]++;
 }
+
+int Histogramme::getValeurIndiceHistogramme(int ind){
+    return tableauHistogramme[ind];
+}

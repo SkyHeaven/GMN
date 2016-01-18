@@ -15,6 +15,7 @@ class Histogramme{
     bool gris(Histogramme h1, Histogramme h2);
     Histogramme egaliser(Histogramme hist);
     void incrementeValeurHistogramme(int val);
+    int getValeurIndiceHistogramme(int ind);
 };
 
 #endif // HISTOGRAMME_H

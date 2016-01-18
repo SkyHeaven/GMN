@@ -47,7 +47,7 @@ QVector<QwtIntervalSample> FenHisto::createPoint(Histogramme h){
     QVector<QwtIntervalSample> points;
 
     for(int i=0; i<256;i++){
-        points<<QwtIntervalSample(h.gettableauHisto()[i],i,i+1);
+        points<<QwtIntervalSample(h.getTableauHistogramme()[i],i,i+1);
     }
     return points;
 }
