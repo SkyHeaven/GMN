@@ -26,16 +26,46 @@ void Pixel::setYUVwithRGB(int rgb[]){
             tab[i] = (double)rgb[i];
         }
         y = 0.299* tab[0] + 0.587*tab[1] + 0.114*tab[2];
-        u = -0.147* tab[0] - 0.289*tab[1] + 0.436*tab[2];
-        v = 0.615* tab[0] -0.515*tab[1] - 0.1*tab[2];
+        u = -0.14713* tab[0] - 0.28886*tab[1] + 0.436*tab[2];
+        v = 0.615* tab[0] -0.51499*tab[1] - 0.10001*tab[2];
 
-        yuv[0] = (int)y;
-        yuv[1] = (int)u;
-        yuv[2] = (int)v;
+        yuv[0] = y;
+        yuv[1] = u;
+        yuv[2] = v;
 
 }
 
+void Pixel::setRGBwithYUV(double yuv[]){
+    rgb[0] = yuv[0] + 1.13983*yuv[2];
+    rgb[1] = yuv[0] - 0.39465*yuv[1] -0.5806*yuv[2];
+    rgb[2] = yuv[0] + 2.03211*yuv[1];
+    if (rgb[0]<0){
+        rgb[0]=0;
+    }
+    else if (rgb[0]>255){
+        rgb[0]=255;
+    }
+    if (rgb[1]<0){
+        rgb[1]=0;
+    }
+    else if (rgb[1]>255){
+        rgb[1]=255;
+    }
+    if (rgb[2]<0){
+        rgb[2]=0;
+    }
+    else if (rgb[2]>255){
+        rgb[2]=255;
+    }
+}
 
+void Pixel::setYUV(int ind, double val){
+    yuv[ind] = val;
+}
+
+double Pixel::getSingleYUV(int ind){
+    return yuv[ind];
+}
 
 void Pixel::setGraywithRGB(int rgb[]){
     double g =0;
@@ -51,7 +81,7 @@ int Pixel::getGrayCouleur(){
     return gris;
 }
 
-int* Pixel::getYUVCouleur(){
+double* Pixel::getYUVCouleur(){
     return yuv;
 }
 

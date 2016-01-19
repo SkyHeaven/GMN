@@ -78,7 +78,7 @@ void Controle::ouvertureImage(QImage imagef){
         return img.getRGB(h,l);
     }
 
-    int* Controle::affichageCouleurYUV(int h, int l){
+    double* Controle::affichageCouleurYUV(int h, int l){
         Image img = sauvegardeImage.at(indexVecteur);
         return img.getYUV(h,l);
     }
@@ -192,76 +192,99 @@ void Controle::ouvertureImage(QImage imagef){
 }
 
     void Controle::transformationHistogramme(){
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        Histogramme* tabHist = afficherHistogramme();
-        Image imgRes;
-        double sum =0;
-        int min = NBNUANCES;
-        int max = 0;
-        int tmp = 0;
-        if(img.quelleCouleur() == "rgb"){
-            for(int i=0; i<NBCOULEUR; i++){
+            Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+            Histogramme* tabHist = afficherHistogramme();
+            Image imgRes;
+            bool condMin = true;
+            bool condMax = true;
+            double sum =0;
+            int min = NBNUANCES;
+            int max = 0;
+            int tmp = 0;
+            double nbPix = img.getHauteur()*img.getLargeur();
+            if(img.quelleCouleur() == "rgb"){
                 for(int j=0; j<NBNUANCES; j++){
                     tmp = tabHist->getValeurIndiceHistogramme(j);
                     sum += tmp;
-                    if(tmp < min) min = tmp;
-                    else if (tmp > max) max = tmp;
 
+                    if(sum > nbPix/VALSUPPR && condMin){
+                        min = j;
+                        condMin = false;
+                    }
+
+                    if((sum > nbPix - nbPix/VALSUPPR) && condMax){
+                        max = j;
+                        condMax = false;
+                    }
                 }
                 sum /= NBNUANCES;
-                if( max - min < MINECARTTYPE){
-                    img.augmentationContraste(i, max, min);
+                if(true){
+                    img.augmentationContraste(0, max, min);
                     img.setYUV();
                     img.setGray();
                     img.setTableauCourant(1);
                 }
 
+    //            else if( sum < MINMOY ){
+    //                img.eclaircissementImage(i);
+    //                img.setYUV();
+    //                img.setGray();
+    //                img.setTableauCourant(1);
+    //            }
+    //            else if( sum > MAXMOY){
+    //                img.assombrissementmage(i);
+    //                img.setYUV();
+    //                img.setGray();
+    //                img.setTableauCourant(1);
+    //            }
+                else{
+                    cout << "pas de transformation disponible pour cette image" << endl;
+                }
+                sum =0;min = NBNUANCES;max = 0;tmp=0;
+
+
+            }
+            else{
+                sum = 0;
+                for(int j=0; j<NBNUANCES; j++){
+                    tmp = tabHist->getValeurIndiceHistogramme(j);
+                    sum += tmp;
+
+                    if(sum > nbPix*((double)VALSUPPR/100.0) && condMin){
+                        min = j;
+                        condMin = false;
+                    }
+
+                    if((sum > nbPix*((100.0-(double)VALSUPPR)/100.0)) && condMax){
+
+                        max = j;
+
+                        condMax = false;
+                    }
+
+                }
+
+                if(true){
+                //if( max - min < MINECARTTYPE){
+                     cout << min << " " << max << endl;
+                    img.augmentationContraste(0, max, min);
+                    img.setTableauCourant(3);
+                }
                 else if( sum < MINMOY ){
-                    img.eclaircissementImage(i);
-                    img.setYUV();
-                    img.setGray();
-                    img.setTableauCourant(1);
+                    img.eclaircissementImage(0);
+                    img.setTableauCourant(3);
                 }
                 else if( sum > MAXMOY){
-                    img.assombrissementmage(i);
-                    img.setYUV();
-                    img.setGray();
-                    img.setTableauCourant(1);
+                    img.assombrissementmage(0);
+                    img.setTableauCourant(3);
                 }
                 else{
                     cout << "pas de transformation disponible pour cette image" << endl;
                 }
+                sum =0;min = NBNUANCES;max = 0;tmp=0;
             }
-            sum =0;min = NBNUANCES;max = 0;tmp=0;
+            ajoutOperation(img);
         }
-        else{
-            for(int j=0; j<NBNUANCES; j++){
-                tmp = tabHist->getValeurIndiceHistogramme(j);
-                sum += tmp;
-                if(tmp < min) min = tmp;
-                else if (tmp > max) max = tmp;
-
-            }
-            sum /= NBNUANCES;
-            if( max - min < MINECARTTYPE){
-                img.augmentationContraste(0, max, min);
-                img.setTableauCourant(3);
-            }
-            else if( sum < MINMOY ){
-                img.eclaircissementImage(0);
-                img.setTableauCourant(3);
-            }
-            else if( sum > MAXMOY){
-                img.assombrissementmage(0);
-                img.setTableauCourant(3);
-            }
-            else{
-                cout << "pas de transformation disponible pour cette image" << endl;
-            }
-        }
-        ajoutOperation(img);
-    }
-
 
 void Controle::fusion(int h1, int l1, int h2, int l2){
     Image imgRes = sauvegardeImage.at(indexVecteur).cropImage(h1,l1,h2,l2);
@@ -273,4 +296,55 @@ void Controle::fusion(int h1, int l1, int h2, int l2){
         indexVecteur--;
     }
 
+}
+
+
+void Controle::egalisation(){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    Histogramme *h = afficherHistogramme();
+    int l;
+    if(img.quelleCouleur() != "rgb"){
+        for (int i=0;i<NBNUANCES;i++){
+            if (h->getValeurIndiceHistogramme(i) !=0){
+                l=i;
+            }
+        }
+        for (int i =0;i<img.getHauteur();i++){
+            for (int j =0; j<img.getLargeur();j++){
+                img.egalisation(h->egaliser(img.getPixel(i,j).getGris(),l),i,j,false);
+            }
+        }
+        img.setTableauCourant(3);
+        ajoutOperation(img);
+    }
+    else {
+        for (int i=0;i<NBNUANCES;i++){
+            if (h->getValeurIndiceHistogramme(i) !=0){
+                l=i;
+            }
+        }
+        for (int i =0;i<img.getHauteur();i++){
+            for (int j =0; j<img.getLargeur();j++){
+                img.egalisation(h->egaliser((int)img.getPixel(i,j).getSingleYUV(0),l),i,j,true);
+            }
+        }
+        img.setTableauCourant(1);
+        ajoutOperation(img);
+    }
+
+}
+
+void Controle::negatif(){
+    Image img = sauvegardeImage.at(indexVecteur).negatif();
+    ajoutOperation(img);
+}
+
+void Controle::gradientX(){
+    Image img = sauvegardeImage.at(indexVecteur).gradienHorizontale_Image();
+    ajoutOperation(img);
+}
+
+void Controle::gradientY(){
+    Image img = sauvegardeImage.at(indexVecteur).gradienVerticale_Image();
+    ajoutOperation(img);
 }

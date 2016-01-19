@@ -13,9 +13,10 @@ class Histogramme{
     int* getTableauHistogramme();
     void initZero();
     bool gris(Histogramme h1, Histogramme h2);
-    Histogramme egaliser(Histogramme hist);
     void incrementeValeurHistogramme(int val);
     int getValeurIndiceHistogramme(int ind);
+    int egaliser(int k, int l);
+    void decrementeValeurHistogramme(int val);
 };
 
 #endif // HISTOGRAMME_H

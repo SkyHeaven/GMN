@@ -51,3 +51,42 @@ int Masque::sommeMasque(){
     }
     return cpt;
 }
+
+void Masque::masqueGradienY()
+{
+    tableauMasque[0][0] = 1;
+    tableauMasque[0][1] = 2;
+    tableauMasque[0][2] = 1;
+    tableauMasque[1][0] = 0;
+    tableauMasque[1][1] = 0;
+    tableauMasque[1][2] = 0;
+    tableauMasque[2][0] = -1;
+    tableauMasque[2][1] = -2;
+    tableauMasque[2][2] = -1;
+}
+
+void Masque::masqueGradienX()
+{
+    tableauMasque[0][0] = 1;
+    tableauMasque[0][1] = 0;
+    tableauMasque[0][2] = -1;
+    tableauMasque[1][0] = 2;
+    tableauMasque[1][1] = 0;
+    tableauMasque[1][2] = -2;
+    tableauMasque[2][0] = 1;
+    tableauMasque[2][1] = 0;
+    tableauMasque[2][2] = -1;
+}
+
+void Masque::masqueRehaussement()
+{
+    tableauMasque[0][0] = -1;
+    tableauMasque[0][1] = -1;
+    tableauMasque[0][2] = -1;
+    tableauMasque[1][0] = -1;
+    tableauMasque[1][1] = 8;
+    tableauMasque[1][2] = -1;
+    tableauMasque[2][0] = -1;
+    tableauMasque[2][1] = -1;
+    tableauMasque[2][2] = -1;
+}

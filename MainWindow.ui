@@ -101,12 +101,23 @@
      <addaction name="actionRecadrer"/>
      <addaction name="actionEgaliser"/>
     </widget>
+    <widget class="QMenu" name="menuFiltrage">
+     <property name="title">
+      <string>Filtrage</string>
+     </property>
+     <addaction name="actionFlou"/>
+     <addaction name="actionGradient"/>
+     <addaction name="actionGradient_y"/>
+     <addaction name="actionRehaussement"/>
+     <addaction name="actionNegatif"/>
+    </widget>
     <addaction name="actionFitToWindowAct"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
     <addaction name="menuRotation"/>
     <addaction name="menuFusion"/>
     <addaction name="menuHistogramme"/>
+    <addaction name="menuFiltrage"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -196,24 +207,11 @@
       <string>Histogramme</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="Flou">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>280</y>
-       <width>99</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Flou</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="Redimension">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>330</y>
+       <y>280</y>
        <width>99</width>
        <height>27</height>
       </rect>
@@ -226,7 +224,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>380</y>
+       <y>340</y>
        <width>99</width>
        <height>27</height>
       </rect>
@@ -337,6 +335,31 @@
   <action name="actionEgaliser">
    <property name="text">
     <string>Egaliser</string>
+   </property>
+  </action>
+  <action name="actionFlou">
+   <property name="text">
+    <string>Flou</string>
+   </property>
+  </action>
+  <action name="actionGradient">
+   <property name="text">
+    <string>Gradient x</string>
+   </property>
+  </action>
+  <action name="actionGradient_y">
+   <property name="text">
+    <string>Gradient y</string>
+   </property>
+  </action>
+  <action name="actionRehaussement">
+   <property name="text">
+    <string>Rehaussement</string>
+   </property>
+  </action>
+  <action name="actionNegatif">
+   <property name="text">
+    <string>Negatif</string>
    </property>
   </action>
  </widget>

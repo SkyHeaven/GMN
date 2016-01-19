@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Histogramme.h"
+#include "Pixel.h"
 
 using namespace std;
 
@@ -29,8 +30,25 @@ bool Histogramme::gris(Histogramme h1, Histogramme h2){
     return egal;
 }
 
-Histogramme egaliser(Histogramme hist){
+//Retourne la nouvelle valeur du pixel
+int Histogramme::egaliser(int k, int l){
+    //T(xk) = (L-1)/n * somme (nj) j->k
+    int n =0;
+    int sum =0;
+    for (int i=0;i<NBNUANCES;i++){
+        n+=tableauHistogramme[i];
+        if (i<=k){
+            sum+=tableauHistogramme[i];
+        }
+    }
+    tableauHistogramme[k]--;
+    tableauHistogramme[((l-1)*sum)/n]++;
+    return ((l-1)*sum)/n;
 
+}
+
+void Histogramme::decrementeValeurHistogramme(int val){
+    tableauHistogramme[val]--;
 }
 
 void Histogramme::incrementeValeurHistogramme(int val){

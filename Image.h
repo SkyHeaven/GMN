@@ -25,7 +25,7 @@ class Image {
     int getLargeur();
     void setLargeur(int l);
     int* getRGB(int h, int l);
-    int* getYUV(int h, int l);
+    double* getYUV(int h, int l);
     int getGray(int h, int l);
     void setGray();
     void setYUV();
@@ -51,6 +51,11 @@ class Image {
     void assombrissementmage(int ind);
     int min(double a, double b);
     int max(double a, double b);
+    void egalisation(int val, int h, int l, bool rgb);
+    Image negatif();
+    Image contourImage();
+    Image gradienVerticale_Image();
+    Image gradienHorizontale_Image();
 };
 
 #endif // IMAGE_H

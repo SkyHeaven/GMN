@@ -41,6 +41,10 @@ private slots:
     void fusionner();
 
     void recadrer();
+    void egaliser();
+    void negatif();
+    void gradientX();
+    void gradientY();
 private:
     Ui::MainWindow *ui;
     bool loadFile(const QString &fileName);

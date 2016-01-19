@@ -12,6 +12,7 @@
 #define MINECARTTYPE 100
 #define MINMOY 60
 #define MAXMOY 190
+#define VALSUPPR 10
 
 class Controle{
     private:
@@ -28,7 +29,7 @@ class Controle{
     void ouvertureImage(QImage imagef);
     void affichageImage(Image img);
     int* affichageCouleurRGB(int h, int l);
-    int* affichageCouleurYUV(int h, int l);
+    double* affichageCouleurYUV(int h, int l);
     int affichageCouleurGris(int h , int l);
     Pixel affichageCouleur(int h, int l);
     void undo();
@@ -49,6 +50,10 @@ class Controle{
     void fusion(int h1, int l1, int h2, int l2);
 
     void transformationHistogramme();
+    void egalisation();
+    void negatif();
+    void gradientX();
+    void gradientY();
 };
 #endif // CONTROLE_H
 

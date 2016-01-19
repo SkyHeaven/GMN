@@ -16,6 +16,9 @@ class Masque{
     int getValeurTableauMasque(int h, int l);
     int sommeMasque();
     //destructeur
+    void masqueGradienY();
+    void masqueGradienX();
+    void masqueRehaussement();
 };
 
 #endif // MASQUE_H

@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle(tr("GMN"));
 
+    //MENU
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
     connect(saveAct,SIGNAL(triggered()), this, SLOT(save()));
     connect(undoAct,SIGNAL(triggered()), this, SLOT(undo()));
@@ -54,9 +55,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action180, SIGNAL(triggered()), this, SLOT(rotation180()));
     connect(ui->actionOpen_fu,SIGNAL(triggered()),this,SLOT(fusion()));
     connect(ui->actionRecadrer,SIGNAL(triggered()),this,SLOT(recadrer()));
+    connect(ui->actionEgaliser,SIGNAL(triggered()),this,SLOT(egaliser()));
+    connect(ui->actionNegatif,SIGNAL(triggered()),this,SLOT(negatif()));
+    connect(ui->actionGradient,SIGNAL(triggered()),this,SLOT(gradientX()));
+    connect(ui->actionGradient_y,SIGNAL(triggered()),this,SLOT(gradientY()));
+    connect(ui->actionFlou,SIGNAL(triggered()),this,SLOT(flou()));
+
+    //BOUTON
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
     connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
-    connect(ui->Flou,SIGNAL(clicked()),this,SLOT(flou()));
     connect(ui->Histogramme,SIGNAL(clicked()),this,SLOT(histogramme()));
     connect(ui->Redimension,SIGNAL(clicked()),this,SLOT(redimension()));
     connect(ui->Fusionner,SIGNAL(clicked()),this,SLOT(fusionner()));
@@ -208,7 +215,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 void MainWindow::pipette(){
     if(ui->Pipette->isChecked()){
         int *rgb = c->affichageCouleurRGB(imageLabel->getPipette().y(),imageLabel->getPipette().x());
-        int *yuv = c->affichageCouleurYUV(imageLabel->getPipette().y(),imageLabel->getPipette().x());
+        double *yuv = c->affichageCouleurYUV(imageLabel->getPipette().y(),imageLabel->getPipette().x());
         int gris = c->affichageCouleurGris(imageLabel->getPipette().y(),imageLabel->getPipette().x());
 
         QString st;
@@ -331,7 +338,30 @@ void MainWindow::fusionner(){
 
 void MainWindow::recadrer(){
     c->transformationHistogramme();
-    cout<<"done"<<endl;
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::egaliser(){
+    c->egalisation();
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::negatif(){
+    c->negatif();
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::gradientX(){
+    c->gradientX();
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::gradientY(){
+    c->gradientY();
     QImage image = recupQImage();
     afficherImage(image);
 }

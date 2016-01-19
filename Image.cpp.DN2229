@@ -551,27 +551,18 @@ void Image::augmentationContraste(int ind, int nMax, int nMin){
     int h = getHauteur();
     int l = getLargeur();
     int val=0;
-    double tmp = 0;
     string coul = quelleCouleur();
     for(int i=0; i<h; i++){
         for(int j=0; j<l; j++){
             Pixel p = getPixel(i,j);
             if(coul == "rgb"){
-                val = p.getSingleYUV(0);
-                val = min(max(255.0*( (double)val- (double)nMin)/((double)nMax-(double)nMin),0),255);
-                p.setYUV(ind,val);
-                p.setRGBwithYUV(p.getYUVCouleur());
-                p.setGraywithRGB(p.getRGBCouleur());
+                val = p.getSingleRGB(ind);
             }
             else{
                 val = p.getGrayCouleur();
-                tmp = 255.0*( ((double)val- (double)nMin)/((double)nMax-(double)nMin));
-                tmp = max(tmp,0);
-                val = min(tmp,255);
-
-                p.setGris(val);
-                p.setEtatCourant(3);
             }
+            val = min(max(255.0*( (double)val- (double)nMin)/((double)nMax-(double)nMin),0.0),255.0);
+            p.setRGBCouleur(ind,val);
             setPixel(i,j,p);
         }
     }
@@ -614,157 +605,13 @@ void Image::egalisation(int val,int h, int l,bool rgb){
         p.setEtatCourant(3);
     }
     else {
-        p.setYUV(0,(double)val);
+        cout<<p.getSingleYUV(0)<<"    "<<val<<endl;
+        double i = (double)val * 1.0;
+        p.setYUV(0,i);
+        cout<<p.getSingleYUV(0)<<"    "<<i<<endl;
         p.setRGBwithYUV(p.getYUVCouleur());
         p.setEtatCourant(1);
     }
     setPixel(h,l,p);
-}
-
-Image Image::negatif(){
-    Image img = cloneImage();
-    for (int i=0;i<hauteur;i++){
-        for (int j=0;j<largeur;j++){
-            Pixel p = getPixel(i,j);
-            int *rgb = p.getRGBCouleur();
-            p.setRGBCouleur(0,255-rgb[0]);
-            p.setRGBCouleur(1,255-rgb[1]);
-            p.setRGBCouleur(2,255-rgb[2]);
-            p.setEtatCourant(1);
-            img.setPixel(i,j,p);
-        }
-    }
-    return img;
-}
-
-Image Image::gradienVerticale_Image(){
-    Masque mask = Masque(3);
-    mask.masqueGradienY();
-    float coeff = 1;
-
-    int hImg = getHauteur();
-    int lImg = getLargeur();
-    Image imgRes;
-    imgRes.setHauteur(hImg);
-    imgRes.setLargeur(lImg);
-    imgRes.setTableauPixel(hImg,lImg);
-
-    int lMask = mask.getLongueur();
-    int *tabCol = new int[NBCOULEUR];
-    int *tabSum = new int[NBCOULEUR];
-    string coul = quelleCouleur();
-
-
-    for(int i=lMask/2; i<hImg-lMask/2; i++){
-        for(int j=lMask/2; j<lImg-lMask/2; j++){
-            for(int k=0; k<NBCOULEUR; k++){ //init tabSum
-                tabSum[k] = 0;
-            }
-            Pixel p = Pixel(i,j);
-
-            for(int i2=0; i2<lMask; i2++){
-                for(int j2=0; j2<lMask; j2++){
-                    tabCol = getPixel(i-lMask/2+i2,j-lMask/2+j2).getEtatCourant();
-                    for(int k=0; k<NBCOULEUR; k++){
-                        tabSum[k] += mask.getValeurTableauMasque(i2,j2)*tabCol[k];
-                    }
-                }
-            }
-
-            for(int k=0; k<NBCOULEUR; k++){
-                tabSum[k] = min(255,abs(tabSum[k]))/4;
-            }
-
-            p.setCouleur(coul,tabSum);
-            imgRes.setPixel(i,j,p);
-            // ATTENTION NE PAS OUBLIER DE SET COULEUR + ETAT COURANT
-            // MALLOC masque
-
-        }
-    }
-    return imgRes;
-}
-
-Image Image::gradienHorizontale_Image(){
-    Masque mask = Masque(3);
-    mask.masqueGradienX();
-    float coeff = 1;
-
-    int hImg = getHauteur();
-    int lImg = getLargeur();
-    Image imgRes;
-    imgRes.setHauteur(hImg);
-    imgRes.setLargeur(lImg);
-    imgRes.setTableauPixel(hImg,lImg);
-
-    int lMask = mask.getLongueur();
-    int *tabCol = new int[NBCOULEUR];
-    int *tabSum = new int[NBCOULEUR];
-    string coul = quelleCouleur();
-
-
-    for(int i=lMask/2; i<hImg-lMask/2; i++){
-        for(int j=lMask/2; j<lImg-lMask/2; j++){
-            for(int k=0; k<NBCOULEUR; k++){ //init tabSum
-                tabSum[k] = 0;
-            }
-            Pixel p = Pixel(i,j);
-
-            for(int i2=0; i2<lMask; i2++){
-                for(int j2=0; j2<lMask; j2++){
-                    tabCol = getPixel(i-lMask/2+i2,j-lMask/2+j2).getEtatCourant();
-                    for(int k=0; k<NBCOULEUR; k++){
-                        tabSum[k] += mask.getValeurTableauMasque(i2,j2)*tabCol[k];
-                    }
-                }
-            }
-
-            for(int k=0; k<NBCOULEUR; k++){
-                tabSum[k] = min(255,abs(tabSum[k]))/4;
-            }
-
-            p.setCouleur(coul,tabSum);
-            imgRes.setPixel(i,j,p);
-            // ATTENTION NE PAS OUBLIER DE SET COULEUR + ETAT COURANT
-            // MALLOC masque
-
-        }
-    }
-    return imgRes;
-}
-
-Image Image::contourImage(){
-    Image imgRes1 = this->gradienHorizontale_Image();
-    Image imgRes2 = this->gradienVerticale_Image();
-
-    int hImg = getHauteur();
-    int lImg = getLargeur();
-    Image imgFinal;
-    imgFinal.setHauteur(hImg);
-    imgFinal.setLargeur(lImg);
-    imgFinal.setTableauPixel(hImg,lImg);
-
-    string coul = quelleCouleur();
-    int *tabSum = new int[NBCOULEUR];
-
-    for(int i=1; i<hImg-1; i++){
-        for(int j=1; j<lImg-1; j++){
-
-            for(int k=0; k<NBCOULEUR; k++){ //init tabSum
-                tabSum[k] = 0;
-            }
-
-            Pixel p = Pixel(i,j);
-            for(int k=0; k<NBCOULEUR; k++){
-                tabSum[k] = sqrt(pow(imgRes1.getPixel(i,j).getEtatCourant()[k],2)+ pow(imgRes2.getPixel(i,j).getEtatCourant()[k],2));
-            }
-
-            p.setCouleur(coul,tabSum);
-            imgFinal.setPixel(i,j,p);
-            // ATTENTION NE PAS OUBLIER DE SET COULEUR + ETAT COURANT
-            // MALLOC masque
-        }
-    }
-    return imgFinal;
 }
 
