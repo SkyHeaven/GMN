@@ -40,6 +40,7 @@ private slots:
     void fusion();
     void fusionner();
 
+    void recadrer();
 private:
     Ui::MainWindow *ui;
     bool loadFile(const QString &fileName);

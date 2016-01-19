@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action90G, SIGNAL(triggered()), this, SLOT(rotation90G()));
     connect(ui->action180, SIGNAL(triggered()), this, SLOT(rotation180()));
     connect(ui->actionOpen_fu,SIGNAL(triggered()),this,SLOT(fusion()));
+    connect(ui->actionRecadrer,SIGNAL(triggered()),this,SLOT(recadrer()));
     connect(ui->Crop, SIGNAL(clicked()), this, SLOT(crop()));
     connect(ui->Grey,SIGNAL(clicked()),this,SLOT(grey()));
     connect(ui->Flou,SIGNAL(clicked()),this,SLOT(flou()));
@@ -326,6 +327,13 @@ void MainWindow::fusionner(){
     afficherImage(image);
     imageFusion->close();
     scrollAreaFusion->close();
+}
+
+void MainWindow::recadrer(){
+    c->transformationHistogramme();
+    cout<<"done"<<endl;
+    QImage image = recupQImage();
+    afficherImage(image);
 }
 
 MainWindow::~MainWindow()
