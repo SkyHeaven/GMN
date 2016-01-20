@@ -156,3 +156,12 @@ int* Pixel::getEtatCourant(){
      }
  }
 
+ double Pixel::getEnergie() const
+ {
+     return energie;
+ }
+
+ void Pixel::setEnergie(int val){
+    energie= val;
+ }
+

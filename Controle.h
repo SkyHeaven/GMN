@@ -27,7 +27,6 @@ class Controle{
     std::vector<Image> getSauvegardeImage() const;
     void setSauvegardeImage(const std::vector<Image> &value);
     void ouvertureImage(QImage imagef);
-    void affichageImage(Image img);
     int* affichageCouleurRGB(int h, int l);
     double* affichageCouleurYUV(int h, int l);
     int affichageCouleurGris(int h , int l);
@@ -36,8 +35,6 @@ class Controle{
     void redo();
     void ajoutOperation(Image img);
     void flou();
-    void filtrage(Image img); //ici creation nouvelle image
-    void amelioration(Image img); //ici creation nouvelle image
     void crop(int h1, int l1, int h2, int l2);
     void afficherGris();
     Histogramme* afficherHistogramme();
@@ -52,6 +49,7 @@ class Controle{
     void gradientX();
     void gradientY();
     void fusion(int h1, int l1, int h2, int l2, int h, int l);
+    void seamCarving();
 };
 #endif // CONTROLE_H
 

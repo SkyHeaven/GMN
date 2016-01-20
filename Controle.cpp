@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include "Controle.h"
+#include "SeamCarving.h"
 using namespace std;
 
 Controle::Controle(){
@@ -70,9 +71,6 @@ void Controle::ouvertureImage(QImage imagef){
 
 }
 
-    void Controle::affichageImage(Image img){
-
-    }
     int* Controle::affichageCouleurRGB(int h, int l){
         Image img = sauvegardeImage.at(indexVecteur);
         return img.getRGB(h,l);
@@ -127,14 +125,6 @@ void Controle::ouvertureImage(QImage imagef){
         Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         img.flouImage();
         ajoutOperation(img);
-    }
-
-    void Controle::filtrage(Image img){ //ici creation nouvelle image
-        //return NULL;
-    }
-
-    void Controle::amelioration(Image img){ //ici creation nouvelle image
-        //return NULL;
     }
 
     void Controle::crop(int h1, int l1, int h2, int l2){
@@ -340,11 +330,24 @@ void Controle::negatif(){
 }
 
 void Controle::gradientX(){
-    Image img = sauvegardeImage.at(indexVecteur).gradienHorizontale_Image();
+    Image img = sauvegardeImage.at(indexVecteur).gradienHorizontal_Image();
     ajoutOperation(img);
 }
 
 void Controle::gradientY(){
-    Image img = sauvegardeImage.at(indexVecteur).gradienVerticale_Image();
+    Image img = sauvegardeImage.at(indexVecteur).gradienVertical_Image();
     ajoutOperation(img);
+}
+
+
+void Controle::seamCarving(){
+    SeamCarving s;
+
+    s.setImg(sauvegardeImage.at(indexVecteur));
+cout<<"debut"<<endl;
+    s.SeamCarving_algo();
+cout<<"fin"<<endl;
+    Image img = s.getImg();
+    ajoutOperation(img);
+
 }

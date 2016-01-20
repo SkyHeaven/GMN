@@ -10,6 +10,7 @@ class Pixel {
     double yuv[NBCOULEUR];
     int gris;    
     int etatCourant[NBCOULEUR];
+    double energie;
 
     public:
     Pixel(double x , double y);
@@ -35,6 +36,8 @@ class Pixel {
     void setGris(int value);
     void setYUV(int ind, double val);
     double getSingleYUV(int ind);
+    double getEnergie() const;
+    void setEnergie(int value);
 };
 
 #endif // PIXEL_H

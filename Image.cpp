@@ -120,8 +120,6 @@ Image Image::cropImage(int h1, int l1, int h2, int l2){
     int minY = min(h1,h2);
     int maxX = max(l1,l2);
     int maxY = max(h1,h2);
-    int diffX = maxX - minX;
-    int diffY = maxY - minY;
 
     imgRes.setHauteur(maxY - minY);
     imgRes.setLargeur(maxX - minX);
@@ -650,7 +648,7 @@ Image Image::negatif(){
     return img;
 }
 
-Image Image::gradienVerticale_Image(){
+Image Image::gradienVertical_Image(){
     Masque mask = Masque(3);
     mask.masqueGradienY();
     float coeff = 1;
@@ -698,7 +696,7 @@ Image Image::gradienVerticale_Image(){
     return imgRes;
 }
 
-Image Image::gradienHorizontale_Image(){
+Image Image::gradienHorizontal_Image(){
     Masque mask = Masque(3);
     mask.masqueGradienX();
     float coeff = 1;
@@ -747,8 +745,8 @@ Image Image::gradienHorizontale_Image(){
 }
 
 Image Image::contourImage(){
-    Image imgRes1 = this->gradienHorizontale_Image();
-    Image imgRes2 = this->gradienVerticale_Image();
+    Image imgRes1 = this->gradienHorizontal_Image();
+    Image imgRes2 = this->gradienVertical_Image();
 
     int hImg = getHauteur();
     int lImg = getLargeur();
@@ -779,5 +777,32 @@ Image Image::contourImage(){
         }
     }
     return imgFinal;
+}
+
+void Image::setEnergiePixel(){
+    for(int ha=0; ha<getHauteur(); ha++){
+        for(int la=0; la<getLargeur(); la++){
+
+            if(ha > 0 && ha < getHauteur()-1 && la > 0 && la< getLargeur()-1){
+                int gradX;
+                int gradY;
+                int *rgbG = getRGB(ha,la-1);
+                int *rgbD = getRGB(ha,la+1);
+                int *rgbH = getRGB(ha-1,la);
+                int *rgbB = getRGB(ha+1,la);
+                for(int k=0; k<NBCOULEUR; k++){
+                    gradX += pow((double)rgbD[k] - (double)rgbG[k],2.0);
+                    gradY += pow((double)rgbB[k] - (double)rgbH[k],2.0);
+
+                }
+                tableauPixel[ha][la].setEnergie(gradX+gradY);
+
+            }
+
+            else{
+                tableauPixel[ha][la].setEnergie(0); // WARNING voir ce qu on met comme valeur
+            }
+        }
+    }
 }
 

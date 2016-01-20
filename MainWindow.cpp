@@ -68,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Histogramme,SIGNAL(clicked()),this,SLOT(histogramme()));
     connect(ui->Redimension,SIGNAL(clicked()),this,SLOT(redimension()));
     connect(ui->Fusionner,SIGNAL(clicked()),this,SLOT(fusionner()));
+    connect(ui->SeamCarving,SIGNAL(clicked()),this,SLOT(seamCarving()));
 
 
 
@@ -143,8 +144,12 @@ void MainWindow::grey(){
 }
 
 QImage MainWindow::recupQImage(){
+    cout<<c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur()<< "       "<<c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur()<<endl;
+    QImage ima(2592,1944,QImage::Format_RGB32);
+    cout<<c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur()<< "       "<<c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur()<<endl;
 
     QImage image(c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),QImage::Format_RGB32);
+    cout<<"tasoeur"<<endl;
     QRgb value;
     for (int h=0;h<image.height();h++){
         for(int l=0;l<image.width();l++){
@@ -390,6 +395,15 @@ void MainWindow::gradientY(){
     c->gradientY();
     QImage image = recupQImage();
     afficherImage(image);
+}
+
+void MainWindow::seamCarving(){
+    c->seamCarving();
+        cout<<"tamere"<<endl;
+    QImage image = recupQImage();
+        cout<<"tamere"<<endl;
+    afficherImage(image);
+        cout<<"tamere"<<endl;
 }
 
 MainWindow::~MainWindow()
