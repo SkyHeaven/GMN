@@ -4,6 +4,7 @@
 #include "ImageViewer.h"
 #include "FenHisto.h"
 #include "DialogRedim.h"
+#include "DialogFusion.h"
 
 
 #include <iostream>
@@ -329,7 +330,32 @@ void MainWindow::fusion(){
 }
 
 void MainWindow::fusionner(){
-    c->fusion(imageFusion->getOrigineSel().y(),imageFusion->getOrigineSel().x(),imageFusion->getFinSel().y(),imageFusion->getFinSel().x());
+    DialogFusion d;
+    d.setValue(0,0);
+    int hmax,lmax;
+    if(imageFusion->getOrigineSel().x() < imageFusion->getFinSel().x()){
+        hmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur() + imageFusion->getOrigineSel().x() - imageFusion->getFinSel().x();
+    }
+    else {
+        hmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur() - imageFusion->getOrigineSel().x() + imageFusion->getFinSel().x();
+    }
+
+    if(imageFusion->getOrigineSel().y() < imageFusion->getFinSel().y()){
+        lmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur() + imageFusion->getOrigineSel().y() - imageFusion->getFinSel().y();
+    }
+    else {
+        lmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur() - imageFusion->getOrigineSel().y() + imageFusion->getFinSel().y();
+    }
+
+
+
+    d.setValueMax(hmax,lmax);
+    int h,l;
+    if(d.exec() == QDialog::Accepted) {
+        h=d.getX();
+        l=d.getY();
+    }
+    c->fusion(imageFusion->getOrigineSel().y(),imageFusion->getOrigineSel().x(),imageFusion->getFinSel().y(),imageFusion->getFinSel().x(),h,l);
     QImage image = recupQImage();
     afficherImage(image);
     imageFusion->close();

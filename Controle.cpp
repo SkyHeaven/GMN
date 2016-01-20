@@ -286,9 +286,9 @@ void Controle::ouvertureImage(QImage imagef){
             ajoutOperation(img);
         }
 
-void Controle::fusion(int h1, int l1, int h2, int l2){
+void Controle::fusion(int h1, int l1, int h2, int l2,int h,int l){
     Image imgRes = sauvegardeImage.at(indexVecteur).cropImage(h1,l1,h2,l2);
-    Image imgfu = sauvegardeImage.at(indexVecteur-1).fusion(imgRes);
+    Image imgfu = sauvegardeImage.at(indexVecteur-1).fusion(imgRes,h,l);
     if (imgfu.getHauteur() != 0){
         ajoutOperation(imgfu);
     }

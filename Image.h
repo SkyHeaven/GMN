@@ -45,7 +45,6 @@ class Image {
     int arrondiSuperieur(double d);
     double distance(double x1, double y1, int x2, int y2);
     //destructeur
-    Image fusion(Image im);
     void augmentationContraste(int ind, int nMax, int nMin);
     void eclaircissementImage(int ind);
     void assombrissementmage(int ind);
@@ -56,6 +55,7 @@ class Image {
     Image contourImage();
     Image gradienVerticale_Image();
     Image gradienHorizontale_Image();
+    Image fusion(Image im, int h, int l);
 };
 
 #endif // IMAGE_H

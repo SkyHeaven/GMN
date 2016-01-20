@@ -12,7 +12,7 @@
 #define MINECARTTYPE 100
 #define MINMOY 60
 #define MAXMOY 190
-#define VALSUPPR 10
+#define VALSUPPR 2
 
 class Controle{
     private:
@@ -46,14 +46,12 @@ class Controle{
     void redimensionHauteur(int valeur, Image img);
     void redimensionLargeur(int valeur, Image img);
 
-
-    void fusion(int h1, int l1, int h2, int l2);
-
     void transformationHistogramme();
     void egalisation();
     void negatif();
     void gradientX();
     void gradientY();
+    void fusion(int h1, int l1, int h2, int l2, int h, int l);
 };
 #endif // CONTROLE_H
 

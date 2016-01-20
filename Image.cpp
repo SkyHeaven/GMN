@@ -531,7 +531,7 @@ Image Image::etirementImage(int h, int l){
 }
 
 
-Image Image::fusion(Image im){
+Image Image::fusion(Image im,int h,int l){
     Image imageres  = cloneImage();
     if (hauteur < im.getHauteur() || largeur < im.getLargeur()){
         cout<<"fusion impossible"<<endl;
@@ -540,7 +540,7 @@ Image Image::fusion(Image im){
     else {
         for (int i=0;i<im.getHauteur();i++){
             for(int j=0;j<im.getLargeur();j++){
-                imageres.setPixel(i,j,im.getPixel(i,j));
+                imageres.setPixel(i+h,j+l,im.getPixel(i,j));
             }
         }
     }
