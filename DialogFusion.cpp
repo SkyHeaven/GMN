@@ -1,5 +1,7 @@
 #include "DialogFusion.h"
 #include "ui_DialogFusion.h"
+#include <iostream>
+#include <string>
 
 DialogFusion::DialogFusion(QWidget *parent) :
     QDialog(parent),

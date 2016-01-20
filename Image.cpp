@@ -623,15 +623,28 @@ void Image::egalisation(int val,int h, int l,bool rgb){
 
 Image Image::negatif(){
     Image img = cloneImage();
-    for (int i=0;i<hauteur;i++){
-        for (int j=0;j<largeur;j++){
-            Pixel p = getPixel(i,j);
-            int *rgb = p.getRGBCouleur();
-            p.setRGBCouleur(0,255-rgb[0]);
-            p.setRGBCouleur(1,255-rgb[1]);
-            p.setRGBCouleur(2,255-rgb[2]);
-            p.setEtatCourant(1);
-            img.setPixel(i,j,p);
+    if (quelleCouleur() == "rgb"){
+        for (int i=0;i<hauteur;i++){
+            for (int j=0;j<largeur;j++){
+                Pixel p = getPixel(i,j);
+                int *rgb = p.getRGBCouleur();
+                p.setRGBCouleur(0,255-rgb[0]);
+                p.setRGBCouleur(1,255-rgb[1]);
+                p.setRGBCouleur(2,255-rgb[2]);
+                p.setEtatCourant(1);
+                img.setPixel(i,j,p);
+            }
+        }
+    }
+    else {
+        for (int i=0;i<hauteur;i++){
+            for (int j=0;j<largeur;j++){
+                Pixel p = getPixel(i,j);
+                int gris = p.getGris();
+                p.setGris(255-gris);
+                p.setEtatCourant(3);
+                img.setPixel(i,j,p);
+            }
         }
     }
     return img;

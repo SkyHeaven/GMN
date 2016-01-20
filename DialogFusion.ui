@@ -64,6 +64,12 @@
      <height>27</height>
     </rect>
    </property>
+   <property name="maximum">
+    <number>100000</number>
+   </property>
+   <property name="displayIntegerBase">
+    <number>10</number>
+   </property>
   </widget>
   <widget class="QSpinBox" name="spinBoxY">
    <property name="geometry">
@@ -73,6 +79,9 @@
      <width>81</width>
      <height>27</height>
     </rect>
+   </property>
+   <property name="maximum">
+    <number>100000</number>
    </property>
   </widget>
  </widget>
