@@ -1,5 +1,5 @@
 #include "FenHisto.h"
-#include "ui_fenhisto.h"
+#include "ui_FenHisto.h"
 
 #include "qwt_plot.h"
 #include "qwt.h"

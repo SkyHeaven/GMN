@@ -11,7 +11,10 @@ SOURCES += \
     MainWindow.cpp \
     DialogRedim.cpp \
     FenHisto.cpp \
-    ImageViewer.cpp
+    ImageViewer.cpp \
+    DialogFusion.cpp \
+    SeamCarving.cpp \
+    SeamCarving.cpp
 
 
 HEADERS += \
@@ -23,13 +26,17 @@ HEADERS += \
     MainWindow.h \
     DialogRedim.h \
     FenHisto.h \
-    ImageViewer.h
+    ImageViewer.h \
+    DialogFusion.h \
+    SeamCarving.h \
+    SeamCarving.h
 
 
 FORMS += \
     MainWindow.ui \
     DialogRedim.ui \
-    FenHisto.ui
+    FenHisto.ui \
+    DialogFusion.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../opt/Tools/QtCreator/lib/qtcreator/plugins/qwt-6.1.2/lib/release/ -lqwt
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../opt/Tools/QtCreator/lib/qtcreator/plugins/qwt-6.1.2/lib/debug/ -lqwt
@@ -37,3 +44,17 @@ else:unix: LIBS += -L$$PWD/../../../opt/Tools/QtCreator/lib/qtcreator/plugins/qw
 
 INCLUDEPATH += $$PWD/../../../opt/Tools/QtCreator/lib/qtcreator/plugins/qwt-6.1.2/include
 DEPENDPATH += $$PWD/../../../opt/Tools/QtCreator/lib/qtcreator/plugins/qwt-6.1.2/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../../usr/local/qwt-6.1.2/lib/release/ -lqwt
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../../usr/local/qwt-6.1.2/lib/debug/ -lqwt
+else:unix: LIBS += -L$$PWD/../../../../../../usr/local/qwt-6.1.2/lib/ -lqwt
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/qwt-6.1.2/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/qwt-6.1.2/include
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../../usr/local/qwt-6.1.2/lib/release/ -lqwt
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../../usr/local/qwt-6.1.2/lib/debug/ -lqwt
+else:unix: LIBS += -L$$PWD/../../../../../../usr/local/qwt-6.1.2/lib/ -lqwt
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/qwt-6.1.2/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/qwt-6.1.2/include
