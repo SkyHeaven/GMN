@@ -5,10 +5,19 @@
 class SeamCarving{
 private:
     Image img;
+    Pixel **tabChemin;
+    int **tabEnergy;
+    int ind_min;
 public:
+        SeamCarving();
     void SeamCarving_algo();
    Image getImg();
     void setImg(Image value);
+    void resetEnergy();
+        //void resetChemin();
+    void seamVertical();
+    Image removeVertical();
+     void seamCarvingVertical(int nb);
 };
 
 #endif // SEAMCARVING_H

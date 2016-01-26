@@ -32,6 +32,7 @@ void Image::setTableauPixel(int h, int l){
     }
 }
 
+
 void Image::setPixel(int h, int l, Pixel p){
     tableauPixel[h][l] = p;
 }
@@ -84,12 +85,16 @@ void Image::setYUV(){
 }
 
 void Image::setNoRGB(){
+
     for(int i= 0 ; i <hauteur; i++){
         for(int j =0; j < largeur; j++){
             for(int k=0; k<NBCOULEUR; k++){
-                tableauPixel[i][j].setRGBCouleur(k,-1);
+                tableauPixel[i][j].setRGBCouleur(k,getPixel(i,j).getGris());
             }
         }
+    }
+    for(int k=0; k<NBCOULEUR; k++){
+        tableauPixel[0][0].setRGBCouleur(k,-1);
     }
 }
 void Image::setTableauCourant(int c){
@@ -352,13 +357,19 @@ Image Image::reductionHauteurImage(int valeur){
                 cpt++;
                 ind++;
             }
-
             for(int k=0; k<NBCOULEUR; k++){
                 tabSum[k] = tabSum[k]/cpt;
             }
             p.setCouleur(coul,tabSum);
             imgRes.setPixel(i,j,p);
         }
+    }
+    if(coul =="rgb"){
+        imgRes.setTableauCourant(1);
+    }
+    else{
+        imgRes.setTableauCourant(3);
+        imgRes.setNoRGB();
     }
     return imgRes;
 }
@@ -396,13 +407,19 @@ Image Image::reductionLargeurImage(int valeur){
                 cpt++;
                 ind++;
             }
-
             for(int k=0; k<NBCOULEUR; k++){
                 tabSum[k] = tabSum[k]/cpt;
             }
             p.setCouleur(coul,tabSum);
             imgRes.setPixel(i,j,p);
         }
+    }
+    if(coul =="rgb"){
+        imgRes.setTableauCourant(1);
+    }
+    else{
+        imgRes.setTableauCourant(3);
+        imgRes.setNoRGB();
     }
     return imgRes;
 }
@@ -441,10 +458,10 @@ Image Image::etirementImage(int h, int l){
             else if( ((int)borneInfHaut != (int)borneSupHaut) && ((int)borneInfLarg != (int)borneSupLarg)){
                 x= (int)borneSupLarg;// + 0.5*coeffEtirLarg;
                 y= (int)borneSupHaut;// + 0.5*coeffEtirHaut;
-                t1 = distance(borneInfLarg, borneInfHaut, x,y);
-                t2 = distance(borneInfLarg, borneSupHaut, x,y); //bizarre
-                u1 = distance(borneSupLarg, borneInfHaut, x,y);
-                u2 = distance(borneSupLarg, borneSupHaut, x,y);
+                t1 = 1.0/distance(borneInfLarg, borneInfHaut, x,y);
+                t2 = 1.0/distance(borneInfLarg, borneSupHaut, x,y); //bizarre
+                u1 = 1.0/distance(borneSupLarg, borneInfHaut, x,y);
+                u2 = 1.0/distance(borneSupLarg, borneSupHaut, x,y);
 
     //            t1 = 1 - (x-borneInfLarg); // a verif
     //            t2 = borneSupLarg-x;
@@ -475,8 +492,8 @@ Image Image::etirementImage(int h, int l){
             else if( ((int)borneInfHaut == (int)borneSupHaut) && ((int)borneInfLarg != (int)borneSupLarg)){
                 x= (int)borneSupLarg;
                 y= (int)borneSupHaut;// + 0.5*coeffEtirHaut;
-                t1 = distance(borneInfLarg, borneInfHaut, x,y);
-                t2 = distance(borneInfLarg, borneSupLarg, x,y);
+                t1 = 1.0/distance(borneInfLarg, borneInfHaut, x,y);
+                t2 = 1.0/distance(borneInfLarg, borneSupLarg, x,y);
 
                 sumCoeff = t1 +t2;
                 if(sumCoeff !=1){
@@ -497,8 +514,8 @@ Image Image::etirementImage(int h, int l){
             else if( ((int)borneInfHaut != (int)borneSupHaut) && ((int)borneInfLarg == (int)borneSupLarg)){
                 x= (int)borneSupLarg;// + 0.5*coeffEtirLarg;
                 y= (int)borneSupHaut;
-                u1 = distance(borneSupLarg, borneInfHaut, x,y);
-                u2 = distance(borneSupLarg, borneSupHaut, x,y);
+                u1 = 1.0/distance(borneSupLarg, borneInfHaut, x,y);
+                u2 = 1.0/distance(borneSupLarg, borneSupHaut, x,y);
 
                 sumCoeff =u1 + u2;
                 if(sumCoeff !=1){
@@ -746,6 +763,7 @@ Image Image::gradienHorizontal_Image(){
 
 Image Image::contourImage(){
     Image imgRes1 = this->gradienHorizontal_Image();
+
     Image imgRes2 = this->gradienVertical_Image();
 
     int hImg = getHauteur();
@@ -782,27 +800,26 @@ Image Image::contourImage(){
 void Image::setEnergiePixel(){
     for(int ha=0; ha<getHauteur(); ha++){
         for(int la=0; la<getLargeur(); la++){
-
+            int gradX = 0;
+            int gradY = 0;
             if(ha > 0 && ha < getHauteur()-1 && la > 0 && la< getLargeur()-1){
-                int gradX;
-                int gradY;
                 int *rgbG = getRGB(ha,la-1);
                 int *rgbD = getRGB(ha,la+1);
                 int *rgbH = getRGB(ha-1,la);
                 int *rgbB = getRGB(ha+1,la);
                 for(int k=0; k<NBCOULEUR; k++){
-                    gradX += pow((double)rgbD[k] - (double)rgbG[k],2.0);
-                    gradY += pow((double)rgbB[k] - (double)rgbH[k],2.0);
+                    gradX += pow(rgbD[k] - rgbG[k],2);
+                    gradY += pow(rgbB[k] - rgbH[k],2);
 
                 }
                 tableauPixel[ha][la].setEnergie(gradX+gradY);
-
             }
 
-            else{
-                tableauPixel[ha][la].setEnergie(0); // WARNING voir ce qu on met comme valeur
+            else {
+                tableauPixel[ha][la].setEnergie(10000); // WARNING voir ce qu on met comme valeur
             }
         }
     }
+
 }
 

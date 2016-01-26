@@ -162,6 +162,6 @@ int* Pixel::getEtatCourant(){
  }
 
  void Pixel::setEnergie(int val){
-    energie= val;
+    energie = val;
  }
 
