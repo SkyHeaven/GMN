@@ -1,13 +1,5 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include "Controle.h"
-#include "ImageViewer.h"
-#include "FenHisto.h"
-#include "DialogRedim.h"
-#include "DialogFusion.h"
-#include "DialogMasque_T.h"
-
-
 #include <iostream>
 #include <string>
 #include <QtWidgets>
@@ -147,12 +139,8 @@ void MainWindow::grey(){
 }
 
 QImage MainWindow::recupQImage(){
-    cout<<c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur()<< "       "<<c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur()<<endl;
     QImage ima(2592,1944,QImage::Format_RGB32);
-    cout<<c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur()<< "       "<<c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur()<<endl;
-
     QImage image(c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),QImage::Format_RGB32);
-    cout<<"tasoeur"<<endl;
     QRgb value;
     for (int h=0;h<image.height();h++){
         for(int l=0;l<image.width();l++){
@@ -406,7 +394,7 @@ void MainWindow::gradientY(){
     }
 
 void MainWindow::seamCarving(){
-    c->seamCarving(150,100);
+    c->seamCarving(400,400);
     QImage image = recupQImage();
     afficherImage(image);
 }

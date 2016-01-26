@@ -42,13 +42,13 @@ void SeamCarving::seamVertical(){
     int h = img.getHauteur();
     int l = img.getLargeur();
     string coul = img.quelleCouleur();
-   // cout << "l = " <<l << endl;
+   //  << "l = " <<l << endl;
     for(int i = 0; i<h;i++){
         for(int j = 0; j<l;j++){
             tabEnergy[i][j] = img.getPixel(i,j).getEnergie();
         }
     }
-   // cout << "h = " << h << endl;
+   //  << "h = " << h << endl;
     //Chercher chemin
     for(int i=1; i<img.getHauteur();i++){
         for(int j=0; j<img.getLargeur(); j++){
@@ -140,7 +140,6 @@ Image SeamCarving::removeVertical(){
     imgRes.setTableauPixel(h,l-1);
 
     for(int row=h-1;row>=0;--row){
-        //cout<<"row=: "<<row<<" ind_min: "<<ind_min<<endl;
         if(row!=0){
             for(int col=0;col<l;col++){
                 Pixel p = img.getPixel(row,col);
@@ -199,8 +198,9 @@ void SeamCarving::seamHorizontal(){
         }
     }
     //Chercher chemin
-    for(int i=0; i<img.getHauteur();i++){
-        for(int j=1; j<img.getLargeur(); j++){
+
+    for(int j=1; j<img.getLargeur(); j++){
+        for(int i=0; i<img.getHauteur();i++){
             Pixel vois1 = img.getPixel(0,0);
             Pixel vois2 = img.getPixel(0,0);
             Pixel vois3 = img.getPixel(0,0);
@@ -262,15 +262,15 @@ void SeamCarving::seamHorizontal(){
         }
     }
 
-    int ch = tabChemin[ind_min][l-1].getY();
-    for(int j = l-1; j>0; j--){
-        Pixel p = img.getPixel(ch,j-1);
-        p.setRGBCouleur(0,255);
-        p.setRGBCouleur(1,0);
-        p.setRGBCouleur(2,0);
-        img.setPixel(ch,j-1,p);
-        ch = tabChemin[ch][j-1].getY();
-    }
+//    int ch = tabChemin[ind_min][l-1].getY();
+//    for(int j = l-1; j>0; j--){
+//        Pixel p = img.getPixel(ch,j-1);
+//        p.setRGBCouleur(0,255);
+//        p.setRGBCouleur(1,0);
+//        p.setRGBCouleur(2,0);
+//        img.setPixel(ch,j-1,p);
+//        ch = tabChemin[ch][j-1].getY();
+//    }
     if(coul == "rgb"){
         img.setTableauCourant(1);
     }
@@ -291,7 +291,6 @@ Image SeamCarving::removeHorizontal(){
     for(int col=l-1; col>=0; --col){
         if(col!=0){
             for(int row=0; row<h; row++){
-            //for(int col=0;col<l;col++){
                 Pixel p = img.getPixel(row,col);
                 if(row<ind_min) {
                     imgRes.setPixel(row,col,p);
@@ -307,7 +306,6 @@ Image SeamCarving::removeHorizontal(){
         }
         else{
             for(int row=0; row< h-1; row++){
-            //for(int col=0;col<l-1;col++){
                 Pixel p = img.getPixel(row,col);
                 imgRes.setPixel(row,col,p);
             }
@@ -320,7 +318,6 @@ Image SeamCarving::removeHorizontal(){
 }
 
 void SeamCarving::seamCarvingHorizontal(int nb){
-    cout << "ok debut ";
     for(int i=1; i< nb; i++){
        seamHorizontal();
        Image img = removeHorizontal();
@@ -331,7 +328,6 @@ void SeamCarving::seamCarvingHorizontal(int nb){
 }
 
 void SeamCarving::seamCarvingVertical(int nb){
-    cout << "ok debut ";
     for(int i=1; i< nb; i++){
        seamVertical();
        Image img = removeVertical();
@@ -340,12 +336,12 @@ void SeamCarving::seamCarvingVertical(int nb){
        this->img.setEnergiePixel();
     }
 }
-//    cout << "ok fin seam";
+//     << "ok fin seam";
 //    int h = img.getHauteur();
 //    int l = img.getLargeur();
 //    Image imgRes;
 //    imgRes.setTableauPixel(h,l);
-//    //cout << "h = " << img.getHauteur()
+//    // << "h = " << img.getHauteur()
 //    imgRes.setHauteur(h);
 //    imgRes.setLargeur(l);
 //    for(int i=0; i<h; i++){

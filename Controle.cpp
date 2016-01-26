@@ -355,24 +355,23 @@ void Controle::rehaussement(){
 void Controle::seamCarving(int h, int l){
     SeamCarving s;
     s.setImg(sauvegardeImage.at(indexVecteur).cloneImage());
-
-    if(false ){//h < s.getImg().getHauteur()){
-        if(false ){//l < s.getImg().getLargeur()){
-            s.seamCarvingHorizontal(h);
-            cout <<" ok horiz ";
-            s.seamCarvingVertical(l);
-            cout <<"ok vertical ";
+    int oldH = s.getImg().getHauteur();
+    int oldL = s.getImg().getLargeur();
+    if(h < oldH){
+        if(l < oldL){
+            s.seamCarvingHorizontal(oldH-h);
+            s.seamCarvingVertical(oldL-l);
             Image img = s.getImg();
             ajoutOperation(img);
         }
         else{
-            s.seamCarvingHorizontal(h);
+            s.seamCarvingHorizontal(oldH-h);
             Image img = s.getImg();
             ajoutOperation(img);
         }
     }
     else if(l < s.getImg().getLargeur()){
-        s.seamCarvingVertical(l);
+        s.seamCarvingVertical(oldL-l);
         Image img = s.getImg();
         ajoutOperation(img);
     }
