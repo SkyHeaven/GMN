@@ -66,7 +66,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -110,6 +110,7 @@
      <addaction name="actionGradient_y"/>
      <addaction name="actionRehaussement"/>
      <addaction name="actionNegatif"/>
+     <addaction name="actionContour"/>
     </widget>
     <addaction name="actionFitToWindowAct"/>
     <addaction name="actionUndo"/>
@@ -386,6 +387,11 @@
   <action name="actionNegatif">
    <property name="text">
     <string>Negatif</string>
+   </property>
+  </action>
+  <action name="actionContour">
+   <property name="text">
+    <string>Contour</string>
    </property>
   </action>
  </widget>

@@ -7,7 +7,7 @@ using namespace std;
 
 Controle::Controle(){
     indexVecteur =0;
-    ouvertuneimage = false;
+    imageOuverte = false;
 }
 
 std::vector<Image> Controle::getSauvegardeImage() const
@@ -64,9 +64,9 @@ void Controle::ouvertureImage(QImage imagef){
     image.setGray();
     image.setYUV();
     image.setTableauCourant(1);
-    if (!ouvertuneimage){
+    if (!imageOuverte){
         sauvegardeImage.insert(sauvegardeImage.begin(),image);
-        ouvertuneimage = true;
+        imageOuverte = true;
     }
     else {
         ajoutOperation(image);
@@ -166,36 +166,32 @@ void Controle::ouvertureImage(QImage imagef){
     }
     void Controle::redimension(int h, int l){
         Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        cout << "couleur = " << img.quelleCouleur() << endl;
         Image imgRes1, imgRes2;
         if(h < img.getHauteur()){
             if(l < img.getLargeur()){
                 imgRes1 = img.reductionHauteurImage(h);
                 imgRes2 = imgRes1.reductionLargeurImage(l);
                 ajoutOperation(imgRes2);
-                cout << "couleur = " << imgRes2.quelleCouleur() << endl;
             }
             else{
-                 imgRes1 = img.reductionHauteurImage(h);
-                 ajoutOperation(imgRes1);
+                imgRes1 = img.reductionHauteurImage(h);
+                ajoutOperation(imgRes1);
             }
         }
         else if(l < img.getLargeur()){
-                imgRes1 = img.reductionLargeurImage(l);
-                ajoutOperation(imgRes1);
-            }
+            imgRes1 = img.reductionLargeurImage(l);
+            ajoutOperation(imgRes1);
+        }
         else if( h > img.getHauteur() && l > img.getLargeur()){
-                imgRes1 = img.etirementImage(h,l);
-                ajoutOperation(imgRes1);
-            }
+            imgRes1 = img.etirementImage(h,l);
+            ajoutOperation(imgRes1);
+        }
         else{
-                cout << "Operation de redimensionnement non prise en compte" << endl;
-            }
+            cout << "Operation de redimensionnement non prise en compte" << endl;
+        }
+    }
 
-
-}
-
-    void Controle::transformationHistogramme(){
+    void Controle::etalementHistogramme(){
         Image img = sauvegardeImage.at(indexVecteur).cloneImage();
         Histogramme* tabHist = afficherHistogramme();
         Image imgRes;
@@ -228,7 +224,6 @@ void Controle::ouvertureImage(QImage imagef){
                 img.setGray();
                 img.setTableauCourant(1);
             }
-
             //            else if( sum < MINMOY ){
             //                img.eclaircissementImage(i);
             //                img.setYUV();
@@ -245,8 +240,6 @@ void Controle::ouvertureImage(QImage imagef){
                 cout << "pas de transformation disponible pour cette image" << endl;
             }
             sum =0;min = NBNUANCES;max = 0;tmp=0;
-
-
         }
         else{
             sum = 0;
@@ -260,14 +253,10 @@ void Controle::ouvertureImage(QImage imagef){
                 }
 
                 if((sum > nbPix*((100.0-(double)VALSUPPR)/100.0)) && condMax){
-
                     max = j;
-
                     condMax = false;
                 }
-
             }
-
             if(true){
                 //if( max - min < MINECARTTYPE){
                 cout << min << " " << max << endl;
@@ -344,26 +333,53 @@ void Controle::negatif(){
 }
 
 void Controle::gradientX(){
-    Image img = sauvegardeImage.at(indexVecteur).gradienHorizontal_Image();
+    Image img = sauvegardeImage.at(indexVecteur).gradienHorizontalImage();
 
     ajoutOperation(img);
 }
 
 void Controle::gradientY(){
-    Image img = sauvegardeImage.at(indexVecteur).gradienVertical_Image();
+    Image img = sauvegardeImage.at(indexVecteur).gradienVerticalImage();
     ajoutOperation(img);
 }
 
+void Controle::contour(){
+    Image img = sauvegardeImage.at(indexVecteur).ameliorationContour();
+    ajoutOperation(img);
+}
 
-void Controle::seamCarving(){
+void Controle::rehaussement(){
+
+}
+
+void Controle::seamCarving(int h, int l){
     SeamCarving s;
     s.setImg(sauvegardeImage.at(indexVecteur).cloneImage());
-    cout<<"debut"<<endl;
-    cout << "l = " <<s.getImg().getLargeur() << endl;
-    s.seamCarvingVertical(20);
 
-    cout << "l = " <<s.getImg().getLargeur() << endl;
-    cout<<"fin"<<endl;
-    Image img = s.getImg();
-    ajoutOperation(img);
+    if(false ){//h < s.getImg().getHauteur()){
+        if(false ){//l < s.getImg().getLargeur()){
+            s.seamCarvingHorizontal(h);
+            cout <<" ok horiz ";
+            s.seamCarvingVertical(l);
+            cout <<"ok vertical ";
+            Image img = s.getImg();
+            ajoutOperation(img);
+        }
+        else{
+            s.seamCarvingHorizontal(h);
+            Image img = s.getImg();
+            ajoutOperation(img);
+        }
+    }
+    else if(l < s.getImg().getLargeur()){
+        s.seamCarvingVertical(l);
+        Image img = s.getImg();
+        ajoutOperation(img);
+    }
+    else if( h > s.getImg().getHauteur() && l > s.getImg().getLargeur()){
+        cout <<" a faire" << endl;
+    }
+    else{
+        cout << "Operation de redimensionnement non prise en compte" << endl;
+    }
 }

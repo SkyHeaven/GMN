@@ -8,6 +8,10 @@
 
 #include "Controle.h"
 #include "ImageViewer.h"
+#include "FenHisto.h"
+#include "DialogRedim.h"
+#include "DialogFusion.h"
+#include "DialogMasque_T.h"
 
 namespace Ui {
 class MainWindow;
@@ -45,6 +49,7 @@ private slots:
     void negatif();
     void gradientX();
     void gradientY();
+    void contour();
     void seamCarving();
     void masque();
 private:

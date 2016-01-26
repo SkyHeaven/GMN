@@ -14,7 +14,8 @@ SOURCES += \
     ImageViewer.cpp \
     DialogFusion.cpp \
     SeamCarving.cpp \
-    SeamCarving.cpp
+    DialogMasque_T.cpp
+
 
 
 HEADERS += \
@@ -29,14 +30,15 @@ HEADERS += \
     ImageViewer.h \
     DialogFusion.h \
     SeamCarving.h \
-    SeamCarving.h
+    DialogMasque_T.h
 
 
 FORMS += \
     MainWindow.ui \
     DialogRedim.ui \
     FenHisto.ui \
-    DialogFusion.ui
+    DialogFusion.ui \
+    DialogMasque_T.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../opt/Tools/QtCreator/lib/qtcreator/plugins/qwt-6.1.2/lib/release/ -lqwt
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../opt/Tools/QtCreator/lib/qtcreator/plugins/qwt-6.1.2/lib/debug/ -lqwt

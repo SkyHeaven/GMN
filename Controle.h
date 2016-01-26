@@ -18,7 +18,7 @@ class Controle{
     private:
     std::vector<Image> sauvegardeImage;
     int indexVecteur;
-    bool ouvertuneimage;
+    bool imageOuverte;
 
     public:
     Controle();
@@ -42,14 +42,16 @@ class Controle{
     void redimension(int h, int l);
     void redimensionHauteur(int valeur, Image img);
     void redimensionLargeur(int valeur, Image img);
-
-    void transformationHistogramme();
+    void etalementHistogramme();
     void egalisation();
     void negatif();
     void gradientX();
     void gradientY();
+    void contour();
+    void rehaussement();
     void fusion(int h1, int l1, int h2, int l2, int h, int l);
-    void seamCarving();
+    void seamCarving(int h, int l);
+
 };
 #endif // CONTROLE_H
 

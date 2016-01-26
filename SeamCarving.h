@@ -9,15 +9,18 @@ private:
     int **tabEnergy;
     int ind_min;
 public:
-        SeamCarving();
+    SeamCarving();
     void SeamCarving_algo();
-   Image getImg();
+    Image getImg();
     void setImg(Image value);
     void resetEnergy();
-        //void resetChemin();
+    //void resetChemin();
     void seamVertical();
     Image removeVertical();
-     void seamCarvingVertical(int nb);
+    void seamHorizontal();
+    Image removeHorizontal();
+    void seamCarvingHorizontal(int nb);
+    void seamCarvingVertical(int nb);
 };
 
 #endif // SEAMCARVING_H

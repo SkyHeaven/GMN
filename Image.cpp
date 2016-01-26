@@ -665,7 +665,7 @@ Image Image::negatif(){
     return img;
 }
 
-Image Image::gradienVertical_Image(){
+Image Image::gradienVerticalImage(){
     Masque mask = Masque(3);
     mask.masqueGradienY();
     float coeff = 1;
@@ -713,7 +713,7 @@ Image Image::gradienVertical_Image(){
     return imgRes;
 }
 
-Image Image::gradienHorizontal_Image(){
+Image Image::gradienHorizontalImage(){
     Masque mask = Masque(3);
     mask.masqueGradienX();
     float coeff = 1;
@@ -762,9 +762,8 @@ Image Image::gradienHorizontal_Image(){
 }
 
 Image Image::contourImage(){
-    Image imgRes1 = this->gradienHorizontal_Image();
-
-    Image imgRes2 = this->gradienVertical_Image();
+    Image imgRes1 = this->gradienHorizontalImage();
+    Image imgRes2 = this->gradienVerticalImage();
 
     int hImg = getHauteur();
     int lImg = getLargeur();
@@ -795,6 +794,43 @@ Image Image::contourImage(){
         }
     }
     return imgFinal;
+}
+
+Image Image::ameliorationContour(){
+    Image img = contourImage();
+    Image imgRes;
+    imgRes.setHauteur(hauteur);
+    imgRes.setLargeur(largeur);
+    imgRes.setTableauPixel(hauteur,largeur);
+    int tmp;
+
+        int *rgb1;
+        int *rgb2;
+
+
+        int gris1;
+        int gris2;
+
+    for(int i=0; i<getHauteur(); i++){
+        for(int j=0; j<getLargeur(); j++){
+            Pixel p = Pixel(j,i);
+            if(quelleCouleur() == "rgb"){
+                rgb1 = getRGB(i,j);
+                rgb2 = img.getRGB(i,j);
+                for(int k=0; k<NBCOULEUR; k++){
+                    tmp = rgb1[k] - rgb2[k];
+                    if(tmp <0) tmp =0;
+                    p.setRGBCouleur(k,tmp);
+                }
+            }
+            imgRes.setPixel(i,j,p);
+
+
+        }
+    }
+    imgRes.setTableauCourant(1);
+    return imgRes;
+
 }
 
 void Image::setEnergiePixel(){

@@ -53,8 +53,9 @@ class Image {
     void egalisation(int val, int h, int l, bool rgb);
     Image negatif();
     Image contourImage();
-    Image gradienVertical_Image();
-    Image gradienHorizontal_Image();
+    Image ameliorationContour();
+    Image gradienVerticalImage();
+    Image gradienHorizontalImage();
     Image fusion(Image im, int h, int l);
     void setEnergiePixel();
 };

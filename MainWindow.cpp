@@ -61,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNegatif,SIGNAL(triggered()),this,SLOT(negatif()));
     connect(ui->actionGradient,SIGNAL(triggered()),this,SLOT(gradientX()));
     connect(ui->actionGradient_y,SIGNAL(triggered()),this,SLOT(gradientY()));
+       connect(ui->actionContour,SIGNAL(triggered()),this,SLOT(contour()));
     connect(ui->actionFlou,SIGNAL(triggered()),this,SLOT(flou()));
 
     //BOUTON
@@ -370,7 +371,7 @@ void MainWindow::fusionner(){
 }
 
 void MainWindow::recadrer(){
-    c->transformationHistogramme();
+    c->etalementHistogramme();
     QImage image = recupQImage();
     afficherImage(image);
 }
@@ -398,14 +399,16 @@ void MainWindow::gradientY(){
     QImage image = recupQImage();
     afficherImage(image);
 }
+    void MainWindow::contour(){
+        c->contour();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 
 void MainWindow::seamCarving(){
-    c->seamCarving();
-        cout<<"tamere"<<endl;
+    c->seamCarving(150,100);
     QImage image = recupQImage();
-        cout<<"tamere"<<endl;
     afficherImage(image);
-        cout<<"tamere"<<endl;
 }
 
 void MainWindow::masque(){
