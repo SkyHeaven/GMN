@@ -42,6 +42,10 @@ int Masque::getValeurTableauMasque(int h, int l){
     return tableauMasque[h][l];
 }
 
+void Masque::setValeurTableauMasque(int h, int l, int v){
+    tableauMasque[h][l] = v;
+}
+
 int Masque::sommeMasque(){
     int cpt=0;
     for(int i=0; i<longueur; i++){

@@ -5,6 +5,7 @@
 #include "FenHisto.h"
 #include "DialogRedim.h"
 #include "DialogFusion.h"
+#include "DialogMasque_T.h"
 
 
 #include <iostream>
@@ -69,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Redimension,SIGNAL(clicked()),this,SLOT(redimension()));
     connect(ui->Fusionner,SIGNAL(clicked()),this,SLOT(fusionner()));
     connect(ui->SeamCarving,SIGNAL(clicked()),this,SLOT(seamCarving()));
+    connect(ui->Mask,SIGNAL(clicked()),this,SLOT(masque()));
 
 
 
@@ -405,6 +407,29 @@ void MainWindow::seamCarving(){
     afficherImage(image);
         cout<<"tamere"<<endl;
 }
+
+void MainWindow::masque(){
+    DialogMasque_T d;
+    d.setText("hauteur/largeur");
+    int tmp;
+    if(d.exec() == QDialog::Accepted) {
+        tmp = d.getValue();
+    }
+
+    Masque m = Masque(tmp);
+
+    for(int i =0;i<m.getLongueur();i++){
+        for(int j =0;j<m.getLongueur();j++){
+            d.setText(QString("Valeur(%1,%2)").arg(i).arg(j));
+            d.setSpin();
+            if(d.exec() == QDialog::Accepted) {
+                m.setValeurTableauMasque(i,j,d.getValue());
+            }
+        }
+    }
+
+}
+
 
 MainWindow::~MainWindow()
 {

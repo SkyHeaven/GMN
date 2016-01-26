@@ -46,6 +46,7 @@ private slots:
     void gradientX();
     void gradientY();
     void seamCarving();
+    void masque();
 private:
     Ui::MainWindow *ui;
     bool loadFile(const QString &fileName);

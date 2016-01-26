@@ -19,6 +19,7 @@ class Masque{
     void masqueGradienY();
     void masqueGradienX();
     void masqueRehaussement();
+    void setValeurTableauMasque(int h, int l, int v);
 };
 
 #endif // MASQUE_H
