@@ -66,7 +66,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -106,11 +106,12 @@
       <string>Filtrage</string>
      </property>
      <addaction name="actionFlou"/>
+     <addaction name="actionRehaussement"/>
      <addaction name="actionGradient"/>
      <addaction name="actionGradient_y"/>
-     <addaction name="actionRehaussement"/>
-     <addaction name="actionNegatif"/>
      <addaction name="actionContour"/>
+     <addaction name="actionAmelioration_Contour"/>
+     <addaction name="actionNegatif"/>
     </widget>
     <addaction name="actionFitToWindowAct"/>
     <addaction name="actionUndo"/>
@@ -392,6 +393,11 @@
   <action name="actionContour">
    <property name="text">
     <string>Contour</string>
+   </property>
+  </action>
+  <action name="actionAmelioration_Contour">
+   <property name="text">
+    <string>Amelioration Contour</string>
    </property>
   </action>
  </widget>

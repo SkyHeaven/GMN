@@ -2,6 +2,7 @@
 #define IMAGE_H
 #include <QImage>
 #include <iostream>
+#include <stdlib.h>
 #include <string>
 #include "Pixel.h"
 #include "Histogramme.h"
@@ -10,12 +11,12 @@
 
 class Image {
     private:
-    Pixel **tableauPixel;
-    int hauteur;
-    int largeur;
+        Pixel **tableauPixel;
+        int hauteur;
+        int largeur;
 
     public:
-//    ~Image();
+    //~Image();
     void setTableauPixel(int h, int l);
     Pixel **getTableauPixel() const;
     void setPixel(int h, int l, Pixel p);
@@ -32,32 +33,49 @@ class Image {
     void setNoYUV();
     void setNoRGB();
     void setTableauCourant(int c);
-    Image cloneImage();
-    Image cropImage(int h1, int l1, int h2, int l2);
-    Histogramme* initHistogramme();
-    Image rotationTableauPixel(std::string option);
-    Pixel rotationPixel(int h, int l, int i,int j,std::string option);
-    void flouImage();
+    Image cloneImage();    
     std::string quelleCouleur();
-    Image reductionHauteurImage(int valeur);
-    Image reductionLargeurImage(int valeur);
-    Image etirementImage(int h,int l);
+    int min(double a, double b);
+    int max(double a, double b);
     int arrondiSuperieur(double d);
-    double distance(double x1, double y1, int x2, int y2);
-    //destructeur
     void augmentationContraste(int ind, int nMax, int nMin);
     void eclaircissementImage(int ind);
     void assombrissementmage(int ind);
-    int min(double a, double b);
-    int max(double a, double b);
+
+    //Rotation
+    Image rotationTableauPixel(std::string option);
+    Pixel rotationPixel(int h, int l, int i,int j,std::string option);
+
+    //Histogramme
+    Histogramme* initHistogramme();
     void egalisation(int val, int h, int l, bool rgb);
+
+    //Fusion
+    Image fusion(Image im, int h, int l);
+
+    //Redimension
+    double distance(double x1, double y1, int x2, int y2);
+    Image cropImage(int h1, int l1, int h2, int l2);
+    Image reductionHauteurImage(int valeur);
+    Image reductionLargeurImage(int valeur);
+    Image etirementImage(int h,int l);
+
+    //Les filtres
+    Image flouImage();
+    Image gradienVerticalImage();
+    Image gradienHorizontalImage();
+    Image rehaussementImage();
     Image negatif();
     Image contourImage();
     Image ameliorationContour();
-    Image gradienVerticalImage();
-    Image gradienHorizontalImage();
-    Image fusion(Image im, int h, int l);
+    Image appliquerMasque(Masque mask, int coeff);
+    void remplirBorder(int hImg, int lImg, int lMask);
+
+    //SeamCarving
     void setEnergiePixel();
+
+
+
 };
 
 #endif // IMAGE_H

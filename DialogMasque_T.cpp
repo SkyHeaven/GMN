@@ -22,7 +22,6 @@ void DialogMasque_T::setSpin(){
     ui->spinBox->setValue(0);
 }
 
-DialogMasque_T::~DialogMasque_T()
-{
+DialogMasque_T::~DialogMasque_T(){
     delete ui;
 }

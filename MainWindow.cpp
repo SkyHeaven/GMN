@@ -3,40 +3,28 @@
 #include <iostream>
 #include <string>
 #include <QtWidgets>
-
-
-
 using namespace std;
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+    ui(new Ui::MainWindow){
     ui->setupUi(this);
-
     c = new Controle();
-
     openAct = ui->action_Open;
     fitToWindowAct = ui->actionFitToWindowAct;
     saveAct = ui->action_Save;
     undoAct = ui->actionUndo;
     redoAct = ui->actionRedo;
-
-
     imageLabel = new ImageViewer();
     imageLabel->setBackgroundRole(QPalette::Base);
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);
     imageLabel->setMouseTracking(true);
     imageLabel->installEventFilter(this);
-
     scrollArea = new QScrollArea;
     scrollArea->setBackgroundRole(QPalette::Dark);
     scrollArea->setWidget(imageLabel);
     setCentralWidget(scrollArea);
-
-
-
     setWindowTitle(tr("GMN"));
 
     //MENU
@@ -53,7 +41,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionNegatif,SIGNAL(triggered()),this,SLOT(negatif()));
     connect(ui->actionGradient,SIGNAL(triggered()),this,SLOT(gradientX()));
     connect(ui->actionGradient_y,SIGNAL(triggered()),this,SLOT(gradientY()));
-       connect(ui->actionContour,SIGNAL(triggered()),this,SLOT(contour()));
+    connect(ui->actionContour,SIGNAL(triggered()),this,SLOT(contour()));
+    connect(ui->actionAmelioration_Contour,SIGNAL(triggered()),this,SLOT(ameliorationContour()));
+    connect(ui->actionRehaussement,SIGNAL(triggered()),this,SLOT(rehaussement()));
     connect(ui->actionFlou,SIGNAL(triggered()),this,SLOT(flou()));
 
     //BOUTON
@@ -64,25 +54,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Fusionner,SIGNAL(clicked()),this,SLOT(fusionner()));
     connect(ui->SeamCarving,SIGNAL(clicked()),this,SLOT(seamCarving()));
     connect(ui->Mask,SIGNAL(clicked()),this,SLOT(masque()));
-
-
-
 }
 
-bool MainWindow::loadFile(const QString &fileName)
-{
+bool MainWindow::loadFile(const QString &fileName){
     QImageReader reader(fileName);
-
     const QImage image = reader.read();
     if (image.isNull()) {
-        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
-                                 tr("Cannot load %1.").arg(QDir::toNativeSeparators(fileName)));
+        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),tr("Cannot load %1.").arg(QDir::toNativeSeparators(fileName)));
         setWindowFilePath(QString());
         imageLabel->setPixmap(QPixmap());
         imageLabel->adjustSize();
         return false;
     }
-
     imageLabel->setPixmap(QPixmap::fromImage(image));
     afficherImage(image);
     c->ouvertureImage(image);
@@ -91,10 +74,7 @@ bool MainWindow::loadFile(const QString &fileName)
     return true;
 }
 
-
-
-void MainWindow::open()
-{
+void MainWindow::open(){
     const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
     QFileDialog dialog(this, tr("Open File"),picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -103,43 +83,43 @@ void MainWindow::open()
     while (dialog.exec() == QDialog::Accepted && !loadFile(dialog.selectedFiles().first())) {    }
 }
 
-void MainWindow::updateActions()
-{
+void MainWindow::updateActions(){
 }
 
-void MainWindow::scaleImage(double factor)
-{
+void MainWindow::scaleImage(double factor){
     Q_ASSERT(imageLabel->pixmap());
     scaleFactor *= factor;
     imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());
-
     adjustScrollBar(scrollArea->horizontalScrollBar(), factor);
     adjustScrollBar(scrollArea->verticalScrollBar(), factor);
 
 }
 
-void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor)
-{
-    scrollBar->setValue(int(factor * scrollBar->value()
-                            + ((factor - 1) * scrollBar->pageStep()/2)));
+void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor){
+    scrollBar->setValue(int(factor * scrollBar->value()+((factor - 1) * scrollBar->pageStep()/2)));
 }
 
-void MainWindow::fitToWindow()
-{
+void MainWindow::fitToWindow(){
     bool fitToWindow = fitToWindowAct->isChecked();
     scrollArea->setWidgetResizable(fitToWindow);
-
     updateActions();
 }
 
-void MainWindow::grey(){
-    c->afficherGris();
-    QImage image= recupQImage();
-    afficherImage(image);
+bool MainWindow::eventFilter(QObject *obj, QEvent *event){
+    if (obj == imageLabel) {
+        if (event->type() == QEvent::MouseButtonPress) {
+            pipette();
+            return QMainWindow::eventFilter(obj, event);
+        }
+        else {
+            return QMainWindow::eventFilter(obj, event);
+        }
+    } else {
+        return QMainWindow::eventFilter(obj, event);
+    }
 }
 
 QImage MainWindow::recupQImage(){
-    QImage ima(2592,1944,QImage::Format_RGB32);
     QImage image(c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),QImage::Format_RGB32);
     QRgb value;
     for (int h=0;h<image.height();h++){
@@ -159,25 +139,15 @@ void MainWindow::afficherImage(QImage image){
     scaleFactor = 1.0;
     fitToWindowAct->setEnabled(true);
     updateActions();
-
     if (!fitToWindowAct->isChecked())
         imageLabel->adjustSize();
 }
 
-bool MainWindow::save()
-{
+bool MainWindow::save(){
     QString fichier = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
     QImage image = recupQImage();
     image.save(fichier);
     return true;
-}
-
-void MainWindow::crop(){
-
-    c->crop(imageLabel->getOrigineSel().y(),imageLabel->getOrigineSel().x(),imageLabel->getFinSel().y(),imageLabel->getFinSel().x());
-    QImage image= recupQImage();
-    afficherImage(image);
-
 }
 
 void MainWindow::undo(){
@@ -192,20 +162,17 @@ void MainWindow::redo(){
     afficherImage(image);
 }
 
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
 
-    if (obj == imageLabel) {
-        if (event->type() == QEvent::MouseButtonPress) {
-            pipette();
-            return QMainWindow::eventFilter(obj, event);
-        }
-        else {
-            return QMainWindow::eventFilter(obj, event);
-        }
-    } else {
-        return QMainWindow::eventFilter(obj, event);
-    }
+void MainWindow::grey(){
+    c->afficherGris();
+    QImage image= recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::crop(){
+    c->crop(imageLabel->getOrigineSel().y(),imageLabel->getOrigineSel().x(),imageLabel->getFinSel().y(),imageLabel->getFinSel().x());
+    QImage image= recupQImage();
+    afficherImage(image);
 }
 
 
@@ -240,29 +207,27 @@ void MainWindow::rotation180(){
     afficherImage(image);
 }
 
-void MainWindow::flou()
-{
+void MainWindow::flou(){
     c->flou();
     QImage image = recupQImage();
     afficherImage(image);
 }
 
-void MainWindow::histogramme()
-{
-    Histogramme *h = c->afficherHistogramme();
-    FenHisto *fr = new FenHisto(h[0],Qt::red);
-    FenHisto *fg = new FenHisto(h[1],Qt::green);
-    FenHisto *fb = new FenHisto(h[2],Qt::blue);
-    FenHisto *fgris = new FenHisto(h[0],Qt::gray);
+void MainWindow::histogramme(){
+        Histogramme *h = c->afficherHistogramme();
+        FenHisto *fr = new FenHisto(h[0],Qt::red);
+        FenHisto *fg = new FenHisto(h[1],Qt::green);
+        FenHisto *fb = new FenHisto(h[2],Qt::blue);
+        FenHisto *fgris = new FenHisto(h[0],Qt::gray);
 
-    if (!(h[0].gris(h[1],h[2]))){
-        fr->show();
-        fg->show();
-        fb->show();
-    }
-    else {
-        fgris->show();
-    }
+        if (!(h[0].gris(h[1],h[2]))){
+            fr->show();
+            fg->show();
+            fb->show();
+        }
+        else {
+            fgris->show();
+        }
 }
 
 void MainWindow::redimension(){
@@ -278,10 +243,8 @@ void MainWindow::redimension(){
     afficherImage(image);
 }
 
-bool MainWindow::loadFile_fusion(const QString &fileName)
-{
+bool MainWindow::loadFile_fusion(const QString &fileName){
     QImageReader reader(fileName);
-
     const QImage image = reader.read();
     if (image.isNull()) {
         QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
@@ -291,7 +254,6 @@ bool MainWindow::loadFile_fusion(const QString &fileName)
         imageFusion->adjustSize();
         return false;
     }
-
     imageFusion->setPixmap(QPixmap::fromImage(image));
     scaleFactor = 1.0;
     fitToWindowAct->setEnabled(true);
@@ -301,10 +263,7 @@ bool MainWindow::loadFile_fusion(const QString &fileName)
     return true;
 }
 
-
-
-void MainWindow::open_fusion()
-{
+void MainWindow::open_fusion(){
     const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
     QFileDialog dialog(this, tr("Open File"),picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -329,33 +288,44 @@ void MainWindow::fusionner(){
     DialogFusion d;
     d.setValue(0,0);
     int hmax,lmax;
-    if(imageFusion->getOrigineSel().x() < imageFusion->getFinSel().x()){
-        hmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur() + imageFusion->getOrigineSel().x() - imageFusion->getFinSel().x();
-    }
-    else {
-        hmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur() - imageFusion->getOrigineSel().x() + imageFusion->getFinSel().x();
-    }
+    int finSelY = imageFusion->getFinSel().y();
+    int finSelX = imageFusion->getFinSel().x();
+    int origineSelX = imageFusion->getOrigineSel().x();
+    int origineSelY = imageFusion->getOrigineSel().y();
+    int minX = min(origineSelX,finSelX);
+    int minY = min(origineSelY,finSelY);
+    int maxX = max(origineSelX,finSelX);
+    int maxY = max(origineSelY,finSelY);
+    int hauteur = c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur();
+    int largeur = c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur();
 
-    if(imageFusion->getOrigineSel().y() < imageFusion->getFinSel().y()){
-        lmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur() + imageFusion->getOrigineSel().y() - imageFusion->getFinSel().y();
-    }
-    else {
-        lmax = c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur() - imageFusion->getOrigineSel().y() + imageFusion->getFinSel().y();
-    }
+    if(minX < 0)
+        minX = 0;
+    if(minY < 0)
+        minY = 0;
+    if(maxX > largeur)
+        maxX = largeur;
+    if(maxY > hauteur)
+        maxY = hauteur;
 
-
+    hmax = hauteur + maxX - minX;
+    lmax = largeur + maxY - minY;
 
     d.setValueMax(hmax,lmax);
     int h,l;
     if(d.exec() == QDialog::Accepted) {
-        h=d.getX();
-        l=d.getY();
+        h=d.getY();
+        l=d.getX();
+
+
+        c->fusion(minY,minX,maxY,maxX,h,l);
+        QImage image = recupQImage();
+        afficherImage(image);
     }
-    c->fusion(imageFusion->getOrigineSel().y(),imageFusion->getOrigineSel().x(),imageFusion->getFinSel().y(),imageFusion->getFinSel().x(),h,l);
-    QImage image = recupQImage();
-    afficherImage(image);
     imageFusion->close();
     scrollAreaFusion->close();
+
+
 }
 
 void MainWindow::recadrer(){
@@ -387,14 +357,26 @@ void MainWindow::gradientY(){
     QImage image = recupQImage();
     afficherImage(image);
 }
-    void MainWindow::contour(){
-        c->contour();
-        QImage image = recupQImage();
-        afficherImage(image);
-    }
+void MainWindow::contour(){
+    c->contour();
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::ameliorationContour(){
+    c->ameliorationContour();
+    QImage image = recupQImage();
+    afficherImage(image);
+}
+
+void MainWindow::rehaussement(){
+    c->rehaussement();
+    QImage image = recupQImage();
+    afficherImage(image);
+}
 
 void MainWindow::seamCarving(){
-    c->seamCarving(400,400);
+    c->seamCarving(150,150);
     QImage image = recupQImage();
     afficherImage(image);
 }
@@ -406,7 +388,6 @@ void MainWindow::masque(){
     if(d.exec() == QDialog::Accepted) {
         tmp = d.getValue();
     }
-
     Masque m = Masque(tmp);
 
     for(int i =0;i<m.getLongueur();i++){
@@ -419,10 +400,21 @@ void MainWindow::masque(){
         }
     }
 
+    int coeff = 0;
+    int sumMask = m.sommeMasque();
+    if (sumMask <=0 ) {
+        coeff = 1;
+    }
+    else {
+        coeff = sumMask;
+    }
+
+    c->appliquerMasque(m,coeff);
+    QImage image = recupQImage();
+    afficherImage(image);
 }
 
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow(){
     delete ui;
 }

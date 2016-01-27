@@ -1,16 +1,13 @@
 #include <iostream>
 #include <string>
 #include "Pixel.h"
-
 using namespace std;
 
-int Pixel::getGris() const
-{
+int Pixel::getGris() const{
     return gris;
 }
 
-void Pixel::setGris(int value)
-{
+void Pixel::setGris(int value){
     gris = value;
 }
 
@@ -28,11 +25,9 @@ void Pixel::setYUVwithRGB(int rgb[]){
         y = 0.299* tab[0] + 0.587*tab[1] + 0.114*tab[2];
         u = -0.14713* tab[0] - 0.28886*tab[1] + 0.436*tab[2];
         v = 0.615* tab[0] -0.51499*tab[1] - 0.10001*tab[2];
-
         yuv[0] = y;
         yuv[1] = u;
         yuv[2] = v;
-
 }
 
 void Pixel::setRGBwithYUV(double yuv[]){
@@ -156,8 +151,7 @@ int* Pixel::getEtatCourant(){
      }
  }
 
- double Pixel::getEnergie() const
- {
+ double Pixel::getEnergie() const {
      return energie;
  }
 

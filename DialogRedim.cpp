@@ -1,21 +1,18 @@
+#include <iostream>
+#include <string>
 #include "DialogRedim.h"
 #include "ui_DialogRedim.h"
 
-#include <iostream>
-#include <string>
 
 DialogRedim::DialogRedim(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogRedim)
 {
     ui->setupUi(this);
-
-
     connect(ui->checkBox_H,SIGNAL(clicked(bool)),this,SLOT(setcheckbox()));
     connect(ui->checkBox_L,SIGNAL(clicked(bool)),this,SLOT(setcheckbox()));
     connect(ui->spinBox_H,SIGNAL(valueChanged(int)),this,SLOT(setValue_L(int)));
     connect(ui->spinBox_L,SIGNAL(valueChanged(int)),this,SLOT(setValue_H(int)));
-
 }
 
 void DialogRedim::setValue_L(int x){
@@ -56,7 +53,6 @@ int DialogRedim::getL(){
     return ui->spinBox_L->value();
 }
 
-DialogRedim::~DialogRedim()
-{
+DialogRedim::~DialogRedim(){
     delete ui;
 }

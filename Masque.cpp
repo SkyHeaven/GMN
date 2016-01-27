@@ -12,29 +12,11 @@ Masque::Masque(const int nb){
   }
 }
 
-//Masque::~Masque(){
-//    for(int i = 0 ; i < longueur ; i++){
-//        delete[] tableauMasque[i];
-//     }
-//     delete[] tableauMasque;
-//}
-
-void Masque::remplirMasque(){
-    for(int i=0; i<longueur; i++){
-        for(int j=0; j<longueur; j++){
-            tableauMasque[i][j] = 1;
-        }
-    }
-}
-
-
-int Masque::getLongueur() const
-{
+int Masque::getLongueur(){
     return longueur;
 }
 
-void Masque::setLongueur(int value)
-{
+void Masque::setLongueur(int value){
     longueur = value;
 }
 
@@ -56,8 +38,15 @@ int Masque::sommeMasque(){
     return cpt;
 }
 
-void Masque::masqueGradienY()
-{
+void Masque::masqueFlou(){
+    for(int i=0; i<longueur; i++){
+        for(int j=0; j<longueur; j++){
+            tableauMasque[i][j] = 1;
+        }
+    }
+}
+
+void Masque::masqueGradienY(){
     tableauMasque[0][0] = 1;
     tableauMasque[0][1] = 2;
     tableauMasque[0][2] = 1;
@@ -69,8 +58,7 @@ void Masque::masqueGradienY()
     tableauMasque[2][2] = -1;
 }
 
-void Masque::masqueGradienX()
-{
+void Masque::masqueGradienX(){
     tableauMasque[0][0] = 1;
     tableauMasque[0][1] = 0;
     tableauMasque[0][2] = -1;
@@ -82,13 +70,12 @@ void Masque::masqueGradienX()
     tableauMasque[2][2] = -1;
 }
 
-void Masque::masqueRehaussement()
-{
+void Masque::masqueRehaussement(){
     tableauMasque[0][0] = -1;
     tableauMasque[0][1] = -1;
     tableauMasque[0][2] = -1;
     tableauMasque[1][0] = -1;
-    tableauMasque[1][1] = 8;
+    tableauMasque[1][1] = 18;
     tableauMasque[1][2] = -1;
     tableauMasque[2][0] = -1;
     tableauMasque[2][1] = -1;

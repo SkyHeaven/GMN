@@ -3,24 +3,27 @@
 #include "Image.h"
 #include "Pixel.h"
 class SeamCarving{
-private:
-    Image img;
-    Pixel **tabChemin;
-    int **tabEnergy;
-    int ind_min;
-public:
-    SeamCarving();
-    void SeamCarving_algo();
-    Image getImg();
-    void setImg(Image value);
-    void resetEnergy();
-    //void resetChemin();
-    void seamVertical();
-    Image removeVertical();
-    void seamHorizontal();
-    Image removeHorizontal();
-    void seamCarvingHorizontal(int nb);
-    void seamCarvingVertical(int nb);
+    private:
+        Image img;
+        Pixel **tabChemin;
+        int **tabEnergy;
+        int ind_min;
+
+    public:
+        SeamCarving();
+        Image getImg();
+        void setImg(Image value);
+        void resetEnergy();
+
+        //Seam Vertical
+        void seamVertical();
+        Image removeVertical();
+        void seamCarvingVertical(int nb);
+
+        //Seam Horizontal
+        void seamHorizontal();
+        Image removeHorizontal();
+        void seamCarvingHorizontal(int nb);
 };
 
 #endif // SEAMCARVING_H

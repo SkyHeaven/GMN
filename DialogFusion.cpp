@@ -1,14 +1,13 @@
-#include "DialogFusion.h"
-#include "ui_DialogFusion.h"
 #include <iostream>
 #include <string>
+#include "DialogFusion.h"
+#include "ui_DialogFusion.h"
 
 DialogFusion::DialogFusion(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogFusion)
 {
     ui->setupUi(this);
-
 }
 
 void DialogFusion::setValue(int x,int y){
@@ -29,7 +28,6 @@ int DialogFusion::getY(){
     return ui->spinBoxY->value();
 }
 
-DialogFusion::~DialogFusion()
-{
+DialogFusion::~DialogFusion(){
     delete ui;
 }

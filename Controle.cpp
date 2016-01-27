@@ -10,55 +10,36 @@ Controle::Controle(){
     imageOuverte = false;
 }
 
-std::vector<Image> Controle::getSauvegardeImage() const
-{
+std::vector<Image> Controle::getSauvegardeImage() const{
     return sauvegardeImage;
 }
 
-void Controle::setSauvegardeImage(const std::vector<Image> &value)
-{
+void Controle::setSauvegardeImage(const std::vector<Image> &value){
     sauvegardeImage = value;
 }
-int Controle::getIndexVecteur() const
-{
+
+int Controle::getIndexVecteur() const{
     return indexVecteur;
 }
 
-void Controle::setIndexVecteur(int value)
-{
+void Controle::setIndexVecteur(int value){
     indexVecteur = value;
 }
 void Controle::ouvertureImage(QImage imagef){
-    
-    //        QImageReader reader(chemin);
-    //        reader.setAutoTransform(true);
-    //        const QImage imagef = reader.read();
-
     Image image;
-
     image.setHauteur(imagef.height());
     image.setLargeur(imagef.width());
     image.setTableauPixel(imagef.height(),imagef.width());
     for( int h = 0; h < image.getHauteur(); h++ ){
-      for( int l = 0; l < image.getLargeur(); l++ ) {
-        Pixel pix = Pixel((double)l,(double)h);
-        pix.setRGBCouleur(0, qRed(imagef.pixel(l,h)));
-        pix.setRGBCouleur(1, qGreen(imagef.pixel(l,h)));
-        pix.setRGBCouleur(2, qBlue(imagef.pixel(l,h)));
-
-        //cout << qRed(imagef.pixel(l,h)) << " " << qBlue(imagef.pixel(l,h)) << " " << qGreen(imagef.pixel(l,h)) << " " ;
-        pix.setX(l);
-        pix.setY(h);
-        image.setPixel(h,l,pix);
-       }
-
-        //Couleur c = rgbE;
-        //Couleur::enumCouleur c;
-//        c = Couleur.enumCouleur. rgb;
-//        Couleur.enumCouleur c = Couleur.rgb;
-
-//        c.enumCouleur enumC  = Couleur.rgb;
-
+        for( int l = 0; l < image.getLargeur(); l++ ) {
+            Pixel pix = Pixel((double)l,(double)h);
+            pix.setRGBCouleur(0, qRed(imagef.pixel(l,h)));
+            pix.setRGBCouleur(1, qGreen(imagef.pixel(l,h)));
+            pix.setRGBCouleur(2, qBlue(imagef.pixel(l,h)));
+            pix.setX(l);
+            pix.setY(h);
+            image.setPixel(h,l,pix);
+        }
     }
 
     image.setGray();
@@ -71,213 +52,176 @@ void Controle::ouvertureImage(QImage imagef){
     else {
         ajoutOperation(image);
     }
-
 }
 
-    int* Controle::affichageCouleurRGB(int h, int l){
-        Image img = sauvegardeImage.at(indexVecteur);
-        return img.getRGB(h,l);
-    }
+int* Controle::affichageCouleurRGB(int h, int l){
+    Image img = sauvegardeImage.at(indexVecteur);
+    return img.getRGB(h,l);
+}
 
-    double* Controle::affichageCouleurYUV(int h, int l){
-        Image img = sauvegardeImage.at(indexVecteur);
-        return img.getYUV(h,l);
-    }
+double* Controle::affichageCouleurYUV(int h, int l){
+    Image img = sauvegardeImage.at(indexVecteur);
+    return img.getYUV(h,l);
+}
 
-    int Controle::affichageCouleurGris(int h , int l){
-        Image img = sauvegardeImage.at(indexVecteur);
-        return img.getGray(h,l);
-    }
+int Controle::affichageCouleurGris(int h , int l){
+    Image img = sauvegardeImage.at(indexVecteur);
+    return img.getGray(h,l);
+}
 
-    Pixel Controle::affichageCouleur(int h, int l){ //FAIRE MALLOC ICI EN CAS PROBLEME
-        Image img = sauvegardeImage.at(indexVecteur);
-        return img.getPixel(h,l);
-    }
+Pixel Controle::affichageCouleur(int h, int l){ //FAIRE MALLOC ICI EN CAS PROBLEME
+    Image img = sauvegardeImage.at(indexVecteur);
+    return img.getPixel(h,l);
+}
 
-    void Controle::undo(){
-        if(indexVecteur > 0){
-            indexVecteur --;
-        }
-        else{
-            cout << "impossible de continuer a annuler" << endl;
-        }
+void Controle::undo(){
+    if(indexVecteur > 0){
+        indexVecteur --;
     }
-
-    void Controle::redo(){
-        if(indexVecteur < sauvegardeImage.size()-1){
-            indexVecteur ++;
-        }
-        else{
-            cout << "Aucun redo supplementaire" << endl;
-        }
+    else{
+        cout << "impossible de continuer a annuler" << endl;
     }
+}
 
-    void Controle::ajoutOperation(Image img){ // GERER DESTRUCTEUR
+void Controle::redo(){
+    if( indexVecteur < (int)sauvegardeImage.size()-1){
         indexVecteur ++;
-        if (sauvegardeImage.size() > indexVecteur){
-            for(int i = sauvegardeImage.size(); i > indexVecteur; i--){
-//                Image imgDel = sauvegardeImage.at(i-1); //copie superficielle
-//                imgDel.~Image(); //DESALOCATION tableauPixel
-                sauvegardeImage.erase(sauvegardeImage.begin() + i -1);
-            }
+    }
+    else{
+        cout << "Aucun redo supplementaire" << endl;
+    }
+}
+
+void Controle::ajoutOperation(Image img){ // GERER DESTRUCTEUR
+    indexVecteur ++;
+    if ((int)sauvegardeImage.size() > indexVecteur){
+        for(int i = sauvegardeImage.size(); i > indexVecteur; i--){
+            sauvegardeImage.erase(sauvegardeImage.begin() + i -1);
         }
-        sauvegardeImage.insert(sauvegardeImage.begin()+ indexVecteur, img);
     }
+    sauvegardeImage.insert(sauvegardeImage.begin()+ indexVecteur, img);
+}
 
-    void Controle::flou(){
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        img.flouImage();
-        ajoutOperation(img);
-    }
+void Controle::crop(int h1, int l1, int h2, int l2){
 
-    void Controle::crop(int h1, int l1, int h2, int l2){
-        Image imgRes = sauvegardeImage.at(indexVecteur).cropImage(h1,l1,h2,l2);
-        ajoutOperation(imgRes);
-    }
-    void Controle::afficherGris(){
+    Image imgRes = sauvegardeImage.at(indexVecteur).cropImage(h1,l1,h2,l2);
+    ajoutOperation(imgRes);
+}
 
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-         cout << "couleur = " << img.quelleCouleur() << endl;
-        img.setTableauCourant(3);
-         cout << "couleur = " << img.quelleCouleur() << endl;
-        img.setNoRGB();
-         cout << "couleur = " << img.quelleCouleur() << endl;
-        ajoutOperation(img);
-//        for(int i =0; i<img.getHauteur(); i++){
-//            for(int j=0; j<img.getLargeur(); j++){
-//                cout << img.getGray(i,j) << " ";
-//            }
-//        }
+void Controle::afficherGris(){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img.setTableauCourant(3);
+    img.setNoRGB();
+    ajoutOperation(img);
+}
 
-    }
+Histogramme* Controle::afficherHistogramme(){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    Histogramme* tabHist;
+    tabHist = new Histogramme[NBCOULEUR];
+    tabHist = img.initHistogramme();
+    return tabHist;
+}
 
-    Histogramme* Controle::afficherHistogramme(){
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        Histogramme* tabHist;
-        tabHist = new Histogramme[NBCOULEUR];
-        tabHist = img.initHistogramme();
-        return tabHist;
-    }
-
-    void Controle::rotation(string option){
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        Image imgRes = img.rotationTableauPixel(option);
-        ajoutOperation(imgRes);
-    }
-    void Controle::redimension(int h, int l){
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        Image imgRes1, imgRes2;
-        if(h < img.getHauteur()){
-            if(l < img.getLargeur()){
-                imgRes1 = img.reductionHauteurImage(h);
-                imgRes2 = imgRes1.reductionLargeurImage(l);
-                ajoutOperation(imgRes2);
-            }
-            else{
-                imgRes1 = img.reductionHauteurImage(h);
-                ajoutOperation(imgRes1);
-            }
-        }
-        else if(l < img.getLargeur()){
-            imgRes1 = img.reductionLargeurImage(l);
-            ajoutOperation(imgRes1);
-        }
-        else if( h > img.getHauteur() && l > img.getLargeur()){
-            imgRes1 = img.etirementImage(h,l);
-            ajoutOperation(imgRes1);
+void Controle::rotation(string option){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    Image imgRes = img.rotationTableauPixel(option);
+    ajoutOperation(imgRes);
+}
+void Controle::redimension(int h, int l){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    Image imgRes1, imgRes2;
+    if(h < img.getHauteur()){
+        if(l < img.getLargeur()){
+            imgRes1 = img.reductionHauteurImage(h);
+            imgRes2 = imgRes1.reductionLargeurImage(l);
+            ajoutOperation(imgRes2);
         }
         else{
-            cout << "Operation de redimensionnement non prise en compte" << endl;
+            imgRes1 = img.reductionHauteurImage(h);
+            ajoutOperation(imgRes1);
         }
     }
+    else if(l < img.getLargeur()){
+        imgRes1 = img.reductionLargeurImage(l);
+        ajoutOperation(imgRes1);
+    }
+    else if( h > img.getHauteur() && l > img.getLargeur()){
+        imgRes1 = img.etirementImage(h,l);
+        ajoutOperation(imgRes1);
+    }
+    else{
+        cout << "Operation de redimensionnement non prise en compte" << endl;
+    }
+}
 
-    void Controle::etalementHistogramme(){
-        Image img = sauvegardeImage.at(indexVecteur).cloneImage();
-        Histogramme* tabHist = afficherHistogramme();
-        Image imgRes;
-        bool condMin = true;
-        bool condMax = true;
-        double sum =0;
-        int min = NBNUANCES;
-        int max = 0;
-        int tmp = 0;
-        double nbPix = img.getHauteur()*img.getLargeur();
-        if(img.quelleCouleur() == "rgb"){
-            for(int j=0; j<NBNUANCES; j++){
-                tmp = tabHist->getValeurIndiceHistogramme(j);
-                sum += tmp;
+void Controle::etalementHistogramme(){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    Histogramme* tabHist = afficherHistogramme();
+    bool condMin = true;
+    bool condMax = true;
+    double sum =0;
+    int min = NBNUANCES;
+    int max = 0;
+    int tmp = 0;
+    double nbPix = img.getHauteur()*img.getLargeur();
+    if(img.quelleCouleur() == "rgb"){
+        for(int j=0; j<NBNUANCES; j++){
+            tmp = tabHist->getValeurIndiceHistogramme(j);
+            sum += tmp;
 
-                if(sum > nbPix/VALSUPPR && condMin){
-                    min = j;
-                    condMin = false;
-                }
+            if(sum > nbPix*((double)VALSUPPR/100.0) && condMin){
+                min = j;
+                condMin = false;
+            }
 
-                if((sum > nbPix - nbPix/VALSUPPR) && condMax){
-                    max = j;
-                    condMax = false;
-                }
+            if((sum > nbPix - nbPix*((double)VALSUPPR/100.0)) && condMax){
+                max = j;
+                condMax = false;
             }
-            sum /= NBNUANCES;
-            if(true){
-                img.augmentationContraste(0, max, min);
-                img.setYUV();
-                img.setGray();
-                img.setTableauCourant(1);
+        }
+        sum /= NBNUANCES;
+        if(true){
+            img.augmentationContraste(0, max, min);
+//            img.setYUV();
+//            img.setGray();
+//            img.setTableauCourant(1);
+        }
+
+        else{
+            cout << "pas de transformation disponible pour cette image" << endl;
+        }
+        sum =0;min = NBNUANCES;max = 0;tmp=0;
+    }
+    else{
+        sum = 0;
+        for(int j=0; j<NBNUANCES; j++){
+            tmp = tabHist->getValeurIndiceHistogramme(j);
+            sum += tmp;
+
+            if(sum > nbPix*((double)VALSUPPR/100.0) && condMin){
+                min = j;
+                condMin = false;
             }
-            //            else if( sum < MINMOY ){
-            //                img.eclaircissementImage(i);
-            //                img.setYUV();
-            //                img.setGray();
-            //                img.setTableauCourant(1);
-            //            }
-            //            else if( sum > MAXMOY){
-            //                img.assombrissementmage(i);
-            //                img.setYUV();
-            //                img.setGray();
-            //                img.setTableauCourant(1);
-            //            }
-            else{
-                cout << "pas de transformation disponible pour cette image" << endl;
+
+            if((sum > nbPix*((100.0-(double)VALSUPPR)/100.0)) && condMax){
+                max = j;
+                condMax = false;
             }
-            sum =0;min = NBNUANCES;max = 0;tmp=0;
+        }
+        if(true){
+            //if( max - min < MINECARTTYPE){
+            cout << min << " " << max << endl;
+            img.augmentationContraste(0, max, min);
+            img.setTableauCourant(3);
         }
         else{
-            sum = 0;
-            for(int j=0; j<NBNUANCES; j++){
-                tmp = tabHist->getValeurIndiceHistogramme(j);
-                sum += tmp;
-
-                if(sum > nbPix*((double)VALSUPPR/100.0) && condMin){
-                    min = j;
-                    condMin = false;
-                }
-
-                if((sum > nbPix*((100.0-(double)VALSUPPR)/100.0)) && condMax){
-                    max = j;
-                    condMax = false;
-                }
-            }
-            if(true){
-                //if( max - min < MINECARTTYPE){
-                cout << min << " " << max << endl;
-                img.augmentationContraste(0, max, min);
-                img.setTableauCourant(3);
-            }
-            else if( sum < MINMOY ){
-                img.eclaircissementImage(0);
-                img.setTableauCourant(3);
-            }
-            else if( sum > MAXMOY){
-                img.assombrissementmage(0);
-                img.setTableauCourant(3);
-            }
-            else{
-                cout << "pas de transformation disponible pour cette image" << endl;
-            }
-            sum =0;min = NBNUANCES;max = 0;tmp=0;
+            cout << "pas de transformation disponible pour cette image" << endl;
         }
-        ajoutOperation(img);
+        sum =0;min = NBNUANCES;max = 0;tmp=0;
     }
+    ajoutOperation(img);
+}
 
 void Controle::fusion(int h1, int l1, int h2, int l2,int h,int l){
     Image imgRes = sauvegardeImage.at(indexVecteur).cropImage(h1,l1,h2,l2);
@@ -288,9 +232,7 @@ void Controle::fusion(int h1, int l1, int h2, int l2,int h,int l){
     else {
         indexVecteur--;
     }
-
 }
-
 
 void Controle::egalisation(){
     Image img = sauvegardeImage.at(indexVecteur).cloneImage();
@@ -333,23 +275,46 @@ void Controle::negatif(){
 }
 
 void Controle::gradientX(){
-    Image img = sauvegardeImage.at(indexVecteur).gradienHorizontalImage();
-
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img = img.gradienHorizontalImage();
     ajoutOperation(img);
 }
 
 void Controle::gradientY(){
-    Image img = sauvegardeImage.at(indexVecteur).gradienVerticalImage();
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img = img.gradienVerticalImage();
     ajoutOperation(img);
 }
 
-void Controle::contour(){
-    Image img = sauvegardeImage.at(indexVecteur).ameliorationContour();
+void Controle::appliquerMasque(Masque mask,int coeff){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img = img.appliquerMasque(mask,coeff);
+    ajoutOperation(img);
+}
+
+void Controle::flou(){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img = img.flouImage();
     ajoutOperation(img);
 }
 
 void Controle::rehaussement(){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img = img.rehaussementImage();
+    ajoutOperation(img);
+}
 
+
+void Controle::contour(){
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img = img.contourImage();
+    ajoutOperation(img);
+}
+
+void Controle::ameliorationContour(){\
+    Image img = sauvegardeImage.at(indexVecteur).cloneImage();
+    img = img.ameliorationContour();
+    ajoutOperation(img);
 }
 
 void Controle::seamCarving(int h, int l){
