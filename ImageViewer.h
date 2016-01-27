@@ -18,7 +18,8 @@ class ImageViewer : public QLabel{
 
         void sign();
 
-    signals :
+        void finCrop();
+signals :
         void sign_pip();
 
     protected:

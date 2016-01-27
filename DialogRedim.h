@@ -24,6 +24,7 @@ class DialogRedim : public QDialog{
         void setValue(int h, int l);
         int getH();
         int getL();
+        void seam();
 };
 
 #endif // DIALOGREDIM_H

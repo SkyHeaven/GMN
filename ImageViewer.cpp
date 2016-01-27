@@ -9,6 +9,8 @@ ImageViewer::ImageViewer()
     setMouseTracking(true);
     r = new QRubberBand(QRubberBand::Rectangle,this);
     selEncours = false;
+    origineSel = QPoint(0,0);
+    finSel = QPoint(0,0);
 }
 
 void ImageViewer::mousePressEvent(QMouseEvent *e)
@@ -88,4 +90,10 @@ QPoint ImageViewer::getOrigineSel() const
 void ImageViewer::setOrigineSel(const QPoint &value)
 {
     origineSel = value;
+}
+
+void ImageViewer::finCrop(){
+    setOrigineSel(QPoint(0,0));
+    setFinSel(QPoint(0,0));
+    r->hide();
 }

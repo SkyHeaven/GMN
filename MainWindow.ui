@@ -66,7 +66,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -87,12 +87,6 @@
      <addaction name="action90D"/>
      <addaction name="action90G"/>
      <addaction name="action180"/>
-    </widget>
-    <widget class="QMenu" name="menuFusion">
-     <property name="title">
-      <string>Fusion</string>
-     </property>
-     <addaction name="actionOpen_fu"/>
     </widget>
     <widget class="QMenu" name="menuHistogramme">
      <property name="title">
@@ -117,7 +111,6 @@
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
     <addaction name="menuRotation"/>
-    <addaction name="menuFusion"/>
     <addaction name="menuHistogramme"/>
     <addaction name="menuFiltrage"/>
    </widget>
@@ -226,7 +219,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>340</y>
+       <y>370</y>
        <width>99</width>
        <height>27</height>
       </rect>
@@ -239,7 +232,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>390</y>
+       <y>420</y>
        <width>101</width>
        <height>31</height>
       </rect>
@@ -252,13 +245,26 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>440</y>
+       <y>470</y>
        <width>99</width>
        <height>27</height>
       </rect>
      </property>
      <property name="text">
       <string>Mask</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Fusion_O">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>320</y>
+       <width>99</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Fusion Open</string>
      </property>
     </widget>
    </widget>

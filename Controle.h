@@ -67,6 +67,7 @@ class Controle{
         void seamCarving(int h, int l);
 
 
+        bool getImageOuverte() const;
 };
 #endif // CONTROLE_H
 

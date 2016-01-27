@@ -53,6 +53,11 @@ int DialogRedim::getL(){
     return ui->spinBox_L->value();
 }
 
+void DialogRedim::seam(){
+    ui->checkBox_H->hide();
+    ui->checkBox_L->hide();
+}
+
 DialogRedim::~DialogRedim(){
     delete ui;
 }

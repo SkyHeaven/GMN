@@ -5,6 +5,11 @@
 #include "SeamCarving.h"
 using namespace std;
 
+bool Controle::getImageOuverte() const
+{
+    return imageOuverte;
+}
+
 Controle::Controle(){
     indexVecteur =0;
     imageOuverte = false;

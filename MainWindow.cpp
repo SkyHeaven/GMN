@@ -5,9 +5,8 @@
 #include <QtWidgets>
 using namespace std;
 
-MainWindow::MainWindow(QWidget *parent):
-    QMainWindow(parent),
-    ui(new Ui::MainWindow){
+MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow){
+
     ui->setupUi(this);
     c = new Controle();
     openAct = ui->action_Open;
@@ -35,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->action90D, SIGNAL(triggered()), this, SLOT(rotation90D()));
     connect(ui->action90G, SIGNAL(triggered()), this, SLOT(rotation90G()));
     connect(ui->action180, SIGNAL(triggered()), this, SLOT(rotation180()));
-    connect(ui->actionOpen_fu,SIGNAL(triggered()),this,SLOT(fusion()));
     connect(ui->actionRecadrer,SIGNAL(triggered()),this,SLOT(recadrer()));
     connect(ui->actionEgaliser,SIGNAL(triggered()),this,SLOT(egaliser()));
     connect(ui->actionNegatif,SIGNAL(triggered()),this,SLOT(negatif()));
@@ -54,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->Fusionner,SIGNAL(clicked()),this,SLOT(fusionner()));
     connect(ui->SeamCarving,SIGNAL(clicked()),this,SLOT(seamCarving()));
     connect(ui->Mask,SIGNAL(clicked()),this,SLOT(masque()));
+    connect(ui->Fusion_O,SIGNAL(clicked()),this,SLOT(fusion()));
 }
 
 bool MainWindow::loadFile(const QString &fileName){
@@ -144,10 +143,13 @@ void MainWindow::afficherImage(QImage image){
 }
 
 bool MainWindow::save(){
-    QString fichier = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
-    QImage image = recupQImage();
-    image.save(fichier);
-    return true;
+    if(c->getImageOuverte()){
+        QString fichier = QFileDialog::getSaveFileName(this, "Enregistrer un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
+        QImage image = recupQImage();
+        image.save(fichier);
+        return true;
+    }
+    return false;
 }
 
 void MainWindow::undo(){
@@ -164,20 +166,26 @@ void MainWindow::redo(){
 
 
 void MainWindow::grey(){
-    c->afficherGris();
-    QImage image= recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->afficherGris();
+        QImage image= recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::crop(){
-    c->crop(imageLabel->getOrigineSel().y(),imageLabel->getOrigineSel().x(),imageLabel->getFinSel().y(),imageLabel->getFinSel().x());
-    QImage image= recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte() && imageLabel->getOrigineSel().y() != 0 && imageLabel->getOrigineSel().x() != 0 && imageLabel->getFinSel().y() != 0 && imageLabel->getFinSel().x() != 0){
+        c->crop(imageLabel->getOrigineSel().y(),imageLabel->getOrigineSel().x(),imageLabel->getFinSel().y(),imageLabel->getFinSel().x());
+        QImage image= recupQImage();
+        afficherImage(image);
+        imageLabel->finCrop();
+    }
 }
 
 
 void MainWindow::pipette(){
-    if(ui->Pipette->isChecked()){
+
+    if(ui->Pipette->isChecked() && c->getImageOuverte()){
         int *rgb = c->affichageCouleurRGB(imageLabel->getPipette().y(),imageLabel->getPipette().x());
         double *yuv = c->affichageCouleurYUV(imageLabel->getPipette().y(),imageLabel->getPipette().x());
         int gris = c->affichageCouleurGris(imageLabel->getPipette().y(),imageLabel->getPipette().x());
@@ -190,30 +198,39 @@ void MainWindow::pipette(){
 }
 
 void MainWindow::rotation90D(){
-    c->rotation("90D");
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->rotation("90D");
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::rotation90G(){
-    c->rotation("90G");
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->rotation("90G");
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::rotation180(){
-    c->rotation("180");
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->rotation("180");
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::flou(){
-    c->flou();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->flou();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::histogramme(){
+    if(c->getImageOuverte()){
         Histogramme *h = c->afficherHistogramme();
         FenHisto *fr = new FenHisto(h[0],Qt::red);
         FenHisto *fg = new FenHisto(h[1],Qt::green);
@@ -228,190 +245,229 @@ void MainWindow::histogramme(){
         else {
             fgris->show();
         }
+    }
 }
 
 void MainWindow::redimension(){
-    DialogRedim d;
-    d.setValue(c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur());
-    int h,l;
-    if(d.exec() == QDialog::Accepted) {
-        h=d.getH();
-        l=d.getL();
-    }
-    c->redimension(h,l);
-    QImage image = recupQImage();
-    afficherImage(image);
-}
-
-bool MainWindow::loadFile_fusion(const QString &fileName){
-    QImageReader reader(fileName);
-    const QImage image = reader.read();
-    if (image.isNull()) {
-        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
-                                 tr("Cannot load %1.").arg(QDir::toNativeSeparators(fileName)));
-        setWindowFilePath(QString());
-        imageFusion->setPixmap(QPixmap());
-        imageFusion->adjustSize();
-        return false;
-    }
-    imageFusion->setPixmap(QPixmap::fromImage(image));
-    scaleFactor = 1.0;
-    fitToWindowAct->setEnabled(true);
-    if (!fitToWindowAct->isChecked())
-        imageFusion->adjustSize();
-    c->ouvertureImage(image);
-    return true;
-}
-
-void MainWindow::open_fusion(){
-    const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
-    QFileDialog dialog(this, tr("Open File"),picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
-    dialog.setAcceptMode(QFileDialog::AcceptOpen);
-
-    //QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
-    while (dialog.exec() == QDialog::Accepted && !loadFile_fusion(dialog.selectedFiles().first())) {    }
-}
-
-void MainWindow::fusion(){
-    imageFusion = new ImageViewer;
-    imageFusion->setScaledContents(true);
-    scrollAreaFusion = new QScrollArea;
-    scrollAreaFusion->setBackgroundRole(QPalette::Dark);
-    scrollAreaFusion->setWidget(imageFusion);
-    scrollAreaFusion->setMinimumWidth(800);
-    scrollAreaFusion->setMinimumHeight(800);
-    open_fusion();
-    scrollAreaFusion->show();
-}
-
-void MainWindow::fusionner(){
-    DialogFusion d;
-    d.setValue(0,0);
-    int hmax,lmax;
-    int finSelY = imageFusion->getFinSel().y();
-    int finSelX = imageFusion->getFinSel().x();
-    int origineSelX = imageFusion->getOrigineSel().x();
-    int origineSelY = imageFusion->getOrigineSel().y();
-    int minX = min(origineSelX,finSelX);
-    int minY = min(origineSelY,finSelY);
-    int maxX = max(origineSelX,finSelX);
-    int maxY = max(origineSelY,finSelY);
-    int hauteur = c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur();
-    int largeur = c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur();
-
-    if(minX < 0)
-        minX = 0;
-    if(minY < 0)
-        minY = 0;
-    if(maxX > largeur)
-        maxX = largeur;
-    if(maxY > hauteur)
-        maxY = hauteur;
-
-    hmax = hauteur + maxX - minX;
-    lmax = largeur + maxY - minY;
-
-    d.setValueMax(hmax,lmax);
-    int h,l;
-    if(d.exec() == QDialog::Accepted) {
-        h=d.getY();
-        l=d.getX();
-
-
-        c->fusion(minY,minX,maxY,maxX,h,l);
+    if(c->getImageOuverte()){
+        DialogRedim d;
+        d.setValue(c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur());
+        int h,l;
+        if(d.exec() == QDialog::Accepted) {
+            h=d.getH();
+            l=d.getL();
+        }
+        c->redimension(h,l);
         QImage image = recupQImage();
         afficherImage(image);
     }
-    imageFusion->close();
-    scrollAreaFusion->close();
+}
+
+bool MainWindow::loadFile_fusion(const QString &fileName){
+    if(c->getImageOuverte()){
+        QImageReader reader(fileName);
+        const QImage image = reader.read();
+        if (image.isNull()) {
+            QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
+                                     tr("Cannot load %1.").arg(QDir::toNativeSeparators(fileName)));
+            setWindowFilePath(QString());
+            imageFusion->setPixmap(QPixmap());
+            imageFusion->adjustSize();
+            return false;
+        }
+        imageFusion->setPixmap(QPixmap::fromImage(image));
+        scaleFactor = 1.0;
+        fitToWindowAct->setEnabled(true);
+        if (!fitToWindowAct->isChecked())
+            imageFusion->adjustSize();
+        c->ouvertureImage(image);
+        return true;
+    }
+    return false;
+}
+
+void MainWindow::open_fusion(){
+    if(c->getImageOuverte()){
+        const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+        QFileDialog dialog(this, tr("Open File"),picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+        dialog.setAcceptMode(QFileDialog::AcceptOpen);
+
+        //QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier", QString(), "Images (*.png *.gif *.jpg *.jpeg)");
+        while (dialog.exec() == QDialog::Accepted && !loadFile_fusion(dialog.selectedFiles().first())) {    }
+    }
+}
+
+void MainWindow::fusion(){
+    if(c->getImageOuverte()){
+        imageFusion = new ImageViewer;
+        imageFusion->setScaledContents(true);
+        scrollAreaFusion = new QScrollArea;
+        scrollAreaFusion->setBackgroundRole(QPalette::Dark);
+        scrollAreaFusion->setWidget(imageFusion);
+        scrollAreaFusion->setMinimumWidth(800);
+        scrollAreaFusion->setMinimumHeight(800);
+        open_fusion();
+        scrollAreaFusion->show();
+    }
+}
+
+void MainWindow::fusionner(){
+    if(c->getImageOuverte()){
+        DialogFusion d;
+        d.setValue(0,0);
+        int hmax,lmax;
+        int finSelY = imageFusion->getFinSel().y();
+        int finSelX = imageFusion->getFinSel().x();
+        int origineSelX = imageFusion->getOrigineSel().x();
+        int origineSelY = imageFusion->getOrigineSel().y();
+        int minX = min(origineSelX,finSelX);
+        int minY = min(origineSelY,finSelY);
+        int maxX = max(origineSelX,finSelX);
+        int maxY = max(origineSelY,finSelY);
+        int hauteur = c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur();
+        int largeur = c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur();
+
+        if(minX < 0)
+            minX = 0;
+        if(minY < 0)
+            minY = 0;
+        if(maxX > largeur)
+            maxX = largeur;
+        if(maxY > hauteur)
+            maxY = hauteur;
+
+        hmax = hauteur + maxX - minX;
+        lmax = largeur + maxY - minY;
+
+        d.setValueMax(hmax,lmax);
+        int h,l;
+        if(d.exec() == QDialog::Accepted) {
+            h=d.getY();
+            l=d.getX();
 
 
+            c->fusion(minY,minX,maxY,maxX,h,l);
+            QImage image = recupQImage();
+            afficherImage(image);
+        }
+        imageFusion->close();
+        scrollAreaFusion->close();
+
+    }
 }
 
 void MainWindow::recadrer(){
-    c->etalementHistogramme();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->etalementHistogramme();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::egaliser(){
-    c->egalisation();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->egalisation();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::negatif(){
-    c->negatif();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->negatif();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::gradientX(){
-    c->gradientX();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->gradientX();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::gradientY(){
-    c->gradientY();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->gradientY();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 void MainWindow::contour(){
-    c->contour();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->contour();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::ameliorationContour(){
-    c->ameliorationContour();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->ameliorationContour();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::rehaussement(){
-    c->rehaussement();
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        c->rehaussement();
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::seamCarving(){
-    c->seamCarving(150,150);
-    QImage image = recupQImage();
-    afficherImage(image);
+    if(c->getImageOuverte()){
+        DialogRedim d;
+        d.seam();
+        d.setValue(c->getSauvegardeImage().at(c->getIndexVecteur()).getHauteur(),c->getSauvegardeImage().at(c->getIndexVecteur()).getLargeur());
+        int h,l;
+        if(d.exec() == QDialog::Accepted) {
+            h=d.getH();
+            l=d.getL();
+        }
+        c->seamCarving(h,l);
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 void MainWindow::masque(){
-    DialogMasque_T d;
-    d.setText("hauteur/largeur");
-    int tmp;
-    if(d.exec() == QDialog::Accepted) {
-        tmp = d.getValue();
-    }
-    Masque m = Masque(tmp);
+    if(c->getImageOuverte()){
+        DialogMasque_T d;
+        d.setText("hauteur/largeur");
+        int tmp;
+        if(d.exec() == QDialog::Accepted) {
+            tmp = d.getValue();
+        }
+        Masque m = Masque(tmp);
 
-    for(int i =0;i<m.getLongueur();i++){
-        for(int j =0;j<m.getLongueur();j++){
-            d.setText(QString("Valeur(%1,%2)").arg(i).arg(j));
-            d.setSpin();
-            if(d.exec() == QDialog::Accepted) {
-                m.setValeurTableauMasque(i,j,d.getValue());
+        for(int i =0;i<m.getLongueur();i++){
+            for(int j =0;j<m.getLongueur();j++){
+                d.setText(QString("Valeur(%1,%2)").arg(i).arg(j));
+                d.setSpin();
+                if(d.exec() == QDialog::Accepted) {
+                    m.setValeurTableauMasque(i,j,d.getValue());
+                }
             }
         }
-    }
 
-    int coeff = 0;
-    int sumMask = m.sommeMasque();
-    if (sumMask <=0 ) {
-        coeff = 1;
-    }
-    else {
-        coeff = sumMask;
-    }
+        int coeff = 0;
+        int sumMask = m.sommeMasque();
+        if (sumMask <=0 ) {
+            coeff = 1;
+        }
+        else {
+            coeff = sumMask;
+        }
 
-    c->appliquerMasque(m,coeff);
-    QImage image = recupQImage();
-    afficherImage(image);
+        c->appliquerMasque(m,coeff);
+        QImage image = recupQImage();
+        afficherImage(image);
+    }
 }
 
 

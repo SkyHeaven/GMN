@@ -44,7 +44,6 @@ int Histogramme::egaliser(int k, int l){
     tableauHistogramme[k]--;
     tableauHistogramme[((l-1)*sum)/n]++;
     return ((l-1)*sum)/n;
-
 }
 
 void Histogramme::decrementeValeurHistogramme(int val){
